@@ -28,6 +28,7 @@ CREATE TABLE publicaciones(
 	id varchar(40) NOT NULL,
     fecha_publicacion datetime DEFAULT NULL,
     fecha_actualizacion datetime DEFAULT NOW() ON UPDATE NOW(),
+    alt_portada varchar(200) NOT NULL,
     
     titulo varchar(80) NOT NULL,
     resumen varchar(200) NOT NULL,
@@ -57,6 +58,14 @@ CREATE TABLE fotografias(
     
     autor_id varchar(40) NOT NULL,
     vehiculo_id char(10) NOT NULL,
+    licencia_id varchar(10) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE licencias(
+	id varchar(10) NOT NULL,
+    titulo varchar(50) NOT NULL,
+    url varchar(100) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -92,10 +101,34 @@ CREATE TABLE empresas(
 );
 
 --
+-- Rama trabajos
+--
+CREATE TABLE trabajos(
+	id varchar(40) NOT NULL,
+    titulo varchar(80) NOT NULL,
+    resumen varchar(200) NOT NULL,
+    contenido text NOT NULL,
+    alt_portada varchar(200) NOT NULL,
+    fecha_publicacion datetime NOT NULL DEFAULT NOW(),
+    fecha_actualizacion datetime NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+    
+    autor_id varchar(40) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE adjuntos(
+	id int NOT NULL,
+    nombre_archivo varchar(50) NOT NULL UNIQUE,
+    fecha_subida datetime NOT NULL DEFAULT NOW(),
+    trabajo_id varchar(40) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+--
 -- FOREIGN KEYS
 --
 
--- usuario redacta publicacion
+-- autor redacta publicacion
 ALTER TABLE publicaciones ADD FOREIGN KEY publicaciones_autor(autor_id) REFERENCES autores(id);
 
 -- publicacion pertenece a palabras clave
@@ -107,14 +140,29 @@ CREATE TABLE publicaciones_palabrasclave (
 	FOREIGN KEY ppc_palabraclave(palabraclave_id) REFERENCES palabras_clave(id)
 );
 
--- usuario comparte fotografia
+-- autor comparte fotografia
 ALTER TABLE fotografias ADD FOREIGN KEY fotografias_autor(autor_id) REFERENCES autores(id);
 
 -- fotografia contiene vehiculo
 ALTER TABLE fotografias ADD FOREIGN KEY fotografias_vehiculo(vehiculo_id) REFERENCES vehiculos(id);
+
+-- fotografia es cedida bajo licencia
+ALTER TABLE fotografias ADD FOREIGN KEY fotografias_licencia(licencia_id) REFERENCES licencias(id);
 
 -- vehiculo pertenece tipo_vehiculo
 ALTER TABLE vehiculos ADD FOREIGN KEY vehiculos_tipovehiculo(tipo_vehiculo_id) REFERENCES tipos_vehiculo(id);
 
 -- tipo_vehiculo propiedad de empresa
 ALTER TABLE tipos_vehiculo ADD FOREIGN KEY tiposvehiculo_empresa(empresa_id) REFERENCES empresas(id);
+
+-- autores publican trabajos
+CREATE TABLE autores_trabajos (
+	autor_id varchar(40) NOT NULL,
+    trabajo_id varchar(40) NOT NULL,
+    PRIMARY KEY (autor_id, trabajo_id),
+    FOREIGN KEY autorestrabajos_autor(autor_id) REFERENCES autores(id),
+    FOREIGN KEY autorestrabajos_trabajo(trabajo_id) REFERENCES trabajos(id)
+);
+
+-- trabajo contiene adjuntos
+ALTER TABLE adjuntos ADD FOREIGN KEY adjuntos_trabajo(trabajo_id) REFERENCES trabajos(id);
