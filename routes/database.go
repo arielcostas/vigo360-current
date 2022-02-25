@@ -1,4 +1,4 @@
-package db
+package routes
 
 import (
 	"database/sql"
@@ -8,9 +8,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func CreateCon() *sql.DB {
+var db *sql.DB
+
+func InitDB() {
 	var dsn string = os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASS") + "@tcp(" + os.Getenv("DB_HOST") + ")/" + os.Getenv("DB_BASE")
-	db, err := sql.Open("mysql", dsn)
+	var err error
+	db, err = sql.Open("mysql", dsn)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
@@ -22,5 +25,4 @@ func CreateCon() *sql.DB {
 		fmt.Println("db is not connected")
 		fmt.Println(err.Error())
 	}
-	return db
 }

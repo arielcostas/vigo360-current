@@ -1,17 +1,17 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/db"
+	"git.sr.ht/~arielcostas/new.vigo360.es/routes"
 	"github.com/joho/godotenv"
 )
 
 var (
 	version string
-	con     *sql.DB
 )
 
 func init() {
@@ -22,23 +22,10 @@ func init() {
 	}
 }
 
-type Resp struct {
-	Now string
-}
-
 func main() {
 	fmt.Printf("Starting vigo360 version %s\n", version)
+	var PORT string = ":" + os.Getenv("PORT")
 
-	con = db.CreateCon()
-	rows, err := con.Query("SELECT NOW()")
-
-	if err != nil {
-		fmt.Println("error querying " + err.Error())
-	}
-
-	for rows.Next() {
-		var r Resp
-		rows.Scan(&r.Now)
-		println("row 0 => " + r.Now)
-	}
+	fmt.Println("Starting web server on " + PORT)
+	log.Fatal(http.ListenAndServe(PORT, routes.InitRouter()))
 }
