@@ -1,3 +1,5 @@
+@import url('fira-sans.css');
+
 :root {
 	--gray: #f8f8f8;
 
@@ -6,8 +8,7 @@
 	--text: rgb(18, 20, 24);
 	--theme: #236535;
 
-	font-family: "Cantarell", Avenir, Roboto, Helvetica, "Liberation Sans",
-		sans-serif;
+	font-family: 'Fira Sans', Cantarell, sans-serif;
 	font-kerning: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -532,6 +533,7 @@ header {
 	align-items: center;
 
 	width: 100%;
+	letter-spacing: 1px;
 
 	background: #fff;
 	border-top: 5px solid var(--theme);
@@ -769,11 +771,14 @@ article#post-inner p img {
 
 .post-author-photo {
 	border-radius: 35%;
-	flex: 0 0 20%;
+	flex: 1 1;
+	max-width: 180px;
 }
 
 #post-author-container {
 	padding: 0 7% 2rem;
+	max-width: 85ch;
+	margin: auto;
 }
 
 #post-author-container a:hover {
@@ -787,6 +792,9 @@ article#post-inner p img {
 .post-author-info {
 	padding-left: 1rem;
 	color: var(--text);
+	justify-content: center;
+	display: flex;
+	flex-direction: column;
 }
 
 .post-author-info h3 {
