@@ -25,7 +25,7 @@ type IndexParams struct {
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
 	posts := []IndexPost{}
-	err := db.Select(&posts, "SELECT publicaciones.id, DATE_FORMAT(publicaciones.fecha_publicacion, '%c %b.') as fecha_publicacion, publicaciones.alt_portada, publicaciones.titulo, publicaciones.resumen, autores.nombre FROM publicaciones LEFT JOIN autores on publicaciones.autor_id = autores.id;")
+	err := db.Select(&posts, "SELECT publicaciones.id, DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b.') as fecha_publicacion, publicaciones.alt_portada, publicaciones.titulo, publicaciones.resumen, autores.nombre FROM publicaciones LEFT JOIN autores on publicaciones.autor_id = autores.id WHERE publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;")
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
