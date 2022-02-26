@@ -1,16 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<title>Document</title>
-
-	<link rel="stylesheet" href="/includes/style.css">
-</head>
-<body>
-	<h1>Index page!</h1>
-	{{ .Row }}
-</body>
+<html lang="es-ES">
+	{{- template "_head.html" }}
+	<body>
+		{{ template "_header.html" }}
+		<main>
+			<div id="frontpage-articles">
+			{{- range $post := .Posts }}
+				<a href="/post/{{ $post.Id }}">
+					<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}" title="{{ $post.Alt_portada }}"/>
+					<div class="article-info">
+						<p class="article-author">
+							{{ $post.Autor_nombre }} / {{ $post.Fecha_publicacion }}
+						</p>
+						<h3 class="article-title">{{ $post.Titulo }}</h3>
+						<p class="article-summary">
+							{{ $post.Resumen }}
+						</p>
+					</div>
+				</a>
+				{{- end }}
+			</div>
+		</main>
+		{{ template "_footer.html" }}
+	</body>
 </html>

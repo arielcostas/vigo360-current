@@ -24,6 +24,12 @@ var t *template.Template
 
 func loadTemplates() {
 	t = template.Must(template.ParseFS(rawtemplates, "html/*.html"))
+	t.Funcs(template.FuncMap{
+		"formatDate": func(date []uint8) string {
+			println(date)
+			return string(date)
+		},
+	})
 }
 
 func TestMiddleware(next http.Handler) http.Handler {
@@ -50,6 +56,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
+	w.Header().Add("Cache-Control", "max-age=3600")
 	w.Write(bytes)
 }
 

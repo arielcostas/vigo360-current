@@ -175,3 +175,6 @@ CREATE TABLE autores_trabajos (
 
 -- trabajo contiene adjuntos
 ALTER TABLE adjuntos ADD FOREIGN KEY adjuntos_trabajo(trabajo_id) REFERENCES trabajos(id);
+
+-- autor inicia sesión
+ALTER TABLE sesiones ADD FOREIGN KEY sesiones_autor(autor_id) REFERENCES autores(id);
