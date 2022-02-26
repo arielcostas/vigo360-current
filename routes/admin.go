@@ -7,13 +7,12 @@ import (
 	_ "embed"
 )
 
-//go:embed templates/admin/login.html
-var adminLoginPage []byte
+type AdminLoginParams struct{}
 
 func AdminLogin(w http.ResponseWriter, r *http.Request) {
 	// Serve the form and end
 	if r.Method == http.MethodGet {
-		w.Write(adminLoginPage)
+		t.Execute(w, &AdminLoginParams{})
 		return
 	}
 
@@ -29,7 +28,7 @@ func AdminLogin(w http.ResponseWriter, r *http.Request) {
 		println(err.Error())
 	}
 
-	pass := ValidPassword(r.PostFormValue("password"), row.password)
+	pass := ValidatePassword(r.PostFormValue("password"), row.password)
 	fmt.Fprintf(w, `id => %s
 nombre => %s
 contraseña => %t

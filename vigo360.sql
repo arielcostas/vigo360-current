@@ -124,6 +124,15 @@ CREATE TABLE adjuntos(
     PRIMARY KEY(id)
 );
 
+CREATE TABLE sesiones(
+    sessid char(20) NOT NULL,
+    iniciada datetime NOT NULL DEFAULT NOW(),
+    revocada boolean DEFAULT false,
+
+    autor_id varchar(40) NOT NULL,
+    PRIMARY KEY (sessid)
+);
+
 --
 -- FOREIGN KEYS
 --

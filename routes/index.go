@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -9,16 +8,16 @@ type Resp struct {
 	Now string
 }
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query("SELECT NOW()")
+type IndexParams struct {
+	Row string
+}
 
-	if err != nil {
-		fmt.Println("error querying " + err.Error())
-	}
+func IndexPage(w http.ResponseWriter, r *http.Request) {
+	row := db.QueryRow("SELECT curtime()")
+	var resp Resp = Resp{}
+	row.Scan(&resp.Now)
 
-	for rows.Next() {
-		var r Resp
-		rows.Scan(&r.Now)
-		w.Write([]byte("row => " + r.Now))
-	}
+	t.ExecuteTemplate(w, "index.html", &IndexParams{
+		Row: resp.Now,
+	})
 }
