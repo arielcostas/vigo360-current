@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+	<head>
+		<title>{{ .Post.Titulo }} - Vigo360</title>
+		{{- template "_head.html" }}
+	</head>
+	<body>
+		{{ template "_header.html" }}
+		<main>
+			<div id="post-main">
+				<figure id="post-thumbnail">
+					<img src="/static/images/{{ .Post.Id}}.webp" alt="{{ .Post.Alt_portada }}">
+					<figcaption>{{ .Post.Alt_portada }}</figcaption>
+				</figure>
+				
+				<h2 id="post-title">{{ .Post.Titulo }}</h2>
+				
+				<div id="post-info">
+					<a href="/authors/{{ .Post.Autor_id }}">{{ .Post.Autor_nombre }}</a>
+					<span>/ {{ .Post.Fecha_actualizacion }}</span>
+				</div>
+				
+				<article id="post-inner">
+					{{ .Post.Contenido }}
+				</article>
+				
+				<div id="post-author-container">
+					<a href="/authors/{{ .Post.Autor_id }}">
+						<div id="post-author-card">
+							<img class="post-author-photo" src="/static/profile/{{ .Post.Autor_id }}.jpg" alt="Fotografía de perfil de {{ .Post.Autor_nombre }}"/>
+							<div class="post-author-info">
+								<h3>{{ .Post.Autor_nombre }}</h3>
+								<span>{{ .Post.Autor_rol}}</span>
+								{{ .Post.Autor_biografia }}
+							</div>
+						</div>
+					</a>
+				</div>
+
+
+			</div>
+		</main>
+		{{ template "_footer.html" }}
+	</body>
+</html>

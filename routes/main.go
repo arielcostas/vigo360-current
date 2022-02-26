@@ -67,6 +67,7 @@ func InitRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(TestMiddleware)
 	router.HandleFunc("/admin/login", AdminLogin).Methods("GET", "POST")
+	router.HandleFunc(`/post/{postid:[A-Za-z0-9\-\_]+}`, PostPage).Methods("GET")
 	router.HandleFunc(`/includes/{file:[\w|\.]+}`, includesHandler).Methods("GET")
 	router.HandleFunc("/", IndexPage).Methods("GET")
 	return router
