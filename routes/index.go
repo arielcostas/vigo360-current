@@ -15,10 +15,6 @@ type IndexPost struct {
 	Autor_nombre      string `db:"nombre"`
 }
 
-type IndexQuery struct {
-	Posts []IndexPost
-}
-
 type IndexParams struct {
 	Posts []IndexPost
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+	<head>
+		<title>Sección - Vigo360</title>
+		{{- template "_head.html" }}
+	</head>
+	<body>
+		{{ template "_header.html" }}
+		<main id="sections">
+			<h1 id="section-title">{{ .Tag.Titulo }}</h1>
+			<ul id="section-articles">
+				{{ range .Posts }}
+				<li>
+					<a href="/post/{{ .Id }}">
+						<img src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}" title="{{ .Titulo }}" />
+						<div>
+							<span class="article-author">
+								{{ .Autor_nombre }} /
+								{{ .Fecha_publicacion }}
+							</span>
+							<h3 class="article-title">{{ .Titulo }}</h3>
+						</div>
+					</a>
+				</li>
+				{{ end }}
+			</ul>
+		</main>
+		{{ template "_footer.html" }}
+	</body>
+</html>

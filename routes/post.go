@@ -26,10 +26,6 @@ type PostPost struct {
 	Autor_biografia     string
 }
 
-type PostQuery struct {
-	Post PostPost
-}
-
 type PostParams struct {
 	Post PostPost
 }
