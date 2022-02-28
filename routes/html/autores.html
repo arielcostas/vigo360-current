@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+	<head>
+		<title>Quiénes Somos - Vigo360</title>
+		{{- template "_head.html" }}
+	</head>
+	<body>
+		{{ template "_header.html" }}
+		<main id="authors">
+			<h1 id="section-title">Quiénes somos</h1>
+			<div id="authors-grid">
+			{{ range .Autores }}
+				<a href="/authors/{{ .Id }}">
+					<div>
+						<img src="/static/profile/{{ .Id }}.jpg" />
+						<span class="authors-name">{{ .Nombre }}</span><br />
+						<span class="authors-role">{{ .Rol }}</span>
+						<p>{{ .Biografia }}</p>
+					</div>
+				</a>
+			{{ end }}
+			</div>
+		</main>
+		{{ template "_footer.html" }}
+	</body>
+</html>

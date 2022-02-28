@@ -154,8 +154,6 @@ main#authors {
 	padding: 0;
 	border-radius: 4px;
 	overflow: hidden;
-
-	box-shadow: 0 13px 27px -5px rgba(50,50,93,0.10),0 8px 16px -8px rgba(0,0,0,0.20);
 }
 
 main#authors #section-title {

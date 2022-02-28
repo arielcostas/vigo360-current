@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//#region /autores/id
 type AutoresIdAutor struct {
 	Id         string
 	Nombre     string
@@ -56,3 +57,28 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		Posts: publicaciones,
 	})
 }
+
+//#endregion
+
+//#region /autores
+type AutoresAutor struct {
+	Id        string
+	Nombre    string
+	Rol       string
+	Biografia string
+}
+
+type AutoresParams struct {
+	Autores []AutoresAutor
+}
+
+func AutoresPage(w http.ResponseWriter, r *http.Request) {
+	autores := []AutoresAutor{}
+	db.Select(&autores, `SELECT id, nombre, rol, biografia FROM autores;`)
+
+	t.ExecuteTemplate(w, "autores.html", AutoresParams{
+		Autores: autores,
+	})
+}
+
+//#endregion
