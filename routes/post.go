@@ -32,7 +32,6 @@ type PostParams struct {
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	req_post_id := mux.Vars(r)["postid"]
-	println(req_post_id)
 	query := `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, 
 	DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b.') as fecha_actualizacion, 
 	DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b.') as fecha_actualizacion, 
