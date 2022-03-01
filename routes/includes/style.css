@@ -1,4 +1,5 @@
 @import url('fira-sans.css');
+@import url('open-sans.css');
 
 :root {
 	--gray: #f8f8f8;
@@ -71,6 +72,10 @@ main {
 
 main > * {
 	background: #fff;
+}
+
+p {
+	font-family: 'Open Sans', sans-serif;
 }
 
 ul,
@@ -748,7 +753,7 @@ header .mobile {
 
 #post-inner {
 	padding: 1rem 7%;
-	max-width: 85ch;
+	max-width: 95ch;
 	margin: 1rem auto;
 	text-align: justify;
 }
@@ -756,6 +761,14 @@ header .mobile {
 article#post-inner p img {
 	width: 100%;
 	object-fit: cover;
+}
+
+#post-inner a {
+	text-decoration: underline;
+}
+
+#post-inner a:hover {
+	color: green;
 }
 
 #post-inner > p,
