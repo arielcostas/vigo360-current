@@ -184,3 +184,10 @@ ALTER TABLE sesiones ADD FOREIGN KEY sesiones_autor(autor_id) REFERENCES autores
  */
 ALTER TABLE adjuntos MODIFY COLUMN id int NOT NULL AUTO_INCREMENT;
 ALTER TABLE adjuntos ADD COLUMN titulo varchar(80) NOT NULL;
+
+/*
+ *   MIGRACION 2 - Palabras clave -> tags
+ */
+RENAME TABLE palabras_clave TO tags;
+RENAME TABLE publicaciones_palabrasclave TO publicaciones_tags;
+ALTER TABLE publicaciones_tags RENAME COLUMN palabraclave_id TO tag_id;

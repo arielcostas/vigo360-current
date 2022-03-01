@@ -85,8 +85,8 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc(`/trabajos/{paperid:[A-Za-z0-9\-\_|ñ]+}`, TrabajoPage).Methods("GET")
 
-	router.HandleFunc(`/authors/{id:[A-Za-z0-9\-\_|ñ]+}`, AutoresIdPage).Methods("GET")
-	router.HandleFunc(`/authors`, AutoresPage).Methods("GET")
+	router.HandleFunc(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, AutoresIdPage).Methods("GET")
+	router.HandleFunc(`/autores`, AutoresPage).Methods("GET")
 
 	router.HandleFunc(`/includes/{file:[\w|\.|\-|\_|ñ]+}`, includesHandler).Methods("GET")
 	router.HandleFunc(`/siguenos`, SiguenosPage).Methods("GET")

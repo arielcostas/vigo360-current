@@ -16,7 +16,7 @@
 				<h2 id="post-title">{{ .Trabajo.Titulo }}</h2>
 				
 				<div id="post-info">
-					<a href="/authors/{{ .Trabajo.Autor_id }}">{{ .Trabajo.Autor_nombre }}</a>
+					<a href="/autores/{{ .Trabajo.Autor_id }}">{{ .Trabajo.Autor_nombre }}</a>
 					<span>/ {{ .Trabajo.Fecha_actualizacion }}</span>
 				</div>
 				
@@ -31,7 +31,7 @@
 				</article>
 				
 				<div id="post-author-container">
-					<a href="/authors/{{ .Trabajo.Autor_id }}">
+					<a href="/autores/{{ .Trabajo.Autor_id }}">
 						<div id="post-author-card">
 							<img class="post-author-photo" src="/static/profile/{{ .Trabajo.Autor_id }}.jpg" alt="Fotografía de perfil de {{ .Trabajo.Autor_nombre }}"/>
 							<div class="post-author-info">
