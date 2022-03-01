@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
+	<id>{{ .BaseURL }}/</id>
+	<title>Vigo360</title>
+	<subtitle>Últimas publicaciones en el sitio web de Vigo360</subtitle>
+	<updated>{{ .Now }}</updated>
+	<contributor>
+		<name>Ariel Costas</name>
+		<email>ariel@vigo360.es</email>
+		<uri>https://costas.dev/</uri>
+	</contributor>
+	<link rel="self" href="{{ .BaseURL }}/atom.xml" />
+	<icon>/includes/logo.png</icon>
+
+	{{ $domain := .BaseURL }}
+	{{- range .Posts }}
+		<entry>
+			<id>{{ $domain }}/post/{{ .Id }}</id>
+			<title>{{ .Titulo }}</title>
+			<published>{{ .Publicacion_3339 }}</published>
+			<updated>{{ .Actualizacion_3339 }}</updated>
+			<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
+			<summary>{{ .Resumen }}</summary>
+			<author>
+				<name>{{ .Autor_nombre }}</name>
+				<email>{{ .Autor_email }}</email>
+				<uri>{{ $domain }}/autores</uri>
+			</author>
+			{{ range .Tags }}
+				<category term="{{ . }}" />
+			{{- end}}
+		</entry>
+	{{- end}}
+</feed>

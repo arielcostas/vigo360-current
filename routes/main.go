@@ -8,6 +8,7 @@ import (
 	"mime"
 	"net/http"
 	"regexp"
+	texttemplate "text/template"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -21,15 +22,11 @@ var rawtemplates embed.FS
 var includes embed.FS
 
 var t *template.Template
+var tt *texttemplate.Template
 
 func loadTemplates() {
 	t = template.Must(template.ParseFS(rawtemplates, "html/*.html"))
-	t.Funcs(template.FuncMap{
-		"formatDate": func(date []uint8) string {
-			println(date)
-			return string(date)
-		},
-	})
+	tt = texttemplate.Must(texttemplate.ParseFS(rawtemplates, "html/*.xml"))
 }
 
 func TestMiddleware(next http.Handler) http.Handler {
@@ -93,6 +90,9 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/siguenos`, SiguenosPage).Methods("GET")
 	router.HandleFunc(`/licencia`, LicenciasPage).Methods("GET")
 	router.HandleFunc(`/contacto`, ContactoPage).Methods("GET")
+
+	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
+
 	router.HandleFunc("/", IndexPage).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
