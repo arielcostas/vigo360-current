@@ -40,8 +40,8 @@ type TrabajoParams struct {
 func TrabajoPage(w http.ResponseWriter, r *http.Request) {
 	req_paper_id := mux.Vars(r)["paperid"]
 	query := `SELECT trabajos.id, alt_portada, titulo, resumen, contenido, 
-	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b.') as fecha_actualizacion, 
-	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b.') as fecha_actualizacion, 
+	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
+	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
 	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
 FROM trabajos 
 LEFT JOIN autores on trabajos.autor_id = autores.id 
@@ -92,6 +92,11 @@ type TrabajosListTrabajo struct {
 
 func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
 	trabajos := []TrabajosListTrabajo{}
+	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre as autor_nombre FROM trabajos LEFT JOIN autores on trabajos.autor_id = autores.id WHERE trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC`)
+
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 
 	t.ExecuteTemplate(w, "trabajos.html", TrabajoListParams{
 		Trabajos: trabajos,

@@ -34,7 +34,7 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	posts := []TagsIdPost{}
-	db.Select(&posts, `SELECT publicaciones.id, DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b.') as fecha_publicacion, publicaciones.alt_portada, publicaciones.titulo,
+	db.Select(&posts, `SELECT publicaciones.id, DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, publicaciones.alt_portada, publicaciones.titulo,
 	autores.nombre FROM publicaciones_tags
 	LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id
     LEFT JOIN autores ON publicaciones.autor_id = autores.id

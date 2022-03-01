@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+	<head>
+		<title>Trabajos - Vigo360</title>
+		{{- template "_head.html" }}
+	</head>
+	<body>
+		{{ template "_header.html" }}
+		<main id="papers">
+			<h1>Trabajos originales Vigo360</h1>
+			<div id="papers-list">
+			{{ range .Trabajos }}
+				<article>
+					<a href="/trabajos/{{.Id}}">
+						<img src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}" title="{{ .Titulo }}" />
+						<div>
+							<p class="article-author">{{ .Autor_nombre }}</p>
+							<h3 class="article-title">{{ .Titulo }}</h3>
+						</div>
+					</a>
+				</article>
+			{{ end }}
+			</div>
+		</main>
+		{{ template "_footer.html" }}
+	</body>
+</html>

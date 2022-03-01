@@ -49,8 +49,8 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 
 	publicaciones := []AutoresIdPublicacion{}
 	// TODO error handling
-	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b.') as fecha_publicacion, 
-	DATE_FORMAT(fecha_actualizacion, '%d %b.') as fecha_actualizacion, alt_portada, titulo, resumen
+	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, 
+	DATE_FORMAT(fecha_actualizacion, '%d %b. %Y') as fecha_actualizacion, alt_portada, titulo, resumen
 	FROM publicaciones WHERE autor_id = 'ariel-costas' ORDER BY publicaciones.fecha_publicacion DESC;`)
 
 	if err != nil {
