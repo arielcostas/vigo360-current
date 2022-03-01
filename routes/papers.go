@@ -69,7 +69,7 @@ WHERE trabajos.id = ?;`
 		log.Fatalf(err.Error())
 	}
 
-	t.ExecuteTemplate(w, "papers-id.html", TrabajoParams{
+	t.ExecuteTemplate(w, "trabajos-id.html", TrabajoParams{
 		Trabajo:  trabajo,
 		Adjuntos: adjuntos,
 	})
