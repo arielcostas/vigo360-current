@@ -6,9 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/parser"
 	"github.com/gorilla/mux"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
 )
 
 type PostPost struct {
@@ -49,11 +48,7 @@ WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 
 	// Result is in markdown, convert to HTML
 	var buf bytes.Buffer
-	md := goldmark.New(goldmark.WithExtensions(extension.Footnote))
-	err = md.Convert([]byte(post.ContenidoRaw), &buf)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	parser.Parser.Convert([]byte(post.ContenidoRaw), &buf)
 
 	post.Contenido = template.HTML(buf.Bytes())
 

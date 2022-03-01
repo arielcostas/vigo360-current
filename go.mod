@@ -13,5 +13,5 @@ require golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 
 require (
 	github.com/jmoiron/sqlx v1.3.4 // indirect
-	github.com/yuin/goldmark v1.4.7 // indirect
+	github.com/mdigger/goldmark-figures v0.0.0-20210529130425-5a82ef316e38 // indirect
 )
