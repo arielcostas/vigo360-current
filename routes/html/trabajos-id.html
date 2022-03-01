@@ -22,12 +22,14 @@
 				
 				<article id="post-inner">
 					{{ .Trabajo.Contenido }}
+					{{ if ne (len .Adjuntos) 0 }}
 					<h2>Descargas</h2>
 					<ul>
 						{{ range .Adjuntos }}
 							<li><a href="/static/papers/{{ .Nombre_archivo }}">{{ .Titulo }}</a></li>
 						{{ end }}
 					</ul>
+					{{ end }}
 				</article>
 				
 				<div id="post-author-container">

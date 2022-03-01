@@ -8,6 +8,7 @@ import (
 	"mime"
 	"net/http"
 	"regexp"
+	"strings"
 	texttemplate "text/template"
 	"time"
 
@@ -68,6 +69,18 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "_500.html", NoPageData{})
 }
 
+func AuthorsToAutores(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r,
+		strings.ReplaceAll(r.URL.String(), "/authors/", "/autores/"),
+		http.StatusMovedPermanently)
+}
+
+func PapersToTrabajos(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r,
+		strings.ReplaceAll(r.URL.String(), "/papers/", "/trabajos/"),
+		http.StatusMovedPermanently)
+}
+
 func InitRouter() *mux.Router {
 	InitDB()
 	loadTemplates()
@@ -80,9 +93,11 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc(`/tags/{tagid:[0-9]+}`, TagsIdPage).Methods("GET")
 
+	router.HandleFunc(`/papers/{.*}`, PapersToTrabajos).Methods("GET")
 	router.HandleFunc(`/trabajos/{paperid:[A-Za-z0-9\-\_|ñ]+}`, TrabajoPage).Methods("GET")
 	router.HandleFunc(`/trabajos`, TrabajoListPage).Methods("GET")
 
+	router.HandleFunc(`/authors/{.*}`, AuthorsToAutores).Methods("GET")
 	router.HandleFunc(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, AutoresIdPage).Methods("GET")
 	router.HandleFunc(`/autores`, AutoresPage).Methods("GET")
 
