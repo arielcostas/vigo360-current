@@ -90,6 +90,8 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc(`/includes/{file:[\w|\.|\-|\_|ñ]+}`, includesHandler).Methods("GET")
 	router.HandleFunc(`/siguenos`, SiguenosPage).Methods("GET")
+	router.HandleFunc(`/licencia`, LicenciasPage).Methods("GET")
+	router.HandleFunc(`/contacto`, ContactoPage).Methods("GET")
 	router.HandleFunc("/", IndexPage).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
