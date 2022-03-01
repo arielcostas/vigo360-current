@@ -57,7 +57,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 
-	t.ExecuteTemplate(w, "authors-id.html", AutoresIdParams{
+	t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
 		Autor: autor,
 		Posts: publicaciones,
 	})

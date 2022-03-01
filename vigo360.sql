@@ -178,3 +178,9 @@ ALTER TABLE adjuntos ADD FOREIGN KEY adjuntos_trabajo(trabajo_id) REFERENCES tra
 
 -- autor inicia sesión
 ALTER TABLE sesiones ADD FOREIGN KEY sesiones_autor(autor_id) REFERENCES autores(id);
+
+/*
+ *   MIGRACION 1 - Adjuntos
+ */
+ALTER TABLE adjuntos MODIFY COLUMN id int NOT NULL AUTO_INCREMENT;
+ALTER TABLE adjuntos ADD COLUMN titulo varchar(80) NOT NULL;
