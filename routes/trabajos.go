@@ -11,6 +11,7 @@ import (
 	"github.com/yuin/goldmark/extension"
 )
 
+//#region
 type TrabajosTrabajo struct {
 	Id                  string
 	Fecha_publicacion   string
@@ -72,5 +73,27 @@ WHERE trabajos.id = ?;`
 	t.ExecuteTemplate(w, "trabajos-id.html", TrabajoParams{
 		Trabajo:  trabajo,
 		Adjuntos: adjuntos,
+	})
+}
+
+//#endregion
+
+type TrabajoListParams struct {
+	Trabajos []TrabajosListTrabajo
+}
+
+type TrabajosListTrabajo struct {
+	Id                string
+	Fecha_publicacion string
+	Alt_portada       string
+	Titulo            string
+	Autor_nombre      string
+}
+
+func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
+	trabajos := []TrabajosListTrabajo{}
+
+	t.ExecuteTemplate(w, "trabajos.html", TrabajoListParams{
+		Trabajos: trabajos,
 	})
 }
