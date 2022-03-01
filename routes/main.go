@@ -53,11 +53,22 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	ext := regexp.MustCompile(`\.[A-Za-z]+$`).FindString(file)
 	bytes, err := includes.ReadFile("includes/" + file)
 	if err != nil {
+		// TODO error handling
 		log.Fatalf(err.Error())
 	}
 	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
 	w.Header().Add("Cache-Control", "max-age=3600")
 	w.Write(bytes)
+}
+
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(404)
+	t.ExecuteTemplate(w, "_404.html", NoPageData{})
+}
+
+func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(500)
+	t.ExecuteTemplate(w, "_500.html", NoPageData{})
 }
 
 func InitRouter() *mux.Router {
@@ -76,6 +87,10 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/authors`, AutoresPage).Methods("GET")
 
 	router.HandleFunc(`/includes/{file:[\w|\.|\-|\_|ñ]+}`, includesHandler).Methods("GET")
+	router.HandleFunc(`/siguenos`, SiguenosPage).Methods("GET")
 	router.HandleFunc("/", IndexPage).Methods("GET")
+
+	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
+
 	return router
 }

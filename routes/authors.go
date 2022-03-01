@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 
@@ -38,8 +39,12 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 	// TODO error handling
 	err := db.QueryRowx("SELECT id, nombre, email, rol, biografia, web_url, web_titulo FROM autores WHERE id=?", req_author).StructScan(&autor)
 
-	if err != nil {
-		log.Fatalf(err.Error())
+	if err == sql.ErrNoRows {
+		NotFoundHandler(w, r)
+		return
+	} else if err != nil {
+		InternalServerErrorHandler(w, r)
+		return
 	}
 
 	publicaciones := []AutoresIdPublicacion{}
