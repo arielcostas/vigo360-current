@@ -56,7 +56,8 @@ WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 	t.ExecuteTemplate(w, "post.html", PostParams{
 		Post: post,
 		Meta: PageMeta{
-			Title: post.Titulo,
+			Titulo:      post.Titulo,
+			Descripcion: post.Resumen,
 		},
 	})
 }

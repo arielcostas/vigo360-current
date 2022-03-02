@@ -75,7 +75,8 @@ WHERE trabajos.id = ?;`
 		Trabajo:  trabajo,
 		Adjuntos: adjuntos,
 		Meta: PageMeta{
-			Title: trabajo.Titulo,
+			Titulo:      trabajo.Titulo,
+			Descripcion: trabajo.Resumen,
 		},
 	})
 }
@@ -106,7 +107,8 @@ func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "trabajos.html", TrabajoListParams{
 		Trabajos: trabajos,
 		Meta: PageMeta{
-			Title: "Trabajos",
+			Titulo:      "Trabajos",
+			Descripcion: "Trabajos originales e interesantes publicados por los autores de Vigo360.",
 		},
 	})
 }

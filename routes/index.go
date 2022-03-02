@@ -30,7 +30,8 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "index.html", IndexParams{
 		Posts: posts,
 		Meta: PageMeta{
-			Title: "Inicio",
+			Titulo:      "Inicio",
+			Descripcion: "Vigo360 es un proyecto dedicado a estudiar varios aspectos de la ciudad de Vigo (España) y su área de influencia, centrándose en la toponimia y el transporte.",
 		},
 	})
 }

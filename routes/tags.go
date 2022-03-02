@@ -45,7 +45,8 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 		Tag:   tag,
 		Posts: posts,
 		Meta: PageMeta{
-			Title: tag.Titulo,
+			Titulo:      tag.Titulo,
+			Descripcion: "Publicaciones en Vigo360 sobre " + tag.Titulo,
 		},
 	})
 }

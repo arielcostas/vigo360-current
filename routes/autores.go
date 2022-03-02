@@ -62,7 +62,8 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		Autor: autor,
 		Posts: publicaciones,
 		Meta: PageMeta{
-			Title: autor.Nombre,
+			Titulo:      autor.Nombre,
+			Descripcion: autor.Biografia,
 		},
 	})
 }
@@ -89,7 +90,8 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "autores.html", AutoresParams{
 		Autores: autores,
 		Meta: PageMeta{
-			Title: "Autores",
+			Titulo:      "Autores",
+			Descripcion: "Conoce a los autores y colaboradores de Vigo360.",
 		},
 	})
 }
