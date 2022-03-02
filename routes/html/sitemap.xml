@@ -3,9 +3,9 @@
 	{{ range .Urls }}
 	<url>
 		<loc>{{ .Uri }}</loc>
-		<lastmod>{{ .Fecha_actualizacion }}</lastmod>
-		<changefreq>{{ .Changefreq }}</changefreq>
-		<priority>{{ .Priority }}</priority>
+		{{ with .Fecha_actualizacion }}<lastmod>{{ . }}</lastmod>{{ end }}
+		{{ with .Changefreq }}<changefreq>{{ . }}</changefreq>{{ end }}
+		{{ with .Priority }}<priority>{{ . }}</priority>{{ end }}
 	</url>
 	{{ end }}
 </urlset>

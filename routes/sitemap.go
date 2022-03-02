@@ -25,6 +25,10 @@ func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 
+	pages = append(pages, SitemapQuery{Uri: "/licencias", Changefreq: "yearly", Priority: "0.3"})
+	pages = append(pages, SitemapQuery{Uri: "/contacto", Changefreq: "yearly", Priority: "0.3"})
+	pages = append(pages, SitemapQuery{Uri: "/siguenos", Changefreq: "yearly", Priority: "0.3"})
+
 	tt.ExecuteTemplate(w, "sitemap.xml", SitemapPage{
 		Urls: pages,
 	})
