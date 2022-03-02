@@ -134,6 +134,7 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/licencia`, LicenciasPage).Methods("GET")
 	router.HandleFunc(`/contacto`, ContactoPage).Methods("GET")
 
+	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
 	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
 
 	router.HandleFunc("/", IndexPage).Methods("GET")

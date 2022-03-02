@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.w3.org/2005/Atom">
+	{{ range .Urls }}
+	<url>
+		<loc>{{ .Uri }}</loc>
+		<lastmod>{{ .Fecha_actualizacion }}</lastmod>
+		<changefreq>{{ .Changefreq }}</changefreq>
+		<priority>{{ .Priority }}</priority>
+	</url>
+	{{ end }}
+</urlset>
