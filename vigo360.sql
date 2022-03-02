@@ -191,3 +191,9 @@ ALTER TABLE adjuntos ADD COLUMN titulo varchar(80) NOT NULL;
 RENAME TABLE palabras_clave TO tags;
 RENAME TABLE publicaciones_palabrasclave TO publicaciones_tags;
 ALTER TABLE publicaciones_tags RENAME COLUMN palabraclave_id TO tag_id;
+
+/*
+ *   MIGRACION 3 - Texto alternativo más largo
+ */
+ALTER TABLE publicaciones MODIFY COLUMN alt_portada varchar(300) NOT NULL,
+	MODIFY COLUMN resumen varchar(300) NOT NULL;
