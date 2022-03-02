@@ -7,6 +7,7 @@ import (
 	"log"
 	"mime"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 	texttemplate "text/template"
@@ -23,6 +24,8 @@ type NoPageData struct {
 type PageMeta struct {
 	Titulo      string
 	Descripcion string
+	Canonica    string
+	Miniatura   string
 }
 
 //go:embed html/*
@@ -37,6 +40,10 @@ var tt *texttemplate.Template
 func loadTemplates() {
 	t = template.Must(template.ParseFS(rawtemplates, "html/*.html"))
 	tt = texttemplate.Must(texttemplate.ParseFS(rawtemplates, "html/*.xml"))
+}
+
+func FullCanonica(path string) string {
+	return os.Getenv("DOMAIN") + path
 }
 
 func TestMiddleware(next http.Handler) http.Handler {
@@ -74,6 +81,7 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      "Página no encontrada",
 			Descripcion: "The requested resource could not be found in this server.",
+			Canonica:    FullCanonica(r.URL.Path),
 		},
 	})
 }
@@ -84,6 +92,7 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      "Error del servidor",
 			Descripcion: "There was a server error trying to load this page.",
+			Canonica:    FullCanonica(r.URL.Path),
 		},
 	})
 }

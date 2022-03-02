@@ -58,6 +58,8 @@ WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 		Meta: PageMeta{
 			Titulo:      post.Titulo,
 			Descripcion: post.Resumen,
+			Canonica:    FullCanonica("/post/" + post.Id),
+			Miniatura:   FullCanonica("/static/thumb/" + post.Id + ".jpg"),
 		},
 	})
 }

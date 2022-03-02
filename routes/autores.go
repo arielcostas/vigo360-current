@@ -64,6 +64,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      autor.Nombre,
 			Descripcion: autor.Biografia,
+			Canonica:    FullCanonica("/autores/" + autor.Id),
 		},
 	})
 }
@@ -92,6 +93,7 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      "Autores",
 			Descripcion: "Conoce a los autores y colaboradores de Vigo360.",
+			Canonica:    FullCanonica("/autores"),
 		},
 	})
 }

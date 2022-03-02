@@ -2,6 +2,14 @@
 <html lang="es-ES">
 	<head>
 		{{- template "_head.html" . }}
+
+		<meta property="og:title" content="{{ .Meta.Titulo }}" />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="Vigo360" />
+		<meta property="og:image" content="{{ .Meta.Miniatura }}" />
+		<meta property="og:url" content="{{ .Meta.Canonica }}" />
+		<meta property="og:locale" content="es_ES">
+		<meta property="og:description" content="{{ .Meta.Descripcion }}" />
 	</head>
 	<body>
 		{{ template "_header.html" }}

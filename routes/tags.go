@@ -47,6 +47,7 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      tag.Titulo,
 			Descripcion: "Publicaciones en Vigo360 sobre " + tag.Titulo,
+			Canonica:    FullCanonica("/tags/" + req_tagid),
 		},
 	})
 }

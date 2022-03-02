@@ -32,6 +32,7 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      "Inicio",
 			Descripcion: "Vigo360 es un proyecto dedicado a estudiar varios aspectos de la ciudad de Vigo (España) y su área de influencia, centrándose en la toponimia y el transporte.",
+			Canonica:    FullCanonica("/"),
 		},
 	})
 }

@@ -2,7 +2,7 @@
 
 - [ ] Support TOTP-based 2FA
 - [ ] Permission management
-- [ ] OpenGraph support
+- [X] OpenGraph support
 - [ ] Sitemap.xml
 - [ ] Atom feeds
 	- [X] Publicaciones

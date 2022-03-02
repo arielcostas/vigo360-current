@@ -77,6 +77,8 @@ WHERE trabajos.id = ?;`
 		Meta: PageMeta{
 			Titulo:      trabajo.Titulo,
 			Descripcion: trabajo.Resumen,
+			Canonica:    FullCanonica("/trabajos/" + trabajo.Id),
+			Miniatura:   FullCanonica("/static/thumb/" + trabajo.Id + ".jpg"),
 		},
 	})
 }
@@ -109,6 +111,7 @@ func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      "Trabajos",
 			Descripcion: "Trabajos originales e interesantes publicados por los autores de Vigo360.",
+			Canonica:    FullCanonica("/trabajos"),
 		},
 	})
 }
