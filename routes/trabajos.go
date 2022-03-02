@@ -35,6 +35,7 @@ type TrabajoAdjunto struct {
 type TrabajoParams struct {
 	Trabajo  TrabajosTrabajo
 	Adjuntos []TrabajoAdjunto
+	Meta     PageMeta
 }
 
 func TrabajoPage(w http.ResponseWriter, r *http.Request) {
@@ -73,6 +74,9 @@ WHERE trabajos.id = ?;`
 	t.ExecuteTemplate(w, "trabajos-id.html", TrabajoParams{
 		Trabajo:  trabajo,
 		Adjuntos: adjuntos,
+		Meta: PageMeta{
+			Title: trabajo.Titulo,
+		},
 	})
 }
 
@@ -80,6 +84,7 @@ WHERE trabajos.id = ?;`
 
 type TrabajoListParams struct {
 	Trabajos []TrabajosListTrabajo
+	Meta     PageMeta
 }
 
 type TrabajosListTrabajo struct {
@@ -100,5 +105,8 @@ func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
 
 	t.ExecuteTemplate(w, "trabajos.html", TrabajoListParams{
 		Trabajos: trabajos,
+		Meta: PageMeta{
+			Title: "Trabajos",
+		},
 	})
 }

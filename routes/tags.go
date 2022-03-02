@@ -22,6 +22,7 @@ type TagsIdTag struct {
 type TagsIdParams struct {
 	Tag   TagsIdTag
 	Posts []TagsIdPost
+	Meta  PageMeta
 }
 
 func TagsIdPage(w http.ResponseWriter, r *http.Request) {
@@ -43,5 +44,8 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "tags-id.html", TagsIdParams{
 		Tag:   tag,
 		Posts: posts,
+		Meta: PageMeta{
+			Title: tag.Titulo,
+		},
 	})
 }

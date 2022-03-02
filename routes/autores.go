@@ -31,6 +31,7 @@ type AutoresIdPublicacion struct {
 type AutoresIdParams struct {
 	Autor AutoresIdAutor
 	Posts []AutoresIdPublicacion
+	Meta  PageMeta
 }
 
 func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +61,9 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
 		Autor: autor,
 		Posts: publicaciones,
+		Meta: PageMeta{
+			Title: autor.Nombre,
+		},
 	})
 }
 
@@ -75,6 +79,7 @@ type AutoresAutor struct {
 
 type AutoresParams struct {
 	Autores []AutoresAutor
+	Meta    PageMeta
 }
 
 func AutoresPage(w http.ResponseWriter, r *http.Request) {
@@ -83,6 +88,9 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) {
 
 	t.ExecuteTemplate(w, "autores.html", AutoresParams{
 		Autores: autores,
+		Meta: PageMeta{
+			Title: "Autores",
+		},
 	})
 }
 

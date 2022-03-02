@@ -17,6 +17,7 @@ type IndexPost struct {
 
 type IndexParams struct {
 	Posts []IndexPost
+	Meta  PageMeta
 }
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
@@ -28,5 +29,8 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 
 	t.ExecuteTemplate(w, "index.html", IndexParams{
 		Posts: posts,
+		Meta: PageMeta{
+			Title: "Inicio",
+		},
 	})
 }

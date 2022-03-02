@@ -16,6 +16,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type NoPageData struct {
+	Meta PageMeta
+}
+
+type PageMeta struct {
+	Title string
+}
+
 //go:embed html/*
 var rawtemplates embed.FS
 
@@ -61,12 +69,20 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(404)
-	t.ExecuteTemplate(w, "_404.html", NoPageData{})
+	t.ExecuteTemplate(w, "_404.html", NoPageData{
+		Meta: PageMeta{
+			Title: "Página no encontrada",
+		},
+	})
 }
 
 func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(500)
-	t.ExecuteTemplate(w, "_500.html", NoPageData{})
+	t.ExecuteTemplate(w, "_500.html", NoPageData{
+		Meta: PageMeta{
+			Title: "Error del servidor",
+		},
+	})
 }
 
 func AuthorsToAutores(w http.ResponseWriter, r *http.Request) {
