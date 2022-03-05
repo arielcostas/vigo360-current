@@ -4,7 +4,7 @@ import (
 	"crypto/sha1"
 	"embed"
 	"encoding/base64"
-	"log"
+	"fmt"
 	"mime"
 	"net/http"
 	"regexp"
@@ -28,9 +28,11 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 
 	ext := regexp.MustCompile(`\.[A-Za-z]+$`).FindString(file)
 	bytes, err := includes.ReadFile("includes/" + file)
+
 	if err != nil {
-		// TODO error handling
-		log.Fatalf(err.Error())
+		fmt.Printf("includes " + file + ": error serving file" + err.Error())
+		NotFoundHandler(w, r)
+		return
 	}
 
 	// ETag for file not calculated
