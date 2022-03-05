@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	_ "embed"
@@ -12,7 +13,11 @@ type AdminLoginParams struct{}
 func AdminLogin(w http.ResponseWriter, r *http.Request) {
 	// Serve the form and end
 	if r.Method == http.MethodGet {
-		t.Execute(w, &AdminLoginParams{})
+		err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
+		if err != nil {
+			w.WriteHeader(500)
+			log.Println("error with admin page: " + err.Error())
+		}
 		return
 	}
 
