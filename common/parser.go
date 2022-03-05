@@ -1,4 +1,4 @@
-package parser
+package common
 
 import (
 	goldmarkfigures "github.com/mdigger/goldmark-figures"

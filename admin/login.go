@@ -1,12 +1,10 @@
-package routes
+package admin
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-
-	_ "embed"
 
 	"github.com/thanhpk/randstr"
 )
@@ -16,21 +14,15 @@ type AdminLoginParams struct {
 	PrefillName string
 }
 
-func StartSession() {
-
+func LoginPage(w http.ResponseWriter, r *http.Request) {
+	err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
+	if err != nil {
+		w.WriteHeader(500)
+		log.Println("error with admin page: " + err.Error())
+	}
 }
 
-func AdminLogin(w http.ResponseWriter, r *http.Request) {
-	// Serve the form and end
-	if r.Method == http.MethodGet {
-		err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
-		if err != nil {
-			w.WriteHeader(500)
-			log.Println("error with admin page: " + err.Error())
-		}
-		return
-	}
-
+func LoginAction(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	var row struct {

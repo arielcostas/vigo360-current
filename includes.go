@@ -1,4 +1,4 @@
-package routes
+package main
 
 import (
 	"crypto/sha1"
@@ -30,9 +30,8 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	bytes, err := includes.ReadFile("includes/" + file)
 
 	if err != nil {
-		fmt.Printf("includes " + file + ": error serving file" + err.Error())
-		NotFoundHandler(w, r)
-		return
+		fmt.Printf("error serving file: " + err.Error() + "\n")
+		http.NotFound(w, r)
 	}
 
 	// ETag for file not calculated
@@ -50,4 +49,10 @@ func GenerateEtag(body []byte) string {
 	hasher := sha1.New()
 	hasher.Write(body)
 	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+}
+
+func initIncludesRouter() *mux.Router {
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc(`/includes/{file:[\w|\.|\-|\_|ñ]+}`, includesHandler).Methods("GET")
+	return router
 }

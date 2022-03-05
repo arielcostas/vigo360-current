@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/routes"
+	"git.sr.ht/~arielcostas/new.vigo360.es/admin"
+	"git.sr.ht/~arielcostas/new.vigo360.es/common"
+	"git.sr.ht/~arielcostas/new.vigo360.es/public"
 	"github.com/joho/godotenv"
 )
 
@@ -27,5 +29,12 @@ func main() {
 	var PORT string = ":" + os.Getenv("PORT")
 
 	fmt.Println("Starting web server on " + PORT)
-	log.Fatal(http.ListenAndServe(PORT, routes.InitRouter()))
+
+	common.DatabaseInit()
+
+	http.Handle("/admin/", admin.InitRouter())
+	http.Handle("/includes/", initIncludesRouter())
+	http.Handle("/", public.InitRouter())
+
+	log.Fatal(http.ListenAndServe(PORT, nil))
 }

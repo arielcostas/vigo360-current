@@ -1,4 +1,4 @@
-package routes
+package public
 
 import (
 	"embed"
@@ -10,8 +10,13 @@ import (
 	texttemplate "text/template"
 	"time"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"github.com/gorilla/mux"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/jmoiron/sqlx"
+)
+
+var (
+	db *sqlx.DB
 )
 
 type NoPageData struct {
@@ -52,15 +57,6 @@ func TestMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func ValidatePassword(password string, hash string) bool {
-	res := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	if res != nil {
-		println(res.Error())
-		return false
-	}
-	return true
-}
-
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(404)
 	t.ExecuteTemplate(w, "_404.html", NoPageData{
@@ -96,12 +92,11 @@ func PapersToTrabajos(w http.ResponseWriter, r *http.Request) {
 }
 
 func InitRouter() *mux.Router {
-	InitDB()
+	db = common.Database
 	loadTemplates()
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(TestMiddleware)
-	router.HandleFunc("/admin/login", AdminLogin).Methods("GET", "POST")
 
 	router.HandleFunc(`/post/{postid:[A-Za-z0-9\-\_|ñ]+}`, PostPage).Methods("GET")
 
@@ -115,7 +110,6 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, AutoresIdPage).Methods("GET")
 	router.HandleFunc(`/autores`, AutoresPage).Methods("GET")
 
-	router.HandleFunc(`/includes/{file:[\w|\.|\-|\_|ñ]+}`, includesHandler).Methods("GET")
 	router.HandleFunc(`/siguenos`, SiguenosPage).Methods("GET")
 	router.HandleFunc(`/licencia`, LicenciasPage).Methods("GET")
 	router.HandleFunc(`/contacto`, ContactoPage).Methods("GET")

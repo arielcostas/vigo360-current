@@ -1,4 +1,4 @@
-package routes
+package public
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/parser"
+	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"github.com/gorilla/mux"
 )
 
@@ -49,7 +49,7 @@ WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 
 	// Result is in markdown, convert to HTML
 	var buf bytes.Buffer
-	parser.Parser.Convert([]byte(post.ContenidoRaw), &buf)
+	common.Parser.Convert([]byte(post.ContenidoRaw), &buf)
 
 	post.Contenido = template.HTML(buf.Bytes())
 
