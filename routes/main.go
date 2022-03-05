@@ -4,11 +4,8 @@ import (
 	"embed"
 	"fmt"
 	"html/template"
-	"log"
-	"mime"
 	"net/http"
 	"os"
-	"regexp"
 	"strings"
 	texttemplate "text/template"
 	"time"
@@ -30,9 +27,6 @@ type PageMeta struct {
 
 //go:embed html/*
 var rawtemplates embed.FS
-
-//go:embed includes
-var includes embed.FS
 
 var t *template.Template
 var tt *texttemplate.Template
@@ -65,19 +59,6 @@ func ValidatePassword(password string, hash string) bool {
 		return false
 	}
 	return true
-}
-
-func includesHandler(w http.ResponseWriter, r *http.Request) {
-	file := mux.Vars(r)["file"]
-	ext := regexp.MustCompile(`\.[A-Za-z]+$`).FindString(file)
-	bytes, err := includes.ReadFile("includes/" + file)
-	if err != nil {
-		// TODO error handling
-		log.Fatalf(err.Error())
-	}
-	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
-	w.Header().Add("Cache-Control", "max-age=3600")
-	w.Write(bytes)
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
