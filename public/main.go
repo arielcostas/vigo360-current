@@ -17,17 +17,6 @@ var (
 	db *sqlx.DB
 )
 
-type NoPageData struct {
-	Meta PageMeta
-}
-
-type PageMeta struct {
-	Titulo      string
-	Descripcion string
-	Canonica    string
-	Miniatura   string
-}
-
 //go:embed html/*
 var rawtemplates embed.FS
 
@@ -45,8 +34,8 @@ func FullCanonica(path string) string {
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(404)
-	t.ExecuteTemplate(w, "_404.html", NoPageData{
-		Meta: PageMeta{
+	t.ExecuteTemplate(w, "_404.html", common.NoPageData{
+		Meta: common.PageMeta{
 			Titulo:      "Página no encontrada",
 			Descripcion: "The requested resource could not be found in this server.",
 			Canonica:    FullCanonica(r.URL.Path),
@@ -56,8 +45,8 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 
 func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(500)
-	t.ExecuteTemplate(w, "_500.html", NoPageData{
-		Meta: PageMeta{
+	t.ExecuteTemplate(w, "_500.html", common.NoPageData{
+		Meta: common.PageMeta{
 			Titulo:      "Error del servidor",
 			Descripcion: "There was a server error trying to load this page.",
 			Canonica:    FullCanonica(r.URL.Path),

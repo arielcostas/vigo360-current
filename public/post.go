@@ -27,7 +27,7 @@ type PostPost struct {
 
 type PostParams struct {
 	Post PostPost
-	Meta PageMeta
+	Meta common.PageMeta
 }
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +55,7 @@ WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 
 	t.ExecuteTemplate(w, "post.html", PostParams{
 		Post: post,
-		Meta: PageMeta{
+		Meta: common.PageMeta{
 			Titulo:      post.Titulo,
 			Descripcion: post.Resumen,
 			Canonica:    FullCanonica("/post/" + post.Id),

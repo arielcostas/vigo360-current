@@ -1,0 +1,45 @@
+:root {
+	--gray: #f8f8f8;
+
+	--accent: var(--gray);
+	--background: unset;
+	--text: rgb(18, 20, 24);
+	--theme: #236535;
+
+	font-family: 'Fira Sans', Cantarell, sans-serif;
+	font-kerning: normal;
+	font-weight: 400;
+	font-size: 16px;
+
+	scroll-behavior: smooth;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+}
+
+body {
+	margin: 0 auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 100vh;
+	background-color: #f2f2f6;
+}
+
+a {
+	text-decoration: none;
+	color: var(--theme);
+	transition: color 300ms, opacity 300ms, background-color 300ms;
+}
+
+p {
+	font-family: 'Open Sans', sans-serif;
+}

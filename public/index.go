@@ -3,6 +3,8 @@ package public
 import (
 	"log"
 	"net/http"
+
+	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 )
 
 type IndexPost struct {
@@ -17,7 +19,7 @@ type IndexPost struct {
 
 type IndexParams struct {
 	Posts []IndexPost
-	Meta  PageMeta
+	Meta  common.PageMeta
 }
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +31,7 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 
 	t.ExecuteTemplate(w, "index.html", IndexParams{
 		Posts: posts,
-		Meta: PageMeta{
+		Meta: common.PageMeta{
 			Titulo:      "Inicio",
 			Descripcion: "Vigo360 es un proyecto dedicado a estudiar varios aspectos de la ciudad de Vigo (España) y su área de influencia, centrándose en la toponimia y el transporte.",
 			Canonica:    FullCanonica("/"),

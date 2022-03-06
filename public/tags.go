@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"github.com/gorilla/mux"
 )
 
@@ -22,7 +23,7 @@ type TagsIdTag struct {
 type TagsIdParams struct {
 	Tag   TagsIdTag
 	Posts []TagsIdPost
-	Meta  PageMeta
+	Meta  common.PageMeta
 }
 
 func TagsIdPage(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +45,7 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "tags-id.html", TagsIdParams{
 		Tag:   tag,
 		Posts: posts,
-		Meta: PageMeta{
+		Meta: common.PageMeta{
 			Titulo:      tag.Titulo,
 			Descripcion: "Publicaciones en Vigo360 sobre " + tag.Titulo,
 			Canonica:    FullCanonica("/tags/" + req_tagid),
