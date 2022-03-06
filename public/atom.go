@@ -1,6 +1,7 @@
 package public
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,8 +22,8 @@ type PostsAtomPost struct {
 	Autor_id     string
 	Autor_nombre string
 	Autor_email  string
-	Tag_id       string
-	Raw_tags     string
+	Tag_id       sql.NullString
+	Raw_tags     sql.NullString
 	Tags         []string
 }
 
@@ -57,6 +58,8 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 
+	var lastUpdate time.Time
+
 	for i := 0; i < len(posts); i++ {
 		p := posts[i]
 		t, _ := time.Parse("2006-01-02 15:04:05", p.Fecha_publicacion)
@@ -65,10 +68,14 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		t, _ = time.Parse("2006-01-02 15:04:05", p.Fecha_actualizacion)
 		p.Actualizacion_3339 = t.Format(time.RFC3339)
 
+		if lastUpdate.Before(t) {
+			lastUpdate = t
+		}
+
 		p.Id = url.PathEscape(p.Id)
 		p.Tags = []string{}
 
-		for _, tag := range strings.Split(p.Raw_tags, ",") {
+		for _, tag := range strings.Split(p.Raw_tags.String, ",") {
 			p.Tags = append(p.Tags, tagMap[tag])
 		}
 
@@ -78,7 +85,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/atom+xml")
 	err = tt.ExecuteTemplate(w, "atom.xml", PostsAtomParams{
 		BaseURL: os.Getenv("DOMAIN"),
-		Now:     time.Now().Format("2006-01-02T15:04:05-07:00"),
+		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
 		Posts:   posts,
 	})
 

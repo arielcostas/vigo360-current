@@ -27,7 +27,7 @@
 				<uri>{{ $domain }}/autores</uri>
 			</author>
 			{{ range .Tags }}
-				<category term="{{ . }}" />
+				{{ if ne . "" }}<category term="{{ . }}" />{{ end }}
 			{{- end}}
 		</entry>
 	{{- end}}
