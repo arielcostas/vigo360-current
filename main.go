@@ -9,6 +9,7 @@ import (
 	"git.sr.ht/~arielcostas/new.vigo360.es/admin"
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/public"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
@@ -24,6 +25,11 @@ func init() {
 	}
 }
 
+func wrapMiddleware(r *mux.Router) *mux.Router {
+	r.Use(LogMiddleware)
+	return r
+}
+
 func main() {
 	fmt.Printf("Starting vigo360 version %s\n", version)
 	var PORT string = ":" + os.Getenv("PORT")
@@ -32,9 +38,9 @@ func main() {
 
 	common.DatabaseInit()
 
-	http.Handle("/admin/", admin.InitRouter())
-	http.Handle("/includes/", initIncludesRouter())
-	http.Handle("/", public.InitRouter())
+	http.Handle("/admin/", wrapMiddleware(admin.InitRouter()))
+	http.Handle("/includes/", wrapMiddleware(initIncludesRouter()))
+	http.Handle("/", wrapMiddleware(public.InitRouter()))
 
 	log.Fatal(http.ListenAndServe(PORT, nil))
 }

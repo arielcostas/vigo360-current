@@ -2,13 +2,11 @@ package public
 
 import (
 	"embed"
-	"fmt"
 	"html/template"
 	"net/http"
 	"os"
 	"strings"
 	texttemplate "text/template"
-	"time"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"github.com/gorilla/mux"
@@ -43,18 +41,6 @@ func loadTemplates() {
 
 func FullCanonica(path string) string {
 	return os.Getenv("DOMAIN") + path
-}
-
-func TestMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("[%s] %s %s", time.Now().Format("15:04:05"), r.Method, r.RequestURI)
-		if !strings.HasSuffix(r.Referer(), r.RequestURI) {
-			fmt.Printf(" - Ref: %s\n", r.Referer())
-		} else {
-			fmt.Print("\n")
-		}
-		next.ServeHTTP(w, r)
-	})
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
@@ -96,7 +82,6 @@ func InitRouter() *mux.Router {
 	loadTemplates()
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.Use(TestMiddleware)
 
 	router.HandleFunc(`/post/{postid:[A-Za-z0-9\-\_|ñ]+}`, PostPage).Methods("GET")
 
