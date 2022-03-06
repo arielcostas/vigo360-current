@@ -33,8 +33,8 @@ type PostParams struct {
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	req_post_id := mux.Vars(r)["postid"]
 	query := `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, 
-	DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
-	DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
+	DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b. %Y') as fecha_publicacion,
+	DATE_FORMAT(publicaciones.fecha_actualizacion, '%e %b.') as fecha_actualizacion,
 	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
 FROM publicaciones 
 LEFT JOIN autores on publicaciones.autor_id = autores.id 
