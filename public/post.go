@@ -10,26 +10,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type PostPost struct {
-	Id                  string
-	Fecha_publicacion   string
-	Fecha_actualizacion string
-	Alt_portada         string
-	Titulo              string
-	Resumen             string
-	ContenidoRaw        string `db:"contenido"`
-	Contenido           template.HTML
-	Autor_id            string
-	Autor_nombre        string
-	Autor_rol           string
-	Autor_biografia     string
-}
-
-type PostParams struct {
-	Post PostPost
-	Meta common.PageMeta
-}
-
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	req_post_id := mux.Vars(r)["postid"]
 	query := `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, 
@@ -40,7 +20,7 @@ FROM publicaciones
 LEFT JOIN autores on publicaciones.autor_id = autores.id 
 WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 
-	post := PostPost{}
+	post := FullPost{}
 	row := db.QueryRowx(query, req_post_id)
 	err := row.StructScan(&post)
 	if err != nil {
@@ -53,7 +33,10 @@ WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
 
 	post.Contenido = template.HTML(buf.Bytes())
 
-	t.ExecuteTemplate(w, "post.html", PostParams{
+	t.ExecuteTemplate(w, "post.html", struct {
+		Post FullPost
+		Meta common.PageMeta
+	}{
 		Post: post,
 		Meta: common.PageMeta{
 			Titulo:      post.Titulo,

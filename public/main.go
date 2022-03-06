@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"strings"
 	texttemplate "text/template"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
@@ -55,15 +54,11 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthorsToAutores(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r,
-		strings.ReplaceAll(r.URL.String(), "/authors/", "/autores/"),
-		http.StatusMovedPermanently)
+	common.Redirect(w, r, "/authors/", "/autores/")
 }
 
 func PapersToTrabajos(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r,
-		strings.ReplaceAll(r.URL.String(), "/papers/", "/trabajos/"),
-		http.StatusMovedPermanently)
+	common.Redirect(w, r, "/papers/", "/trabajos/")
 }
 
 func InitRouter() *mux.Router {

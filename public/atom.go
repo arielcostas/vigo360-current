@@ -27,19 +27,8 @@ type PostsAtomPost struct {
 	Tags         []string
 }
 
-type PostsAtomTag struct {
-	Id     string
-	Nombre string
-}
-
-type PostsAtomParams struct {
-	BaseURL string
-	Now     string
-	Posts   []PostsAtomPost
-}
-
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
-	tags := []PostsAtomTag{}
+	tags := []Tag{}
 	tagMap := map[string]string{}
 	err := db.Select(&tags, `SELECT * FROM tags`)
 
@@ -83,7 +72,11 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "application/atom+xml")
-	err = tt.ExecuteTemplate(w, "atom.xml", PostsAtomParams{
+	err = tt.ExecuteTemplate(w, "atom.xml", struct {
+		BaseURL string
+		Now     string
+		Posts   []PostsAtomPost
+	}{
 		BaseURL: os.Getenv("DOMAIN"),
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
 		Posts:   posts,

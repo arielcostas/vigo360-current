@@ -12,7 +12,6 @@ import (
 	"github.com/yuin/goldmark/extension"
 )
 
-//#region
 type TrabajosTrabajo struct {
 	Id                  string
 	Fecha_publicacion   string
@@ -31,12 +30,6 @@ type TrabajosTrabajo struct {
 type TrabajoAdjunto struct {
 	Nombre_archivo string
 	Titulo         string
-}
-
-type TrabajoParams struct {
-	Trabajo  TrabajosTrabajo
-	Adjuntos []TrabajoAdjunto
-	Meta     common.PageMeta
 }
 
 func TrabajoPage(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +65,11 @@ WHERE trabajos.id = ?;`
 		log.Fatalf(err.Error())
 	}
 
-	t.ExecuteTemplate(w, "trabajos-id.html", TrabajoParams{
+	t.ExecuteTemplate(w, "trabajos-id.html", struct {
+		Trabajo  TrabajosTrabajo
+		Adjuntos []TrabajoAdjunto
+		Meta     common.PageMeta
+	}{
 		Trabajo:  trabajo,
 		Adjuntos: adjuntos,
 		Meta: common.PageMeta{
@@ -84,30 +81,18 @@ WHERE trabajos.id = ?;`
 	})
 }
 
-//#endregion
-
-type TrabajoListParams struct {
-	Trabajos []TrabajosListTrabajo
-	Meta     common.PageMeta
-}
-
-type TrabajosListTrabajo struct {
-	Id                string
-	Fecha_publicacion string
-	Alt_portada       string
-	Titulo            string
-	Autor_nombre      string
-}
-
 func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
-	trabajos := []TrabajosListTrabajo{}
-	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre as autor_nombre FROM trabajos LEFT JOIN autores on trabajos.autor_id = autores.id WHERE trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC`)
+	trabajos := []ResumenPost{}
+	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre FROM trabajos LEFT JOIN autores on trabajos.autor_id = autores.id WHERE trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC`)
 
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	t.ExecuteTemplate(w, "trabajos.html", TrabajoListParams{
+	t.ExecuteTemplate(w, "trabajos.html", struct {
+		Trabajos []ResumenPost
+		Meta     common.PageMeta
+	}{
 		Trabajos: trabajos,
 		Meta: common.PageMeta{
 			Titulo:      "Trabajos",
