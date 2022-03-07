@@ -27,6 +27,12 @@ type AtomPost struct {
 	Tags         []string
 }
 
+type FeedParams struct {
+	BaseURL string
+	Now     string
+	Posts   []AtomPost
+}
+
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	tags := []Tag{}
 	tagMap := map[string]string{}
@@ -72,11 +78,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "application/atom+xml")
-	err = tt.ExecuteTemplate(w, "atom.xml", struct {
-		BaseURL string
-		Now     string
-		Posts   []AtomPost
-	}{
+	err = tt.ExecuteTemplate(w, "atom.xml", &FeedParams{
 		BaseURL: os.Getenv("DOMAIN"),
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
 		Posts:   posts,
@@ -113,11 +115,7 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "application/atom+xml")
-	err = tt.ExecuteTemplate(w, "trabajos-atom.xml", struct {
-		BaseURL string
-		Now     string
-		Posts   []AtomPost
-	}{
+	err = tt.ExecuteTemplate(w, "trabajos-atom.xml", &FeedParams{
 		BaseURL: os.Getenv("DOMAIN"),
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
 		Posts:   trabajos,
