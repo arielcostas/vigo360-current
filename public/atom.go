@@ -53,21 +53,8 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 
-	var lastUpdate time.Time
-
 	for i := 0; i < len(posts); i++ {
 		p := posts[i]
-		t, _ := time.Parse("2006-01-02 15:04:05", p.Fecha_publicacion)
-		p.Publicacion_3339 = t.Format(time.RFC3339)
-
-		t, _ = time.Parse("2006-01-02 15:04:05", p.Fecha_actualizacion)
-		p.Actualizacion_3339 = t.Format(time.RFC3339)
-
-		if lastUpdate.Before(t) {
-			lastUpdate = t
-		}
-
-		p.Id = url.PathEscape(p.Id)
 		p.Tags = []string{}
 
 		for _, tag := range strings.Split(p.Raw_tags.String, ",") {
@@ -77,16 +64,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		posts[i] = p
 	}
 
-	w.Header().Add("Content-Type", "application/atom+xml")
-	err = tt.ExecuteTemplate(w, "atom.xml", &FeedParams{
-		BaseURL: os.Getenv("DOMAIN"),
-		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
-		Posts:   posts,
-	})
-
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	writeFeed(w, r, "atom.xml", posts)
 }
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -97,10 +75,14 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 
+	writeFeed(w, r, "trabajos-atom.xml", trabajos)
+}
+
+func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomPost) {
 	var lastUpdate time.Time
 
-	for i := 0; i < len(trabajos); i++ {
-		p := trabajos[i]
+	for i := 0; i < len(items); i++ {
+		p := items[i]
 		t, _ := time.Parse("2006-01-02 15:04:05", p.Fecha_publicacion)
 		p.Publicacion_3339 = t.Format(time.RFC3339)
 
@@ -115,10 +97,10 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "application/atom+xml")
-	err = tt.ExecuteTemplate(w, "trabajos-atom.xml", &FeedParams{
+	err := tt.ExecuteTemplate(w, feedName, &FeedParams{
 		BaseURL: os.Getenv("DOMAIN"),
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
-		Posts:   trabajos,
+		Posts:   items,
 	})
 
 	if err != nil {
