@@ -8,7 +8,8 @@
 	- [X] Publicaciones
 	- [ ] Por etiqueta
 	- [ ] Por autor
-	- [ ] Trabajos
+	- [X] Trabajos
+	- Links from sections via emoticon
 - [ ] JSON-LD
 	https://developers.google.com/search/docs/advanced/structured-data/search-gallery
 	- [ ] Autor
