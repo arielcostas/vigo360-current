@@ -85,6 +85,7 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
 	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
+	router.HandleFunc(`/trabajos/atom.xml`, TrabajosAtomFeed).Methods("GET")
 
 	router.HandleFunc("/", IndexPage).Methods("GET")
 
