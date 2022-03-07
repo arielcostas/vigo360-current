@@ -24,7 +24,7 @@
 			<author>
 				<name>{{ .Autor_nombre }}</name>
 				<email>{{ .Autor_email }}</email>
-				<uri>{{ $domain }}/autores</uri>
+				<uri>{{ $domain }}/autores/{{ .Autor_id }}</uri>
 			</author>
 			{{ range .Tags }}
 				{{ if ne . "" }}<category term="{{ . }}" />{{ end }}
