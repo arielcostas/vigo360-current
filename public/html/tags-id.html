@@ -8,10 +8,10 @@
 		<main id="sections">
 			<h1 id="section-title">{{ .Tag.Nombre }}</h1>
 			<ul id="section-articles">
-				{{ range .Posts }}
+				{{ range $i, $post := .Posts }}
 				<li>
-					<a href="/post/{{ .Id }}">
-						<img src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}" title="{{ .Titulo }}" loading="lazy"  />
+					<a href="/post/{{ $post.Id }}">
+						<img src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada }}" title="{{ $post.Titulo }}" {{ if gt $i 3 }} loading="lazy"{{ end }}  />
 						<div>
 							<span class="article-author">
 								{{ .Autor_nombre }} /

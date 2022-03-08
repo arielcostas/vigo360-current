@@ -40,7 +40,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
-	w.Header().Add("Cache-Control", "max-age=3600")
+	w.Header().Add("Cache-Control", "max-age=2592000")
 	w.Header().Add("ETag", etags[file])
 	w.Write(bytes)
 }

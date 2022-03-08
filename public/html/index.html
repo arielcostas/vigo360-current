@@ -9,9 +9,9 @@
 		{{ template "_header.html" }}
 		<main>
 			<div id="frontpage-articles">
-			{{- range $post := .Posts }}
+			{{- range $i, $post := .Posts }}
 				<a href="/post/{{ $post.Id }}">
-					<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}" title="{{ $post.Alt_portada }}" loading="lazy" />
+					<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }} loading="lazy"{{ end }} />
 					<div class="article-info">
 						<p class="article-author">
 							{{ $post.Autor_nombre }} / {{ $post.Fecha_publicacion }}

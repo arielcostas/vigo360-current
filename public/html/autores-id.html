@@ -34,14 +34,14 @@
 			{{ if ne (len .Posts) 0 }}
 			<h2 class="user-section-title">Artículos publicados</h2>
 			<section class="user-list">
-				{{ range .Posts }}
+				{{ range $i, $post := .Posts }}
 				<div class="user-article">
-					<a href="/post/{{ .Id }}">
+					<a href="/post/{{ $post.Id }}">
 						<div>
-							<img class="user-article-thumbnail" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}" title="{{ .Alt_portada }}" loading="lazy"  />
+							<img class="user-article-thumbnail" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }} loading="lazy"{{ end }}  />
 							<div>
-								<h3 class="user-article-title">{{ .Titulo }}</h3>
-								<p class="user-article-summary">{{ .Resumen }}</p>
+								<h3 class="user-article-title">{{ $post.Titulo }}</h3>
+								<p class="user-article-summary">{{ $post.Resumen }}</p>
 							</div>
 						</div>
 					</a>
