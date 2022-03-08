@@ -1,0 +1,63 @@
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+}
+
+header h1 {
+	text-align: center;
+}
+
+button {
+	font-weight: bold;
+	width: auto;
+}
+
+button, input {
+	font-size: 1.1rem;
+	border: 1px solid black;
+	border-radius: 4px;
+	padding: 0.5rem 1rem;
+}
+
+button.btn-theme {
+	background-color: var(--correct);
+	border-color: var(--theme);
+	color: white;
+}
+
+.dialog-error {
+	margin-bottom: 1rem;
+	color: var(--incorrect);
+	font-weight: bold;
+	margin-left: 1rem;
+}
+
+
+
+
+#login {
+	flex: 0;
+	width: 640px;
+	margin: 3rem auto;
+	background-color: #fff;
+	padding: 3rem 6rem;
+	font-size: 1.1rem;
+}
+
+#login > h2,
+#login form input {
+	margin-bottom: 1rem;
+}
+
+#login form {
+	display: flex;
+	flex-direction: column;
+}
+
+form button[type="submit"] {
+	margin-top: 0.5rem;
+}

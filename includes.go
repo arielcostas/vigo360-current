@@ -5,6 +5,7 @@ import (
 	"embed"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"mime"
 	"net/http"
 	"regexp"
@@ -17,6 +18,18 @@ var includes embed.FS
 
 // Map each file to its etag
 var etags map[string]string = make(map[string]string)
+
+func pregenerateEtags() {
+	entries, _ := includes.ReadDir("includes")
+	for _, e := range entries {
+		bytes, err := includes.ReadFile("includes/" + e.Name())
+		if err != nil {
+			log.Fatalf("error reading " + e.Name())
+		}
+		etags[e.Name()] = GenerateEtag(bytes)
+	}
+	fmt.Printf("Pregenerated etags for %d includes\n", len(entries))
+}
 
 func includesHandler(w http.ResponseWriter, r *http.Request) {
 	file := mux.Vars(r)["file"]
@@ -36,6 +49,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// ETag for file not calculated
 	if _, ok := etags[file]; !ok {
+		println("calculating etag for file " + file)
 		etags[file] = GenerateEtag(bytes)
 	}
 
@@ -52,6 +66,8 @@ func GenerateEtag(body []byte) string {
 }
 
 func initIncludesRouter() *mux.Router {
+	pregenerateEtags()
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc(`/includes/{file:[\w|\.|\-|\_|ñ]+}`, includesHandler).Methods("GET")
 	return router

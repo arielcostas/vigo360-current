@@ -13,7 +13,7 @@ import (
 var rawtemplates embed.FS
 
 var t *template.Template
-var db *sqlx.DB = common.Database
+var db *sqlx.DB
 
 func loadTemplates() {
 	t = template.Must(template.ParseFS(rawtemplates, "html/*.html"))
@@ -21,6 +21,7 @@ func loadTemplates() {
 
 func InitRouter() *mux.Router {
 	loadTemplates()
+	db = common.Database
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/admin/login", LoginPage).Methods("GET")

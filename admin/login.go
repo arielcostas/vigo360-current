@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,6 +13,12 @@ type AdminLoginParams struct {
 	PrefillName string
 }
 
+type LoginRow struct {
+	Id         string
+	Nombre     string
+	Contraseña string
+}
+
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
@@ -24,26 +29,35 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 
 func LoginAction(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
+	param_userid := r.PostFormValue("userid")
+	param_password := r.PostFormValue("password")
 
-	var row struct {
-		Id         string
-		Nombre     string
-		Contraseña string
-	}
-	err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", r.PostFormValue("userid")).StructScan(&row)
-	if err == sql.ErrNoRows {
-		//TODO log failed login
+	row := LoginRow{}
+
+	if param_userid == "" || param_password == "" {
 		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
-			PrefillName: r.PostFormValue("userid"),
+			PrefillName: param_userid,
 			LoginError:  true,
 		})
+		return
 	}
 
-	pass := ValidatePassword(r.PostFormValue("password"), row.Contraseña)
+	err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row)
+
+	if err != nil {
+		//TODO log failed login
+		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+			PrefillName: param_userid,
+			LoginError:  true,
+		})
+		return
+	}
+
+	pass := ValidatePassword(param_password, row.Contraseña)
 
 	if !pass {
 		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
-			PrefillName: r.PostFormValue("userid"),
+			PrefillName: param_userid,
 			LoginError:  true,
 		})
 		return
