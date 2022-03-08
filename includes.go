@@ -47,12 +47,6 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 	}
 
-	// ETag for file not calculated
-	if _, ok := etags[file]; !ok {
-		println("calculating etag for file " + file)
-		etags[file] = GenerateEtag(bytes)
-	}
-
 	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
 	w.Header().Add("Cache-Control", "max-age=2592000")
 	w.Header().Add("ETag", etags[file])

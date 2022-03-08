@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -65,6 +64,9 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 
 	token := randstr.String(20)
 
+	// TODO Error handling
+	db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid)
+
 	http.SetCookie(w, &http.Cookie{
 		Name:     "sess",
 		Value:    token,
@@ -75,5 +77,6 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 	})
 
-	fmt.Fprintf(w, "id => %s\nnombre => %s\ncontraseña => %t\n", row.Id, row.Nombre, pass)
+	println(param_userid + " logged in")
+	http.Redirect(w, r, "/admin/dashboard", http.StatusTemporaryRedirect)
 }
