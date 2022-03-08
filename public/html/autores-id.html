@@ -28,7 +28,7 @@
 						{{ .Autor.Biografia }}
 					</p>
 				</div>
-				<img class="profile_pic" src="/static/profile/{{ .Autor.Id }}.jpg" alt=""/>
+				<img class="profile_pic" src="/static/profile/{{ .Autor.Id }}.jpg" alt="Foto de {{ .Autor.Nombre}}"/>
 			</div>
 
 			{{ if ne (len .Posts) 0 }}

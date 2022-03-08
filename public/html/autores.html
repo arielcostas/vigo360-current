@@ -11,7 +11,7 @@
 			{{ range .Autores }}
 				<a href="/autores/{{ .Id }}">
 					<div>
-						<img src="/static/profile/{{ .Id }}.jpg" />
+						<img src="/static/profile/{{ .Id }}.jpg" alt="Foto de perfil de {{ .Nombre }}" />
 						<span class="authors-name">{{ .Nombre }}</span><br />
 						<span class="authors-role">{{ .Rol }}</span>
 						<p>{{ .Biografia }}</p>
