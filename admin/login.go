@@ -19,6 +19,7 @@ type LoginRow struct {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
+	verifyLogin(w, r)
 	err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
 		w.WriteHeader(500)
@@ -27,6 +28,8 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginAction(w http.ResponseWriter, r *http.Request) {
+	verifyLogin(w, r)
+
 	r.ParseForm()
 	param_userid := r.PostFormValue("userid")
 	param_password := r.PostFormValue("password")

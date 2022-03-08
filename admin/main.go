@@ -25,6 +25,7 @@ func verifyLogin(w http.ResponseWriter, r *http.Request) SesionRow {
 	// TODO error handling
 	cookie, err := r.Cookie("sess")
 	if err == http.ErrNoCookie && r.URL.Path != "/admin/login" {
+		println(err.Error())
 		http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
 		return SesionRow{}
 	}
