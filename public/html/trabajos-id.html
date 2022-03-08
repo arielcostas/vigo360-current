@@ -42,7 +42,7 @@
 				<div id="post-author-container">
 					<a href="/autores/{{ .Trabajo.Autor_id }}">
 						<div id="post-author-card">
-							<img class="post-author-photo" src="/static/profile/{{ .Trabajo.Autor_id }}.jpg" alt="Fotografía de perfil de {{ .Trabajo.Autor_nombre }}"/>
+							<img class="post-author-photo" src="/static/profile/{{ .Trabajo.Autor_id }}.jpg" alt="Fotografía de perfil de {{ .Trabajo.Autor_nombre }}" loading="lazy" />
 							<div class="post-author-info">
 								<h3>{{ .Trabajo.Autor_nombre }}</h3>
 								<span>{{ .Trabajo.Autor_rol}}</span>

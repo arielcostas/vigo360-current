@@ -11,7 +11,7 @@
 			<div id="frontpage-articles">
 			{{- range $post := .Posts }}
 				<a href="/post/{{ $post.Id }}">
-					<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}" title="{{ $post.Alt_portada }}"/>
+					<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}" title="{{ $post.Alt_portada }}" loading="lazy" />
 					<div class="article-info">
 						<p class="article-author">
 							{{ $post.Autor_nombre }} / {{ $post.Fecha_publicacion }}
