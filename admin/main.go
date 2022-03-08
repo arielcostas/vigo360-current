@@ -21,23 +21,23 @@ func loadTemplates() {
 	t = template.Must(template.ParseFS(rawtemplates, "html/*.html"))
 }
 
-func verifyLogin(w http.ResponseWriter, r *http.Request) SesionRow {
+func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	// TODO error handling
 	cookie, err := r.Cookie("sess")
 	if err == http.ErrNoCookie && r.URL.Path != "/admin/login" {
 		println(err.Error())
 		http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
-		return SesionRow{}
+		return Sesion{}
 	}
 
-	user := SesionRow{}
+	user := Sesion{}
 
-	err = db.QueryRowx("SELECT sessid, id, nombre, rol FROM sesiones LEFT JOIN autores ON sesiones.autor_id = autores.id WHERE sessid = ? AND revocada = false;", cookie.Value).StructScan(&user)
+	err = db.QueryRowx("SELECT id, nombre, rol FROM sesiones LEFT JOIN autores ON sesiones.autor_id = autores.id WHERE sessid = ? AND revocada = false;", cookie.Value).StructScan(&user)
 
 	if err != nil && r.URL.Path != "/admin/login" {
 		log.Println("error in login verification: " + err.Error())
 		http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
-		return SesionRow{}
+		return Sesion{}
 	}
 
 	// Logged in successfully, no sense to log in again

@@ -6,9 +6,43 @@
 	</head>
 	<body>
 		{{ template "_header.html" . }}
-		<main>
-			<h1>Bienvenido, {{ .Nombre }}</h1>
+		<main id="dashboard">
+			<p>Bienvenido al panel administrativo de Vigo360, donde podrás crear y editar tus publicaciones, trabajos y perfil de autor. Este panel se encuentra aún en fase experimental alfa, con lo que es probable que te encuentres con fallos, cosas que no funcionan o algún problema. Si es así, por favor repórtalo.</p>
+			
+			<p>Ten en cuenta que se trata de un panel básico para gestionar el contenido de Vigo360, no es un editor de texto enriquecido ni un editor de imágenes. Para hacer eso, debes utilizar un editor Markdown (como StackEdit) y un editor de imágenes (como GIMP).</p>
+			<div>
+				<section>
+					<h2>Avisos</h2>
+					<ul>
+					{{ range .Avisos }}
+						<li class="aviso">
+							<h3>{{ .Fecha_creacion }} - {{ .Titulo }}</h3>
+							<p>
+								{{ .Contenido }}
+							</p>
+						</li>
+					{{ end }}
+					</ul>
+				</section>
+
+				<section>
+					<h2>Últimas publicaciones</h2>
+					<ul>
+					{{ range .Posts }}
+						<li class="resumen-post">
+							<h3>{{ .Fecha_publicacion }} - {{ .Titulo }}</h3>
+							<p><i>{{ .Autor_nombre }}</i> - {{ .Resumen }}</p>
+						</li>
+					{{ end }}
+					</ul>
+				</section>
+				<section>
+
+				</section>
+			</div>
 		</main>
-		<footer></footer>
+		<footer>
+			<p>Copyright &copy; 2022 Ariel Costas. Reportar cualquier incidencia a <a href="mailto:ariel@vigo360.es">Ariel Costas</a>.</p>
+		</footer>
 	</body>
 </html>

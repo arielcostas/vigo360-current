@@ -219,3 +219,14 @@ CREATE VIEW sitemap AS SELECT uri, DATE(fecha_actualizacion) as fecha_actualizac
 	UNION
 	(SELECT "/" as uri, fecha_actualizacion, "0.9" as priority, "weekly" as changefreq FROM publicaciones ORDER BY fecha_actualizacion DESC LIMIT 1)
 ) as pq;
+
+/*
+ *  MIGRACION 5 - Avisos para administradores
+ */
+CREATE TABLE avisos(
+    id int NOT NULL AUTO_INCREMENT,
+    fecha_creacion datetime DEFAULT NOW(),
+    titulo varchar(100) NOT NULL,
+    contenido varchar(1000) NOT NULL,
+    PRIMARY KEY(id)
+);
