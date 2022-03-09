@@ -17,6 +17,7 @@
 	- [ ] Inicio
 - [ ] Mostrar trabajos en perfil
 - [ ] Login => next page option
+- [ ] Errors: show requested path, function or something
 
 - [ ] Post suggestions based on tags, author and date.
 	- Point system? Score based on date, keywords, same author... Posts with most points win

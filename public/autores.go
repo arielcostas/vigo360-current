@@ -2,6 +2,7 @@ package public
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"net/http"
 
@@ -26,7 +27,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 	// TODO error handling
 	err := db.QueryRowx("SELECT id, nombre, email, rol, biografia, web_url, web_titulo FROM autores WHERE id=?", req_author).StructScan(&autor)
 
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		NotFoundHandler(w, r)
 		return
 	} else if err != nil {
