@@ -69,6 +69,11 @@ func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	return user
 }
 
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(404)
+	t.ExecuteTemplate(w, "_404.html", struct{}{})
+}
+
 func InitRouter() *mux.Router {
 	loadTemplates()
 	db = common.Database
@@ -79,5 +84,6 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc("/admin/dashboard", DashboardPage).Methods("GET", "POST")
 
+	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
 	return router
 }

@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html lang="es-ES">
+<html lang="en">
 	<head>
-		<title>Página no encontrada - Vigo360</title>
+		<title>Página no encontrada - Admin Vigo360</title>
+		{{ template "_head.html" . }}
 	</head>
 	<body>
-		<h1>Página no encontrada</h1>
+		{{ template "_header.html" . }}
+		<main id="dashboard">
+			<h2>Página no encontrada</h2>
+			<p>
+				De algún modo, has llegado a una URL no encontrada. Si crees que se trata de un error, repórtalo. Pra volver al panel principal <a href="/admin/dashboard">pulsa aquí</a>.
+			</p>
+		</main>
+		<footer>
+			<p>Copyright &copy; 2022 Ariel Costas. Reportar cualquier incidencia a <a href="mailto:ariel@vigo360.es">Ariel Costas</a>.</p>
+		</footer>
 	</body>
 </html>
