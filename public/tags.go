@@ -12,7 +12,7 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 	req_tagid := mux.Vars(r)["tagid"]
 
 	tag := Tag{}
-	err := db.QueryRowx("SELECT nombre FROM tags WHERE id=?;", req_tagid).StructScan(&tag)
+	err := db.QueryRowx("SELECT id,nombre FROM tags WHERE id=?;", req_tagid).StructScan(&tag)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
