@@ -16,9 +16,10 @@ type AutoresParams struct {
 }
 
 type AutoresIdParams struct {
-	Autor Autor
-	Posts []ResumenPost
-	Meta  common.PageMeta
+	Autor    Autor
+	Posts    []ResumenPost
+	Trabajos []ResumenPost
+	Meta     common.PageMeta
 }
 
 func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
@@ -43,9 +44,18 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf(err.Error())
 	}
 
+	trabajos := []ResumenPost{}
+	// TODO error handling
+	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM trabajos WHERE autor_id = ? ORDER BY trabajos.fecha_publicacion DESC;`, req_author)
+
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+
 	t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
-		Autor: autor,
-		Posts: publicaciones,
+		Autor:    autor,
+		Posts:    publicaciones,
+		Trabajos: trabajos,
 		Meta: common.PageMeta{
 			Titulo:      autor.Nombre,
 			Descripcion: autor.Biografia,

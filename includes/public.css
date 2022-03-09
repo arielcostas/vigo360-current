@@ -104,9 +104,11 @@ main#authors {
 	max-width: 1024px;
 	margin: 3rem auto 2rem;
 
-	padding: 0;
+	padding: 1rem 2rem;
 	border-radius: 4px;
 	overflow: hidden;
+	box-shadow: var(--shadow);
+	background: #fff;
 }
 
 main#authors #section-title {
@@ -524,8 +526,7 @@ main#authors #user-info #section-title {
 #post-main {
 	max-width: 1024px;
 	margin: auto;
-	box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1),
-		0 8px 16px -8px rgba(0, 0, 0, 0.2);
+	box-shadow: var(--shadow);
 }
 
 #post-title {
@@ -701,8 +702,7 @@ code {
 	margin: 0.5rem 60% 1.5rem 0;
 	font-weight: bold;
 
-	box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1),
-		0 8px 16px -8px rgba(0, 0, 0, 0.4);
+	box-shadow: var(--shadow);
 }
 
 .post-series ul {
