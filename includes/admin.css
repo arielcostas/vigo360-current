@@ -4,9 +4,12 @@ body {
 }
 
 main {
-	flex: 1;
 	border-radius: 4px;
 	box-shadow: var(--shadow);
+	background-color: #fff;
+	max-width: 1280px;
+	margin: 2rem auto auto;
+	padding: 2rem 3rem;
 }
 
 button {
@@ -36,13 +39,9 @@ button.btn-theme {
 
 
 
-
 #login {
-	flex: 0;
 	width: 640px;
-	margin: 3rem auto;
-	background-color: #fff;
-	padding: 3rem 6rem;
+	margin: 1rem auto;
 	font-size: 1.1rem;
 }
 
@@ -58,14 +57,6 @@ button.btn-theme {
 
 form button[type="submit"] {
 	margin-top: 0.5rem;
-}
-
-
-#dashboard {
-	max-width: 1280px;
-	margin: 2rem auto;
-	background-color: white;
-	padding: 2rem 3rem;
 }
 
 #dashboard > div {

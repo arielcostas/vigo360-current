@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Publicaciones - Admin Vigo360</title>
+		{{ template "_head.html" . }}
+	</head>
+	<body>
+		{{ template "_header.html" . }}
+		<main id="post-list">
+			<h2>Gestión de artículos</h2>
+			{{ if ne (len .Posts) 0 }}
+			<ul id="post-list">
+				{{ range .Posts }}
+				<li class="list-post">
+					<a href="/admin/post/{{ .Id }}" class="posts-title">{{ .Titulo }}</a>
+					<p>{{ if .Publicado }}Publicado por{{ else }}Por{{ end }} {{ .Autor_nombre }}</p>
+				</li>
+				{{ end }}
+			</ul>
+			{{ else }}
+			<h2 class="user-section-title">No se encontró ningún artículo</h2>
+			{{ end }}
+		</main>
+		<footer>
+			<p>Copyright &copy; 2022 Ariel Costas. Reportar cualquier incidencia a <a href="mailto:ariel@vigo360.es">Ariel Costas</a>.</p>
+		</footer>
+	</body>
+</html>
