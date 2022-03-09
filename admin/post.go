@@ -17,6 +17,7 @@ type ResumenPost struct {
 }
 
 func PostListPage(w http.ResponseWriter, r *http.Request) {
+	verifyLogin(w, r)
 	posts := []ResumenPost{}
 
 	err := db.Select(&posts, `SELECT publicaciones.id, titulo, fecha_publicacion < NOW() as publicado, autor_id, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id ORDER BY fecha_publicacion DESC;`)

@@ -70,6 +70,7 @@ func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	verifyLogin(w, r)
 	w.WriteHeader(404)
 	t.ExecuteTemplate(w, "_404.html", struct{}{})
 }
