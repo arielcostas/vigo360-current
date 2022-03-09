@@ -1,9 +1,9 @@
 package common
 
 import (
-	"fmt"
 	"os"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
@@ -15,16 +15,16 @@ func DatabaseInit() {
 	var err error
 	Database, err = sqlx.Connect("mysql", dsn)
 	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("Connected to database")
+		logger.Critical("error connecting to mysql: " + err.Error())
 	}
+
+	logger.Information("database connection established")
 
 	err = Database.Ping()
 	if err != nil {
-		fmt.Println("db is not connected")
-		fmt.Println(err.Error())
+		logger.Critical("couldn't ping database: " + err.Error())
 	}
 
 	Database.Exec("SET lc_time_names = 'es_ES';")
+	logger.Information("database configured")
 }

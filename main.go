@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"os"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/admin"
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"git.sr.ht/~arielcostas/new.vigo360.es/public"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -21,7 +20,8 @@ func init() {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		cwd, _ := os.Getwd()
+		logger.Critical("unable to load .env configuration on " + cwd + ". " + err.Error())
 	}
 }
 
@@ -31,10 +31,10 @@ func wrapMiddleware(r *mux.Router) *mux.Router {
 }
 
 func main() {
-	fmt.Printf("Starting vigo360 version %s\n", version)
+	logger.Information("starting Vigo360 version " + version)
 	var PORT string = ":" + os.Getenv("PORT")
 
-	fmt.Println("Starting web server on " + PORT)
+	logger.Information("starting web server on %s", PORT)
 
 	common.DatabaseInit()
 
@@ -42,5 +42,8 @@ func main() {
 	http.Handle("/includes/", wrapMiddleware(initIncludesRouter()))
 	http.Handle("/", wrapMiddleware(public.InitRouter()))
 
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	err := http.ListenAndServe(PORT, nil)
+	if err != nil {
+		logger.Critical("error with HTTP server: " + err.Error())
+	}
 }
