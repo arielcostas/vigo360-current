@@ -6,7 +6,7 @@
 - [X] Sitemap.xml
 - [ ] Atom feeds
 	- [X] Publicaciones
-	- [ ] Por etiqueta
+	- [X] Por etiqueta
 	- [ ] Por autor
 	- [X] Trabajos
 	- Links from sections via emoticon

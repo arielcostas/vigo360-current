@@ -69,7 +69,7 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc(`/post/{postid:[A-Za-z0-9\-\_|ñ]+}`, PostPage).Methods("GET")
 
-	router.HandleFunc(`/tags/{tagid:[0-9]+}`, TagsIdPage).Methods("GET")
+	router.HandleFunc(`/tags/{tagid:[0-9]+}/`, TagsIdPage).Methods("GET")
 
 	router.HandleFunc(`/papers/{.*}`, PapersToTrabajos).Methods("GET")
 	router.HandleFunc(`/trabajos/{paperid:[A-Za-z0-9\-\_|ñ]+}`, TrabajoPage).Methods("GET")
@@ -86,6 +86,7 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
 	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
 	router.HandleFunc(`/trabajos/atom.xml`, TrabajosAtomFeed).Methods("GET")
+	router.HandleFunc(`/tags/{tagid:[0-9]+}/atom.xml`, TagsAtomFeed).Methods("GET")
 
 	router.HandleFunc("/", IndexPage).Methods("GET")
 

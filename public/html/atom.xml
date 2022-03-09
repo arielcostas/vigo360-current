@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
 	<id>{{ .BaseURL }}/</id>
-	<title>Publicaciones - Vigo360</title>
+	<title>{{ .Nombre }} - Vigo360</title>
 	<subtitle>Últimas publicaciones en el sitio web de Vigo360</subtitle>
 	<updated>{{ .Now }}</updated>
 	<contributor>

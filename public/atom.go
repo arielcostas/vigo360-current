@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
+	"github.com/gorilla/mux"
 )
 
 type AtomPost struct {
@@ -31,6 +32,7 @@ type AtomPost struct {
 
 type FeedParams struct {
 	BaseURL string
+	Nombre  string
 	Now     string
 	Posts   []AtomPost
 }
@@ -68,7 +70,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		posts[i] = p
 	}
 
-	writeFeed(w, r, "atom.xml", posts)
+	writeFeed(w, r, "atom.xml", posts, "Publicaciones")
 }
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -80,14 +82,35 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 		logger.Warning("unexpected error selecting trabajos: " + err.Error())
 	}
 
-	writeFeed(w, r, "trabajos-atom.xml", trabajos)
+	writeFeed(w, r, "trabajos-atom.xml", trabajos, "Trabajos")
 }
 
-func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomPost) {
+func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
+	tagid := mux.Vars(r)["tagid"]
+	trabajos := []AtomPost{}
+	err := db.Select(&trabajos, `SELECT publicaciones.id, publicaciones.fecha_publicacion, publicaciones.fecha_actualizacion, publicaciones.titulo, publicaciones.resumen, publicaciones.autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM publicaciones_tags LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones_tags.tag_id = ?;`, tagid)
+
+	// An unexpected error
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Warning("unexpected error selecting trabajos: " + err.Error())
+	}
+
+	var tagnombre string
+	err = db.QueryRowx(`SELECT nombre FROM tags WHERE id = ?;`, tagid).Scan(&tagnombre)
+
+	// An unexpected error
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Warning("unexpected error selecting trabajos: " + err.Error())
+	}
+
+	writeFeed(w, r, "tags-id-atom.xml", trabajos, tagnombre)
+}
+
+func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomPost, nombre string) {
 	var lastUpdate time.Time
 
 	for i := 0; i < len(items); i++ {
-		p := items[i]
+		p := &items[i]
 		t, err := time.Parse("2006-01-02 15:04:05", p.Fecha_publicacion)
 		if err != nil {
 			logger.Error("unexpected error parsing fecha_publicacion: %s", err.Error())
@@ -114,6 +137,7 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 		BaseURL: os.Getenv("DOMAIN"),
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
 		Posts:   items,
+		Nombre:  nombre,
 	})
 
 	if err != nil {
