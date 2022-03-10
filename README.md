@@ -1,21 +1,32 @@
 # New Vigo360
 
-- [ ] Support TOTP-based 2FA
-- [X] OpenGraph support
+New Vigo360 blog engine built in Go with MySQL.
+
+## TODO
+
+Things to implement before initial release.
+
+### Admin
+
+- [ ] Soporte para 2FA basada en TOTP
+- [ ] Soporte para "series" de publicaciones
+
+### Public
+
+- [X] Soporte para OpenGraph
 - [X] Sitemap.xml
-- [ ] Atom feeds
+- [ ] Feeds atom
 	- [X] Publicaciones
 	- [X] Por etiqueta
 	- [ ] Por autor
 	- [X] Trabajos
-	- [ ] Links from sections via emoticon
+	- [ ] Links desde secciones por emoticono
 - [ ] JSON-LD
 	https://developers.google.com/search/docs/advanced/structured-data/search-gallery
 	- [ ] Autor
 	- [ ] Publicación
 	- [ ] Inicio
-- [ ] Mostrar trabajos en perfil
-- [ ] Login => next page option
+- [X] Mostrar trabajos en perfil
 - [ ] Errors: show requested path, function or something
 - [ ] Soporte para "series" de publicaciones
 

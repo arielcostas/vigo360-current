@@ -22,7 +22,7 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 	autores.nombre FROM publicaciones_tags
 	LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id
     LEFT JOIN autores ON publicaciones.autor_id = autores.id
-    WHERE tag_id = ? ORDER BY publicaciones.fecha_publicacion DESC;`, req_tagid)
+    WHERE tag_id = ? AND publicaciones.fecha_publicacion IS NOT NULL AND publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;`, req_tagid)
 
 	t.ExecuteTemplate(w, "tags-id.html", struct {
 		Tag   Tag

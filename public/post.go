@@ -18,11 +18,10 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
 FROM publicaciones 
 LEFT JOIN autores on publicaciones.autor_id = autores.id 
-WHERE publicaciones.id = ? ORDER BY publicaciones.fecha_publicacion DESC;`
+WHERE publicaciones.id = ? AND publicaciones.fecha_publicacion IS NOT NULL AND publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;`
 
 	post := FullPost{}
-	row := db.QueryRowx(query, req_post_id)
-	err := row.StructScan(&post)
+	err := db.QueryRowx(query, req_post_id).StructScan(&post)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}

@@ -38,7 +38,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 
 	publicaciones := []ResumenPost{}
 	// TODO error handling
-	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM publicaciones WHERE autor_id = ? ORDER BY publicaciones.fecha_publicacion DESC;`, req_author)
+	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM publicaciones WHERE autor_id = ? AND publicaciones.fecha_publicacion IS NOT NULL AND publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;`, req_author)
 
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -46,7 +46,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 
 	trabajos := []ResumenPost{}
 	// TODO error handling
-	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM trabajos WHERE autor_id = ? ORDER BY trabajos.fecha_publicacion DESC;`, req_author)
+	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM trabajos WHERE autor_id = ? AND trabajos.fecha_publicacion IS NOT NULL AND trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC;`, req_author)
 
 	if err != nil {
 		log.Fatalf(err.Error())
