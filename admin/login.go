@@ -81,5 +81,6 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 	})
 
 	println(param_userid + " logged in")
-	http.Redirect(w, r, "/admin/dashboard", http.StatusTemporaryRedirect)
+	w.Header().Add("Location", "/admin/dashboard")
+	w.WriteHeader(http.StatusSeeOther)
 }
