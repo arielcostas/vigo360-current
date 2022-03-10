@@ -97,3 +97,12 @@ main h2 {
 	flex-direction: column;
 	flex: 2;
 }
+
+#post-list form input {
+	margin-bottom: 1rem;
+}
+
+.list-post > a {
+	font-size: 1.2em;
+	font-weight: bold;
+}
