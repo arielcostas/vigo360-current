@@ -7,7 +7,16 @@
 	<body>
 		{{ template "_header.html" . }}
 		<main id="post-editor">
-			<form action="" method="post"></form>
+			<h2>Editor de artículos</h2>
+			<form method="post">
+				<label for="art-titulo">Título del artículo</label>
+				<input type="text" name="art-titulo" id="art-titulo" placeholder="Asunto interesante" maxlength="80" required value="{{ .Post.Titulo }}">
+				<label for="art-resumen">Resumen del artículo</label>
+				<input type="text" name="art-resumen" id="art-resumen" placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular" maxlength="300" value="{{ .Post.Resumen }}" required>
+				<label for="art-contenido">Contenido del artículo</label>
+				<textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo" required>{{ .Post.Contenido }}</textarea>
+				<button type="submit" class="btn-theme">Guardar artículo</button>
+			</form>
 		</main>
 		<footer>
 			<p>Copyright &copy; 2022 Ariel Costas. Reportar cualquier incidencia a <a href="mailto:ariel@vigo360.es">Ariel Costas</a>.</p>

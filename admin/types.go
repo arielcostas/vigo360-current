@@ -19,3 +19,10 @@ type DashboardPost struct {
 	Fecha_publicacion string
 	Autor_nombre      string
 }
+
+type PostEditar struct {
+	Titulo      string
+	Resumen     string
+	Contenido   string
+	Alt_portada string
+}
