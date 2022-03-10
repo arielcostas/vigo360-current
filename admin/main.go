@@ -75,6 +75,12 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "_404.html", struct{}{})
 }
 
+func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
+	verifyLogin(w, r)
+	w.WriteHeader(500)
+	t.ExecuteTemplate(w, "_500.html", struct{}{})
+}
+
 func InitRouter() *mux.Router {
 	loadTemplates()
 	db = common.Database
@@ -85,6 +91,7 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc("/admin/dashboard", DashboardPage).Methods("GET")
 	router.HandleFunc("/admin/post", PostListPage).Methods("GET")
+	router.HandleFunc("/admin/post", CreatePostAction).Methods("POST")
 
 	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
 	return router
