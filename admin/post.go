@@ -6,7 +6,6 @@ import (
 	"errors"
 	"net/http"
 	"os"
-	"regexp"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
@@ -57,13 +56,15 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	art_autor := sesion.Id
 
 	// Article id must be below 40 characters long, with only lowercase spanish letters, numbers and dashes
-	if !regexp.MustCompile(`^[a-z|ñ|\-|\_|0-9]{3,40}$`).MatchString(art_id) {
+	if !verificarId(art_id) {
+		w.WriteHeader(400)
 		// TODO add a proper error page
 		w.Write([]byte("El id del artículo debe contener entre 3 y 40 letras minúsculas del alfabeto español, números, guiones o guiones bajos."))
 		return
 	}
 
-	if len(art_titulo) < 3 || len(art_titulo) > 80 {
+	if !verificarTitulo(art_titulo) {
+		w.WriteHeader(400)
 		w.Write([]byte("El título tiene que contener entre 3 y 80 caracteres."))
 		return
 	}
@@ -72,8 +73,9 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		// TODO add proper error page
-		w.Write([]byte("Error creando el artículo"))
+		w.WriteHeader(500)
 		logger.Error("error creating article in database: %s", err.Error())
+		w.Write([]byte("Error creando el artículo"))
 		return
 	}
 
@@ -82,15 +84,17 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	err = os.WriteFile(photopath+"/images/"+art_id+".webp", defaultImageWebp, 0o644)
 	if err != nil {
 		// TODO proper error page
+		w.WriteHeader(500)
 		logger.Error("error creating article webp: %s", err.Error())
-		w.Write([]byte("Error creating default WEBP photo"))
+		w.Write([]byte("Error creando foto WEBP predeterminada"))
 		return
 	}
 	err = os.WriteFile(photopath+"/thumb/"+art_id+".jpg", defaultImageJPG, 0o644)
 	if err != nil {
 		// TODO proper error page
+		w.WriteHeader(500)
 		logger.Error("error creating article jpg: %s", err.Error())
-		w.Write([]byte("Error creating default JPG photo"))
+		w.Write([]byte("Error creando foto JPG predeterminada"))
 		return
 	}
 
