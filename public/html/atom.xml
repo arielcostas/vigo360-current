@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+{{ safeHTML `<?xml version="1.0" encoding="utf-8"?>` }}
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
 	<id>{{ .BaseURL }}/</id>
 	<title>{{ .Nombre }} - Vigo360</title>

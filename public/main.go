@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	texttemplate "text/template"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"github.com/gorilla/mux"
@@ -19,13 +18,25 @@ var (
 //go:embed html/*
 var rawtemplates embed.FS
 
-var t *template.Template
-var tt *texttemplate.Template
+var t = func() *template.Template {
+	t := template.New("")
 
-func loadTemplates() {
-	t = template.Must(template.ParseFS(rawtemplates, "html/*.html"))
-	tt = texttemplate.Must(texttemplate.ParseFS(rawtemplates, "html/*.xml"))
-}
+	functions := template.FuncMap{
+		"safeHTML": func(text string) template.HTML {
+			return template.HTML(text)
+		},
+	}
+
+	entries, _ := rawtemplates.ReadDir("html")
+	for _, de := range entries {
+		filename := de.Name()
+		contents, _ := rawtemplates.ReadFile("html/" + filename)
+
+		t.New(filename).Funcs(functions).Parse(string(contents))
+	}
+
+	return t
+}()
 
 func FullCanonica(path string) string {
 	return os.Getenv("DOMAIN") + path
@@ -63,7 +74,6 @@ func PapersToTrabajos(w http.ResponseWriter, r *http.Request) {
 
 func InitRouter() *mux.Router {
 	db = common.Database
-	loadTemplates()
 
 	router := mux.NewRouter().StrictSlash(true)
 
