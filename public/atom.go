@@ -52,7 +52,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	posts := []AtomPost{}
-	err = db.Select(&posts, `SELECT publicaciones.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM publicaciones LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON publicaciones.autor_id = autores.id GROUP BY id;`)
+	err = db.Select(&posts, `SELECT publicaciones.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM publicaciones LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE fecha_publicacion < NOW() GROUP BY id;`)
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -75,7 +75,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 	trabajos := []AtomPost{}
-	err := db.Select(&trabajos, `SELECT trabajos.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos LEFT JOIN autores ON trabajos.autor_id = autores.id;`)
+	err := db.Select(&trabajos, `SELECT trabajos.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos LEFT JOIN autores ON trabajos.autor_id = autores.id WHERE fecha_publicacion < NOW();`)
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -88,7 +88,7 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	tagid := mux.Vars(r)["tagid"]
 	trabajos := []AtomPost{}
-	err := db.Select(&trabajos, `SELECT publicaciones.id, publicaciones.fecha_publicacion, publicaciones.fecha_actualizacion, publicaciones.titulo, publicaciones.resumen, publicaciones.autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM publicaciones_tags LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones_tags.tag_id = ?;`, tagid)
+	err := db.Select(&trabajos, `SELECT publicaciones.id, publicaciones.fecha_publicacion, publicaciones.fecha_actualizacion, publicaciones.titulo, publicaciones.resumen, publicaciones.autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM publicaciones_tags LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones_tags.tag_id = ? AND fecha_publicacion < NOW();`, tagid)
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
