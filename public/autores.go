@@ -3,10 +3,10 @@ package public
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"net/http"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
 
@@ -25,31 +25,37 @@ type AutoresIdParams struct {
 func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 	req_author := mux.Vars(r)["id"]
 	autor := Autor{}
-	// TODO error handling
+
 	err := db.QueryRowx("SELECT id, nombre, email, rol, biografia, web_url, web_titulo FROM autores WHERE id=?", req_author).StructScan(&autor)
 
 	if errors.Is(err, sql.ErrNoRows) {
+		logger.Error("[autores]: author not found with id %s", req_author)
 		NotFoundHandler(w, r)
 		return
 	} else if err != nil {
+		logger.Error("[autores]: unexpected error getting autor from database: %s", err.Error())
 		InternalServerErrorHandler(w, r)
 		return
 	}
 
 	publicaciones := []ResumenPost{}
-	// TODO error handling
+
 	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM publicaciones WHERE autor_id = ? AND publicaciones.fecha_publicacion IS NOT NULL AND publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;`, req_author)
 
-	if err != nil {
-		log.Fatalf(err.Error())
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Error("[autores]: errors fetching posts from database: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
 	}
 
 	trabajos := []ResumenPost{}
-	// TODO error handling
+
 	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM trabajos WHERE autor_id = ? AND trabajos.fecha_publicacion IS NOT NULL AND trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC;`, req_author)
 
-	if err != nil {
-		log.Fatalf(err.Error())
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Error("[autores]: errors fetching trabajos from database: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
 	}
 
 	t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{

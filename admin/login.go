@@ -1,9 +1,9 @@
 package admin
 
 import (
-	"log"
 	"net/http"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/thanhpk/randstr"
 )
 
@@ -22,8 +22,9 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	verifyLogin(w, r)
 	err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
+		logger.Error("[adminlogin]: error rendering page: %s", err.Error())
 		w.WriteHeader(500)
-		log.Println("error with admin page: " + err.Error())
+		InternalServerErrorHandler(w, r)
 	}
 }
 
@@ -47,7 +48,7 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 	err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row)
 
 	if err != nil {
-		//TODO log failed login
+		logger.Error("[login] failed login for user %s", param_userid)
 		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
@@ -67,8 +68,13 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 
 	token := randstr.String(20)
 
-	// TODO Error handling
-	db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid)
+	_, err = db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid)
+
+	if err != nil {
+		logger.Error("[login] error saving new session token %s for user %s", token, param_userid)
+		InternalServerErrorHandler(w, r)
+		return
+	}
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "sess",
@@ -80,7 +86,6 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 	})
 
-	println(param_userid + " logged in")
 	w.Header().Add("Location", "/admin/dashboard")
 	w.WriteHeader(http.StatusSeeOther)
 }

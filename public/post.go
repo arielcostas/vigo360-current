@@ -2,11 +2,13 @@ package public
 
 import (
 	"bytes"
+	"database/sql"
+	"errors"
 	"html/template"
-	"log"
 	"net/http"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
 
@@ -23,7 +25,12 @@ WHERE publicaciones.id = ? AND publicaciones.fecha_publicacion IS NOT NULL AND p
 	post := FullPost{}
 	err := db.QueryRowx(query, req_post_id).StructScan(&post)
 	if err != nil {
-		log.Fatalf(err.Error())
+		if errors.Is(err, sql.ErrNoRows) {
+			logger.Warning("[post] could not find post with that id")
+			NotFoundHandler(w, r)
+			return
+		}
+		logger.Error("[post] unexpected error fetching post from database: %s", err.Error())
 	}
 
 	// Result is in markdown, convert to HTML

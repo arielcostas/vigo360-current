@@ -28,6 +28,7 @@ Things to implement before initial release.
 	- [ ] Inicio
 - [X] Mostrar trabajos en perfil
 - [ ] Errors: show requested path, function or something
+- [ ] Errors: catch errors on page rendering and all SQL queries
 - [ ] Soporte para "series" de publicaciones
 
 - [ ] Post suggestions based on tags, author and date.

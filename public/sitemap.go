@@ -1,8 +1,11 @@
 package public
 
 import (
-	"log"
+	"database/sql"
+	"errors"
 	"net/http"
+
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
 type SitemapQuery struct {
@@ -21,8 +24,10 @@ func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
 	query := `SELECT * FROM sitemap;`
 
 	err := db.Select(&pages, query)
-	if err != nil {
-		log.Fatalf(err.Error())
+	if !errors.Is(err, sql.ErrNoRows) {
+		logger.Error("[sitemap]: unable to fetch rows: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
 	}
 
 	pages = append(pages, SitemapQuery{Uri: "/licencias", Changefreq: "yearly", Priority: "0.3"})

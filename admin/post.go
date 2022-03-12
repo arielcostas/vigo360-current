@@ -56,14 +56,14 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	art_autor := sesion.Id
 
 	// Article id must be below 40 characters long, with only lowercase spanish letters, numbers and dashes
-	if !verificarId(art_id) {
+	if !validarId(art_id) {
 		w.WriteHeader(400)
-		// TODO add a proper error page
+		// TODO proper error page
 		w.Write([]byte("El id del artículo debe contener entre 3 y 40 letras minúsculas del alfabeto español, números, guiones o guiones bajos."))
 		return
 	}
 
-	if !verificarTitulo(art_titulo) {
+	if !validarTitulo(art_titulo) {
 		w.WriteHeader(400)
 		w.Write([]byte("El título tiene que contener entre 3 y 80 caracteres."))
 		return
@@ -72,7 +72,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	_, err = db.Exec(`INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, "CAMBIAME","", "", ?);`, art_id, art_titulo, art_autor)
 
 	if err != nil {
-		// TODO add proper error page
+		// TODO proper error page
 		w.WriteHeader(500)
 		logger.Error("error creating article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))

@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"embed"
 	"encoding/base64"
-	"fmt"
 	"mime"
 	"net/http"
 	"regexp"
@@ -48,8 +47,9 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	bytes, err := includes.ReadFile("includes/" + file)
 
 	if err != nil {
-		fmt.Printf("error serving file: " + err.Error() + "\n")
-		http.NotFound(w, r)
+		logger.Error("[includes]: error serving file %s: %s", file, err.Error())
+		w.WriteHeader(404)
+		return
 	}
 
 	// Long-term cache, to reduce server load and bandwidth consumption

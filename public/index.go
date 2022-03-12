@@ -1,17 +1,21 @@
 package public
 
 import (
-	"log"
+	"database/sql"
+	"errors"
 	"net/http"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
 	posts := []ResumenPost{}
 	err := db.Select(&posts, "SELECT publicaciones.id, DATE_FORMAT(publicaciones.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, publicaciones.alt_portada, publicaciones.titulo, publicaciones.resumen, autores.nombre FROM publicaciones LEFT JOIN autores on publicaciones.autor_id = autores.id WHERE publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;")
-	if err != nil {
-		log.Fatalf(err.Error())
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Error("[index]: error fetching posts: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
 	}
 
 	t.ExecuteTemplate(w, "index.html", struct {
