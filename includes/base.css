@@ -193,6 +193,10 @@ footer div :not(:last-child) {
 	margin-right: 1rem;
 }
 
+form hr {
+	margin: 1rem 0;
+}
+
 @media screen and (max-width: 960px) {
 	footer {
 		width: 95vw;

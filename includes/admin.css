@@ -23,6 +23,10 @@ button, input, textarea {
 	padding: 0.5rem 1rem;
 }
 
+input[type="file"] {
+	border: 0;
+}
+
 button, input {
 	font-size: 1.1rem;
 }
@@ -56,7 +60,8 @@ button.btn-theme {
 
 #login > h2,
 form input, 
-form textarea {
+form textarea,
+form p {
 	margin-bottom: 1rem;
 }
 
