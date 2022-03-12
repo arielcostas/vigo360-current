@@ -112,6 +112,10 @@ main h2 {
 	font-weight: bold;
 }
 
+.list-post > a.unpublished {
+	color: var(--incorrect);
+}
+
 #post-editor {
 	width: 100%;
 }

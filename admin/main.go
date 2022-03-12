@@ -32,9 +32,9 @@ func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	return Sesion{}
 }
 
+// TODO Refactor this
 func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	cookie, err := r.Cookie("sess")
-	// TODO Refactor this block
 	if errors.Is(err, http.ErrNoCookie) && r.URL.Path != "/admin/login" {
 		logger.Notice("unauthenticated user tried accessing auth-requiring page %s", r.URL.Path)
 		return gotoLogin(w, r)

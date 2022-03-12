@@ -27,7 +27,7 @@
 				<ul id="post-list">
 					{{ range .Posts }}
 					<li class="list-post">
-						<a href="/admin/post/{{ .Id }}" class="posts-title">{{ .Titulo }}</a>
+						<a href="/admin/post/{{ .Id }}" class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
 						<p>{{ if .Publicado }}Publicado por{{ else }}Por{{ end }} {{ .Autor_nombre }}</p>
 					</li>
 					{{ end }}
