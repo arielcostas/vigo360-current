@@ -25,4 +25,5 @@ type PostEditar struct {
 	Resumen     string
 	Contenido   string
 	Alt_portada string
+	Publicado   bool
 }

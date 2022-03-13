@@ -17,7 +17,9 @@ button {
 	width: auto;
 }
 
-button, input, textarea {
+button,
+input,
+textarea {
 	border: 1px solid black;
 	border-radius: 4px;
 	padding: 0.5rem 1rem;
@@ -27,7 +29,8 @@ input[type="file"] {
 	border: 0;
 }
 
-button, input {
+button,
+input {
 	font-size: 1.1rem;
 }
 
@@ -48,7 +51,8 @@ button.btn-theme {
 	margin-left: 1rem;
 }
 
-#post-list, #dashboard {
+#post-list,
+#dashboard {
 	width: 100%;
 }
 
@@ -59,7 +63,7 @@ button.btn-theme {
 }
 
 #login > h2,
-form input, 
+input,
 form textarea,
 form p {
 	margin-bottom: 1rem;

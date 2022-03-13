@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
@@ -16,12 +17,14 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 	post_id := mux.Vars(r)["id"]
 	post := PostEditar{}
 
-	err := db.QueryRowx(`SELECT titulo, resumen, contenido, alt_portada FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
+	err := db.QueryRowx(`SELECT titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
 
 	// TODO Proper error handling
 	if err != nil {
+		logger.Error("[editor]: error getting article from database: %s", err.Error())
 		w.WriteHeader(500)
 		w.Write([]byte("error buscando el artículo en la base de datos"))
+		return
 	}
 
 	t.ExecuteTemplate(w, "post-id.html", struct {
@@ -43,6 +46,8 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	art_titulo := r.FormValue("art-titulo")
 	art_resumen := r.FormValue("art-resumen")
 	art_contenido := r.FormValue("art-contenido")
+	alt_portada := r.FormValue("alt-portada")
+	art_publicar := r.FormValue("publicar")
 
 	// TODO Proper error page
 	if !validarTitulo(art_titulo) {
@@ -63,7 +68,11 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec(`UPDATE publicaciones SET titulo=?, resumen=?, contenido=? WHERE id=?`, art_titulo, art_resumen, art_contenido, post_id)
+	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?`
+	if art_publicar == "on" {
+		query += `, fecha_publicacion = NOW()`
+	}
+	_, err = db.Exec(query+` WHERE id=?`, art_titulo, art_resumen, art_contenido, alt_portada, post_id)
 
 	// TODO Proper error page
 	if err != nil {
@@ -71,6 +80,8 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		w.Write([]byte("error guardando cambios a la base de datos"))
 	}
+
+	logger.Information("[editor] updated post %s", post_id)
 
 	// image processing
 	portada_file, portada_mime, err := r.FormFile("portada")
@@ -102,6 +113,8 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// If not, redirection shows the old value - Chapuza xD
+	time.Sleep(100 * time.Millisecond)
 	w.Header().Add("Location", "/admin/post")
 	w.WriteHeader(303)
 }

@@ -1,5 +1,5 @@
-@import url('fira-sans.css');
-@import url('open-sans.css');
+@import url("fira-sans.css");
+@import url("open-sans.css");
 
 :root {
 	--gray: #f8f8f8;
@@ -9,12 +9,14 @@
 	--text: rgb(18, 20, 24);
 	--theme: #236535;
 
-	--correct: #16A34A;
-	--incorrect: #DC2626;
+	--correct: #16a34a;
+	--alternate: #0284c7;
+	--incorrect: #dc2626;
 
-	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
+	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1),
+		0 8px 16px -8px rgba(0, 0, 0, 0.2);
 
-	font-family: 'Fira Sans', Cantarell, sans-serif;
+	font-family: "Fira Sans", Cantarell, sans-serif;
 	font-kerning: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -29,7 +31,6 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	-webkit-appearance: none;
 }
 
 body {
@@ -49,7 +50,7 @@ a {
 }
 
 p {
-	font-family: 'Open Sans', sans-serif;
+	font-family: "Open Sans", sans-serif;
 }
 
 header {

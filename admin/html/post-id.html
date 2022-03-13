@@ -15,12 +15,25 @@
 				<input type="text" name="art-resumen" id="art-resumen" placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular" maxlength="300" value="{{ .Post.Resumen }}" required>
 				<label for="art-contenido">Contenido del artículo</label>
 				<textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo" required>{{ .Post.Contenido }}</textarea>
+				
+				{{ if ne .Post.Publicado true }} 
+					<div>
+						<input type="checkbox" name="publicar" id="publicar">
+						<label for="publicar">Publicar (irreversible)</label>
+					</div>
+				{{ end }}
+
 				<hr />
 				<p>
 					Selecciona una imagen de portada. La imagen debe tener una relación de aspecto 16:9, o se verá distorsionada; además de ser menor a 20 MB. Si no se selecciona ninguna, se conservará la actual.
 				</p>
-				<input type="file" id="portada" name="portada" accept="image/png, image.jpeg"> 
-
+				
+				<input type="file" id="portada" name="portada" accept="image/png, image/jpeg">
+				
+				<label for="alt-portada">Texto alternativo de portada</label>		
+				<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required>
+				
+				
 				<button type="submit" class="btn-theme">Guardar artículo</button>
 			</form>
 		</main>
