@@ -8,7 +8,7 @@
 		<meta property="og:site_name" content="Vigo360" />
 		<meta property="og:image" content="{{ .Meta.Miniatura }}" />
 		<meta property="og:url" content="{{ .Meta.Canonica }}" />
-		<meta property="og:locale" content="es_ES">
+		<meta property="og:locale" content="es_ES" />
 		<meta property="og:description" content="{{ .Meta.Descripcion }}" />
 
 		<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
@@ -18,25 +18,30 @@
 		<main>
 			<div id="post-main">
 				<figure id="post-thumbnail">
-					<img src="/static/images/{{ .Post.Id}}.webp" alt="{{ .Post.Alt_portada }}">
+					<img src="/static/images/{{ .Post.Id}}.webp" alt="{{ .Post.Alt_portada }}" />
 					<figcaption>{{ .Post.Alt_portada }}</figcaption>
 				</figure>
-				
+
 				<h2 id="post-title">{{ .Post.Titulo }}</h2>
-				
+
 				<div id="post-info">
 					<a href="/autores/{{ .Post.Autor_id }}">{{ .Post.Autor_nombre }}</a>
-					<span>/ {{ .Post.Fecha_publicacion }} (actualizado {{ .Post.Fecha_actualizacion }})</span>
+					<span
+						>/ {{ .Post.Fecha_publicacion }} {{ if ne .Post.Fecha_actualizacion
+						.Post.Fecha_publicacion }}(actualizado {{ .Post.Fecha_actualizacion }}){{end}}</span
+					>
 				</div>
-				
-				<article id="post-inner">
-					{{ .Post.Contenido }}
-				</article>
-				
+
+				<article id="post-inner">{{ .Post.Contenido }}</article>
+
 				<div id="post-author-container">
 					<a href="/autores/{{ .Post.Autor_id }}">
 						<div id="post-author-card">
-							<img class="post-author-photo" src="/static/profile/{{ .Post.Autor_id }}.jpg" alt="Fotografía de perfil de {{ .Post.Autor_nombre }}"/>
+							<img
+								class="post-author-photo"
+								src="/static/profile/{{ .Post.Autor_id }}.jpg"
+								alt="Fotografía de perfil de {{ .Post.Autor_nombre }}"
+							/>
 							<div class="post-author-info">
 								<h3>{{ .Post.Autor_nombre }}</h3>
 								<span>{{ .Post.Autor_rol}}</span>
@@ -45,8 +50,6 @@
 						</div>
 					</a>
 				</div>
-
-
 			</div>
 		</main>
 		{{ template "_footer.html" }}
