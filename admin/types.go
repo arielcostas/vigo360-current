@@ -21,6 +21,7 @@ type DashboardPost struct {
 }
 
 type PostEditar struct {
+	Id          string
 	Titulo      string
 	Resumen     string
 	Contenido   string

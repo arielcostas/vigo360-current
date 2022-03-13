@@ -17,7 +17,7 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 	post_id := mux.Vars(r)["id"]
 	post := PostEditar{}
 
-	err := db.QueryRowx(`SELECT titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
+	err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
 
 	// TODO Proper error handling
 	if err != nil {
