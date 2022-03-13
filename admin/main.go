@@ -35,14 +35,16 @@ func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
 // TODO Refactor this
 func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	cookie, err := r.Cookie("sess")
+
 	if errors.Is(err, http.ErrNoCookie) && r.URL.Path != "/admin/login" {
 		logger.Notice("unauthenticated user tried accessing auth-requiring page %s", r.URL.Path)
 		return gotoLogin(w, r)
-	} else if err != nil && r.URL.Path != "/admin/login" {
+	}
+
+	if err != nil && r.URL.Path != "/admin/login" {
 		logger.Error("error getting session cookie: %s", err.Error())
 		return gotoLogin(w, r)
 	} else if err != nil {
-		logger.Error("error getting session cookie: %s", err.Error())
 		return Sesion{}
 	}
 
@@ -92,6 +94,7 @@ func InitRouter() *mux.Router {
 	router.HandleFunc("/admin/", redirectToDashboard).Methods("GET")
 	router.HandleFunc("/admin/login", LoginPage).Methods("GET")
 	router.HandleFunc("/admin/login", LoginAction).Methods("POST")
+	router.HandleFunc("/admin/logout", LogoutPage).Methods("GET")
 
 	router.HandleFunc("/admin/dashboard", DashboardPage).Methods("GET")
 	router.HandleFunc("/admin/post", PostListPage).Methods("GET")
