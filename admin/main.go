@@ -79,11 +79,17 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "_500.html", struct{}{})
 }
 
+func redirectToDashboard(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Location", "/admin/login")
+	w.WriteHeader(302)
+}
+
 func InitRouter() *mux.Router {
 	loadTemplates()
 	db = common.Database
 
 	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/admin/", redirectToDashboard).Methods("GET")
 	router.HandleFunc("/admin/login", LoginPage).Methods("GET")
 	router.HandleFunc("/admin/login", LoginAction).Methods("POST")
 
