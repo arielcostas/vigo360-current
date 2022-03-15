@@ -15,6 +15,8 @@
 				<input type="text" name="art-resumen" id="art-resumen" placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular" maxlength="300" value="{{ .Post.Resumen }}" required>
 				<label for="art-contenido">Contenido del artículo</label>
 				<textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo" required>{{ .Post.Contenido }}</textarea>
+				<p>Actualmente no hay una forma de subir imágenes adicionales para incluir en el artículo. Envía al
+					administrador un ZIP con las imágenes a incluir NUMERADAS, y el artículo al que se asocian.</p>
 				
 				{{ if ne .Post.Publicado true }} 
 					<div>
@@ -34,7 +36,6 @@
 				
 				<label for="alt-portada">Texto alternativo de portada</label>		
 				<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required value="{{ .Post.Alt_portada }}">
-				
 				
 				<button type="submit" class="btn-theme">Guardar artículo</button>
 			</form>

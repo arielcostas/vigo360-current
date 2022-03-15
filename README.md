@@ -8,28 +8,20 @@ Things to implement before initial release.
 
 ### Admin
 
-- [ ] Soporte para 2FA basada en TOTP
-- [ ] Soporte para "series" de publicaciones
+-   [ ] Soporte para 2FA basada en TOTP
+-   [ ] Soporte para "series" de publicaciones
+-   [ ] Editor de trabajos
+-   [-] Subida de imágenes extra a artículos
 
 ### Public
 
-- [X] Soporte para OpenGraph
-- [X] Sitemap.xml
-- [ ] Feeds atom
-	- [X] Publicaciones
-	- [X] Por etiqueta
-	- [ ] Por autor
-	- [X] Trabajos
-	- [ ] Links desde secciones por emoticono
-- [ ] JSON-LD
-	https://developers.google.com/search/docs/advanced/structured-data/search-gallery
-	- [ ] Autor
-	- [ ] Publicación
-	- [ ] Inicio
-- [X] Mostrar trabajos en perfil
-- [ ] Errors: show requested path, function or something
-- [ ] Errors: catch errors on page rendering and all SQL queries
-- [ ] Soporte para "series" de publicaciones
+-   [ ] Feed atom por autor
+-   [ ] Enlace a feeds atom desde HTML
+-   [ ] Motor de búsqueda
+    -   [ ] Soporte OpenSearch
+-   [ ] Sistema de recomendación de publicaciones
 
-- [ ] Post suggestions based on tags, author and date.
-	- Point system? Score based on date, keywords, same author... Posts with most points win
+### Otros
+
+-   [ ] Errors: show requested path, function or something
+-   [ ] Errors: catch errors on page rendering and all SQL queries
