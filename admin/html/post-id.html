@@ -25,6 +25,8 @@
 					</div>
 				{{ end }}
 
+				<p>Para incluir un artículo en una serie, contacta con el administrador indicando artículo y serie. Próximamente se podrá hacer esto desde aquí.</p>
+
 				<hr />
 				<p>
 					Selecciona una imagen de portada. La imagen debe tener una relación de aspecto 16:9, o se verá distorsionada; además de ser menor a 20 MB. Si no se selecciona ninguna, se conservará la actual.
@@ -36,7 +38,7 @@
 				
 				<label for="alt-portada">Texto alternativo de portada</label>		
 				<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required value="{{ .Post.Alt_portada }}">
-				
+
 				<button type="submit" class="btn-theme">Guardar artículo</button>
 			</form>
 		</main>

@@ -230,3 +230,16 @@ CREATE TABLE avisos(
     contenido varchar(1000) NOT NULL,
     PRIMARY KEY(id)
 );
+
+/*
+ *  MIGRACION 6 - Series de artículos
+ */
+CREATE TABLE series(
+    id varchar(40) NOT NULL,
+    titulo varchar(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE publicaciones ADD COLUMN serie_id varchar(40) DEFAULT NULL;
+ALTER TABLE publicaciones ADD COLUMN serie_posicion int DEFAULT NULL;
+ALTER TABLE publicaciones ADD FOREIGN KEY publicaciones_series(serie_id) REFERENCES series(id);

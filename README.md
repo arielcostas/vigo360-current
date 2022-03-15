@@ -9,8 +9,7 @@ Things to implement before initial release.
 ### Admin
 
 -   [ ] Soporte para 2FA basada en TOTP
--   [ ] Soporte para "series" de publicaciones
--   [ ] Editor de trabajos
+-   [x] Soporte para "series" de publicaciones
 -   [-] Subida de imágenes extra a artículos
 
 ### Public

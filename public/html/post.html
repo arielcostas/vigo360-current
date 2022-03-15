@@ -32,7 +32,26 @@
 					>
 				</div>
 
-				<article id="post-inner">{{ .Post.Contenido }}</article>
+				<article id="post-inner">
+					{{ if ne .Serie.Titulo "" }}
+					<aside class="post-series">
+						<h4>{{ .Serie.Titulo }}</h4>
+						<ul>
+							{{ $postid := .Post.Id }}
+							{{ range .Serie.Articulos }}
+							<li>
+							{{ if eq .Id $postid}}
+								<b>{{ .Titulo }}</b>
+							{{ else }}
+								<a href="/post/{{.Id}}">{{ .Titulo }}</a>
+							{{end}}
+							</li>
+						{{ end }}
+						</ul>
+					</aside>
+					{{ end }}
+					{{ .Post.Contenido }}
+				</article>
 
 				<div id="post-author-container">
 					<a href="/autores/{{ .Post.Autor_id }}">

@@ -1,6 +1,9 @@
 package public
 
-import "html/template"
+import (
+	"database/sql"
+	"html/template"
+)
 
 type Autor struct {
 	Id         string
@@ -20,6 +23,8 @@ type ResumenPost struct {
 	Resumen           string
 	Autor_id          string
 	Autor_nombre      string `db:"nombre"`
+	Serie_id          string
+	Serie_posicion    int
 }
 
 type FullPost struct {
@@ -35,6 +40,12 @@ type FullPost struct {
 	Autor_nombre        string
 	Autor_rol           string
 	Autor_biografia     string
+	Serie               sql.NullString
+}
+
+type Serie struct {
+	Titulo    string
+	Articulos []ResumenPost
 }
 
 type Tag struct {
