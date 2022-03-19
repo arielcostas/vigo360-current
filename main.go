@@ -9,24 +9,11 @@ import (
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"git.sr.ht/~arielcostas/new.vigo360.es/public"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 )
 
 var (
 	version string
 )
-
-func init() {
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		cwd, e2 := os.Getwd()
-		if e2 != nil { // Error inside an error... oops
-			logger.Critical("error getting current working directory: %s", e2.Error())
-		}
-		logger.Critical("unable to load .env configuration on %s. %s", cwd, err.Error())
-	}
-}
 
 func wrapMiddleware(r *mux.Router) *mux.Router {
 	r.Use(LogMiddleware)

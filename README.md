@@ -24,3 +24,13 @@ Things to implement before initial release.
 
 -   [ ] Errors: show requested path, function or something
 -   [ ] Errors: catch errors on page rendering and all SQL queries
+-   [ ] Cargar env desde systemd, no con godotenv
+
+## Install guide
+
+1. Clone via git and compile with `make build`
+2. Add and enable systemd service (located in `config/`)
+3. Add NGINX configuration
+4. Run SQL migrations from `_schema/` "mysql -p < _schema/*"
+5. Start systemd service and reload nginx config.
+6. Check if it works.
