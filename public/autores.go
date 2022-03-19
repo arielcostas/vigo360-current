@@ -40,7 +40,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 
 	publicaciones := []ResumenPost{}
 
-	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM publicaciones WHERE autor_id = ? AND publicaciones.fecha_publicacion IS NOT NULL AND publicaciones.fecha_publicacion < NOW() ORDER BY publicaciones.fecha_publicacion DESC;`, req_author)
+	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM PublicacionesPublicas WHERE autor_id = ? ORDER BY PublicacionesPublicas.fecha_publicacion DESC;`, req_author)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		logger.Error("[autores]: errors fetching posts from database: %s", err.Error())
@@ -50,7 +50,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 
 	trabajos := []ResumenPost{}
 
-	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM trabajos WHERE autor_id = ? AND trabajos.fecha_publicacion IS NOT NULL AND trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC;`, req_author)
+	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM TrabajosPublicos WHERE autor_id = ? ORDER BY TrabajosPublicos.fecha_publicacion DESC;`, req_author)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		logger.Error("[autores]: errors fetching trabajos from database: %s", err.Error())
