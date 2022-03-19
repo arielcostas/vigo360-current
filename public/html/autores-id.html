@@ -57,7 +57,7 @@
 			<section class="user-list">
 				{{ range $i, $trabajo := .Trabajos }}
 				<div class="user-article">
-					<a href="/post/{{ $trabajo.Id }}">
+					<a href="/trabajos/{{ $trabajo.Id }}">
 						<div>
 							<img class="user-article-thumbnail" src="/static/images/{{ $trabajo.Id }}.webp" alt="{{ $trabajo.Alt_portada }}" title="{{ $trabajo.Alt_portada }}" {{ if gt $i 3 }} loading="lazy"{{ end }}  />
 							<div>
