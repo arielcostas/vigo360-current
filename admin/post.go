@@ -69,13 +69,34 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec(`INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, "CAMBIAME","", "", ?);`, art_id, art_titulo, art_autor)
+	tx, err := db.Begin()
+	if err != nil {
+		w.WriteHeader(500)
+		logger.Error("[post] error beginning insert operation: %s" + err.Error())
+		w.Write([]byte("Error creando el artículo"))
+		tx.Rollback()
+		return
+	}
+
+	_, err = tx.Exec(`INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, "CAMBIAME","", "", ?);`, art_id, art_titulo, art_autor)
 
 	if err != nil {
 		// TODO proper error page
 		w.WriteHeader(500)
-		logger.Error("error creating article in database: %s", err.Error())
+		logger.Error("[post] error creating article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
+		tx.Rollback()
+		return
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		// TODO proper error page
+		w.WriteHeader(500)
+		logger.Error("[post] error commiting article in database: %s", err.Error())
+		w.Write([]byte("Error creando el artículo"))
+		tx.Rollback()
 		return
 	}
 
@@ -85,16 +106,18 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// TODO proper error page
 		w.WriteHeader(500)
-		logger.Error("error creating article webp: %s", err.Error())
+		logger.Error("[post] error saving article webp: %s", err.Error())
 		w.Write([]byte("Error creando foto WEBP predeterminada"))
+		tx.Rollback()
 		return
 	}
 	err = os.WriteFile(photopath+"/thumb/"+art_id+".jpg", defaultImageJPG, 0o644)
 	if err != nil {
 		// TODO proper error page
 		w.WriteHeader(500)
-		logger.Error("error creating article jpg: %s", err.Error())
+		logger.Error("[post] error saving article jpg: %s", err.Error())
 		w.Write([]byte("Error creando foto JPG predeterminada"))
+		tx.Rollback()
 		return
 	}
 
