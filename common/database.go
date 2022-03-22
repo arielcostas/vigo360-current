@@ -22,9 +22,12 @@ func DatabaseInit() {
 
 	err = Database.Ping()
 	if err != nil {
-		logger.Critical("couldn't ping database: " + err.Error())
+		logger.Critical("couldn't ping database: %s", err.Error())
 	}
 
-	Database.Exec("SET lc_time_names = 'es_ES';")
+	_, err = Database.Exec("SET lc_time_names = 'es_ES';")
+	if err != nil {
+		logger.Critical("error configuring database: %s", err.Error())
+	}
 	logger.Information("database configured")
 }

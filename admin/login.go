@@ -31,21 +31,30 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 func LoginAction(w http.ResponseWriter, r *http.Request) {
 	verifyLogin(w, r)
 
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		logger.Error("[login-action] error parsing form: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 	param_userid := r.PostFormValue("userid")
 	param_password := r.PostFormValue("password")
 
 	row := LoginRow{}
 
 	if param_userid == "" || param_password == "" {
-		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+		err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
+		if err != nil {
+			logger.Error("[login-action] error rendering template: %s", err.Error())
+			InternalServerErrorHandler(w, r)
+		}
 		return
 	}
 
-	err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row)
+	err = db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row)
 
 	if err != nil {
 		logger.Error("[login] failed login for user %s", param_userid)

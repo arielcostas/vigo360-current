@@ -18,7 +18,7 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.ExecuteTemplate(w, "index.html", struct {
+	err = t.ExecuteTemplate(w, "index.html", struct {
 		Posts []ResumenPost
 		Meta  common.PageMeta
 	}{
@@ -29,4 +29,10 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 			Canonica:    FullCanonica("/"),
 		},
 	})
+
+	if err != nil {
+		logger.Error("[index] error rendering template: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 }

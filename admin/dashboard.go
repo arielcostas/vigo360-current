@@ -29,7 +29,7 @@ func DashboardPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.ExecuteTemplate(w, "admin-dashboard.html", struct {
+	err = t.ExecuteTemplate(w, "admin-dashboard.html", struct {
 		Sesion Sesion
 		Avisos []Aviso
 		Posts  []DashboardPost
@@ -38,4 +38,8 @@ func DashboardPage(w http.ResponseWriter, r *http.Request) {
 		Avisos: avisos,
 		Posts:  posts,
 	})
+
+	if err != nil {
+		logger.Error("[dashboard]: error rendering template: %s", err.Error())
+	}
 }

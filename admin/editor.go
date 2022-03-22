@@ -23,13 +23,21 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error("[editor]: error getting article from database: %s", err.Error())
 		w.WriteHeader(500)
-		w.Write([]byte("error buscando el artículo en la base de datos"))
+		_, err2 := w.Write([]byte("error buscando el artículo en la base de datos"))
+		if err2 != nil {
+			logger.Error("[post] error showing error message: %s", err2.Error())
+		}
 		return
 	}
 
-	t.ExecuteTemplate(w, "post-id.html", struct {
+	err = t.ExecuteTemplate(w, "post-id.html", struct {
 		Post PostEditar
 	}{Post: post})
+	if err != nil {
+		logger.Error("[editor-postid] error rendering template: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 }
 
 func EditPostAction(w http.ResponseWriter, r *http.Request) {
@@ -52,19 +60,28 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	// TODO Proper error page
 	if !validarTitulo(art_titulo) {
 		w.WriteHeader(400)
-		w.Write([]byte("El título debe contener entre 3 y 80 caracteres"))
+		_, err2 := w.Write([]byte("El título debe contener entre 3 y 80 caracteres"))
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 
 	if !validarResumen(art_resumen) {
 		w.WriteHeader(400)
-		w.Write([]byte("El resumen debe contener entre 3 y 300 caracteres"))
+		_, err2 := w.Write([]byte("El resumen debe contener entre 3 y 300 caracteres"))
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 
 	if !validarContenido(art_contenido) {
 		w.WriteHeader(400)
-		w.Write([]byte("El contenido del artículo no puede estar vacío"))
+		_, err2 := w.Write([]byte("El contenido del artículo no puede estar vacío"))
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 
@@ -78,7 +95,10 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error("error saving edited post to database: %s", err.Error())
 		w.WriteHeader(400)
-		w.Write([]byte("error guardando cambios a la base de datos"))
+		_, err2 := w.Write([]byte("error guardando cambios a la base de datos"))
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 	}
 
 	logger.Information("[editor] updated post %s", post_id)

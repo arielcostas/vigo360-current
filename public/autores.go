@@ -58,7 +58,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
+	err = t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
 		Autor:    autor,
 		Posts:    publicaciones,
 		Trabajos: trabajos,
@@ -68,13 +68,24 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 			Canonica:    FullCanonica("/autores/" + autor.Id),
 		},
 	})
+
+	if err != nil {
+		logger.Error("[autores-id] error rendering template: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 }
 
 func AutoresPage(w http.ResponseWriter, r *http.Request) {
 	autores := []Autor{}
-	db.Select(&autores, `SELECT id, nombre, rol, biografia FROM autores;`)
+	err := db.Select(&autores, `SELECT id, nombre, rol, biografia FROM autores;`)
+	if err != nil {
+		logger.Error("[autores] error querying database: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 
-	t.ExecuteTemplate(w, "autores.html", AutoresParams{
+	err = t.ExecuteTemplate(w, "autores.html", AutoresParams{
 		Autores: autores,
 		Meta: common.PageMeta{
 			Titulo:      "Autores",
@@ -82,4 +93,9 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) {
 			Canonica:    FullCanonica("/autores"),
 		},
 	})
+	if err != nil {
+		logger.Error("[autores] error rendering template: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 }

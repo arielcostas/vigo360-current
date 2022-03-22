@@ -55,11 +55,16 @@ WHERE PublicacionesPublicas.id = ? ORDER BY PublicacionesPublicas.fecha_publicac
 	// TODO Do this as a template function
 	// Result is in markdown, convert to HTML
 	var buf bytes.Buffer
-	common.Parser.Convert([]byte(post.ContenidoRaw), &buf)
+	err = common.Parser.Convert([]byte(post.ContenidoRaw), &buf)
+	if err != nil {
+		logger.Error("[post] error converting markdown to HTML: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 
 	post.Contenido = template.HTML(buf.Bytes())
 
-	t.ExecuteTemplate(w, "post.html", struct {
+	err = t.ExecuteTemplate(w, "post.html", struct {
 		Post  FullPost
 		Meta  common.PageMeta
 		Serie Serie
@@ -73,4 +78,9 @@ WHERE PublicacionesPublicas.id = ? ORDER BY PublicacionesPublicas.fecha_publicac
 			Miniatura:   FullCanonica("/static/thumb/" + post.Id + ".jpg"),
 		},
 	})
+	if err != nil {
+		logger.Error("[autores] error rendering template: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
 }

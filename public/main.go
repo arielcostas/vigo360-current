@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 )
@@ -32,7 +33,10 @@ var t = func() *template.Template {
 		filename := de.Name()
 		contents, _ := rawtemplates.ReadFile("html/" + filename)
 
-		t.New(filename).Funcs(functions).Parse(string(contents))
+		_, err := t.New(filename).Funcs(functions).Parse(string(contents))
+		if err != nil {
+			logger.Critical("[public-main] error parsing template: %s", err.Error())
+		}
 	}
 
 	return t
@@ -44,24 +48,36 @@ func FullCanonica(path string) string {
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(404)
-	t.ExecuteTemplate(w, "_404.html", common.NoPageData{
+	err := t.ExecuteTemplate(w, "_404.html", common.NoPageData{
 		Meta: common.PageMeta{
 			Titulo:      "Página no encontrada",
 			Descripcion: "The requested resource could not be found in this server.",
 			Canonica:    FullCanonica(r.URL.Path),
 		},
 	})
+
+	if err != nil {
+		logger.Error("[main] error rendering 404 page: %s", err.Error())
+		//w.WriteHeader(500)
+		w.Write([]byte("La página solicitada no fue encontrada. Adicionalmente, no fue posible mostrar la página de error correspondiente."))
+		return
+	}
 }
 
 func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(500)
-	t.ExecuteTemplate(w, "_500.html", common.NoPageData{
+	err := t.ExecuteTemplate(w, "_500.html", common.NoPageData{
 		Meta: common.PageMeta{
 			Titulo:      "Error del servidor",
 			Descripcion: "There was a server error trying to load this page.",
 			Canonica:    FullCanonica(r.URL.Path),
 		},
 	})
+	if err != nil {
+		logger.Error("[main] error rendering 500 page (ironic): %s", err.Error())
+		w.Write([]byte("Error interno del servidor. Adicionalmente, la página de error no puede ser mostrada."))
+		return
+	}
 }
 
 func AuthorsToAutores(w http.ResponseWriter, r *http.Request) {

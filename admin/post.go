@@ -74,7 +74,10 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		logger.Error("[post] error beginning insert operation: %s" + err.Error())
 		w.Write([]byte("Error creando el artículo"))
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 
@@ -85,7 +88,10 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		logger.Error("[post] error creating article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 
@@ -96,7 +102,10 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		logger.Error("[post] error commiting article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 
@@ -108,7 +117,10 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		logger.Error("[post] error saving article webp: %s", err.Error())
 		w.Write([]byte("Error creando foto WEBP predeterminada"))
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 	err = os.WriteFile(photopath+"/thumb/"+art_id+".jpg", defaultImageJPG, 0o644)
@@ -117,7 +129,10 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(500)
 		logger.Error("[post] error saving article jpg: %s", err.Error())
 		w.Write([]byte("Error creando foto JPG predeterminada"))
-		tx.Rollback()
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
 		return
 	}
 

@@ -56,7 +56,11 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
 	w.Header().Add("Cache-Control", "max-age=2592000")
 	w.Header().Add("ETag", etags[file])
-	w.Write(bytes)
+	_, err = w.Write(bytes)
+	if err != nil {
+		logger.Error("[autores] error querying database: %s", err.Error())
+		return
+	}
 }
 
 // Receives the contents of a file and returns a base64-encoded SHA-1 of the file, suitable for the ETag HTTP header
