@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+if [ "$1" == "run" ];
+then
+	export $(cat .env | grep -v '^#' | xargs)
+	go run -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
+elif  [ "$1" == "build" ];
+then
+	go build -o vigo360 -ldflags "-X main.version=$(shell git rev-parse --short HEAD)" .
+else
+	printf "Vigo360 launcher script\nusage: ${0} [command]\n\n	build: compiles vigo360 to a binary to be ran in production\n	  run: runs vigo360 via in memory.\n"
+fi

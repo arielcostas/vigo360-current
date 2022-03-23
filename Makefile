@@ -1,6 +1,7 @@
 build:
-	- go build -o vigo360 -ldflags "-X main.version=$(shell git rev-parse --short HEAD)" .
+	- @echo "Building via makefile should not be used. Use `./launcher build` instead"
+	- @./launcher build
 
 run:
-	- @export $(shell cat .env | grep -v '^#' | xargs)
-	- go run -ldflags "-X main.version=$(shell git rev-parse --short HEAD)" .
+	- @echo "Running via makefile should not be used. Use \`./launcher run\` instead"
+	- @./launcher run
