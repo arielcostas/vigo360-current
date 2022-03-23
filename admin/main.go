@@ -16,7 +16,29 @@ import (
 //go:embed html/*
 var rawtemplates embed.FS
 
-var t *template.Template
+var t = func() *template.Template {
+	t := template.New("")
+
+	functions := template.FuncMap{
+		"safeHTML": func(text string) template.HTML {
+			return template.HTML(text)
+		},
+	}
+
+	entries, _ := rawtemplates.ReadDir("html")
+	for _, de := range entries {
+		filename := de.Name()
+		contents, _ := rawtemplates.ReadFile("html/" + filename)
+
+		_, err := t.New(filename).Funcs(functions).Parse(string(contents))
+		if err != nil {
+			logger.Critical("[public-main] error parsing template: %s", err.Error())
+		}
+	}
+
+	return t
+}()
+
 var db *sqlx.DB
 
 func loadTemplates() {
