@@ -2,6 +2,7 @@ package admin
 
 import (
 	"bytes"
+	"database/sql"
 	"errors"
 	"image"
 	"image/jpeg"
@@ -52,4 +53,14 @@ func generateImagesFromImage(photo io.Reader, mime *multipart.FileHeader) (porta
 	webp.Encode(&portadaWebp, portada, &webp.Options{Quality: 98})
 
 	return
+}
+
+func NewNullString(s string) sql.NullString {
+	if len(s) == 0 {
+		return sql.NullString{}
+	}
+	return sql.NullString{
+		String: s,
+		Valid:  true,
+	}
 }

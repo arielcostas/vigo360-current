@@ -75,6 +75,9 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	alt_portada := r.FormValue("alt-portada")
 	art_publicar := r.FormValue("publicar")
 
+	serie_id := r.FormValue("serie-id")
+	serie_posicion := r.FormValue("serie-num")
+
 	// TODO Proper error page
 	if !validarTitulo(art_titulo) {
 		w.WriteHeader(400)
@@ -103,11 +106,16 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?`
+	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?, serie_id=?, serie_posicion=?`
 	if art_publicar == "on" {
 		query += `, fecha_publicacion = NOW()`
 	}
-	_, err = db.Exec(query+` WHERE id=?`, art_titulo, art_resumen, art_contenido, alt_portada, post_id)
+
+	// If serie is unselected but posicion is not deleted, it will be saved, even though it doesn't make sense
+	if serie_id == "" {
+		serie_posicion = ""
+	}
+	_, err = db.Exec(query+` WHERE id=?`, art_titulo, art_resumen, art_contenido, alt_portada, NewNullString(serie_id), NewNullString(serie_posicion), post_id)
 
 	// TODO Proper error page
 	if err != nil {
