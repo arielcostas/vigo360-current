@@ -37,7 +37,8 @@
 						{{ end }}
 					</select>
 					<label for="serie-num">Posición en serie</label>
-					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion.Value }}">
+					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion.Value }}"
+						min="0" max="20">
 					<hr>
 					<p>
 						Selecciona una imagen de portada. La imagen debe tener una relación de aspecto 16:9, o se verá
