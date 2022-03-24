@@ -33,8 +33,17 @@
 						<label for="publicar">Publicar (irreversible)</label>
 					</div>
 					{{ end }}
-					<p>Para incluir un artículo en una serie, contacta con el administrador indicando artículo y serie.
-						Próximamente se podrá hacer esto desde aquí.</p>
+					<p>Solo cubrir si la publicación pertenece a una serie. Si no, dejar vacío.</p>
+					<label for="series-select">Selecciona serie</label>
+					<select name="serie-id" id="series-select">
+						<option value="">-- Ninguna serie --</option>
+						{{ $serieId := .Post.Serie_id.Value }}
+						{{ range .Series }}
+						<option value="{{ .Id }}" {{ if eq .Id $serieId}}selected{{end}}>{{ .Titulo }}</option>
+						{{ end }}
+					</select>
+					<label for="serie-num">Posición en serie</label>
+					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion.Value }}">
 					<hr>
 					<p>
 						Selecciona una imagen de portada. La imagen debe tener una relación de aspecto 16:9, o se verá

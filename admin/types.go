@@ -1,5 +1,7 @@
 package admin
 
+import "database/sql"
+
 type Sesion struct {
 	Id     string
 	Nombre string
@@ -21,10 +23,18 @@ type DashboardPost struct {
 }
 
 type PostEditar struct {
-	Id          string
-	Titulo      string
-	Resumen     string
-	Contenido   string
-	Alt_portada string
-	Publicado   bool
+	Id             string
+	Titulo         string
+	Resumen        string
+	Contenido      string
+	Alt_portada    string
+	Publicado      bool
+	Serie_id       sql.NullString
+	Serie_posicion sql.NullInt16
+}
+
+type Serie struct {
+	Id        string
+	Titulo    string
+	Articulos int
 }

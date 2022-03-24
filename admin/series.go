@@ -7,15 +7,9 @@ import (
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
-type ResumenSerie struct {
-	Id        string
-	Titulo    string
-	Articulos int
-}
-
 func ListSeries(w http.ResponseWriter, r *http.Request) {
 	verifyLogin(w, r)
-	series := []ResumenSerie{}
+	series := []Serie{}
 	err := db.Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)
 	if err != nil {
 		logger.Error("[series]: error fetching series from database: %s", err.Error())
@@ -24,7 +18,7 @@ func ListSeries(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.ExecuteTemplate(w, "series.html", struct {
-		Series []ResumenSerie
+		Series []Serie
 	}{
 		Series: series,
 	})

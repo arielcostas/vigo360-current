@@ -16,8 +16,22 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 	verifyLogin(w, r)
 	post_id := mux.Vars(r)["id"]
 	post := PostEditar{}
+	series := []Serie{}
 
-	err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
+	err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
+
+	// TODO Proper error handling
+	if err != nil {
+		logger.Error("[editor]: error getting article from database: %s", err.Error())
+		w.WriteHeader(500)
+		_, err2 := w.Write([]byte("error buscando el artículo en la base de datos"))
+		if err2 != nil {
+			logger.Error("[post] error showing error message: %s", err2.Error())
+		}
+		return
+	}
+
+	err = db.Select(&series, `SELECT * FROM series;`)
 
 	// TODO Proper error handling
 	if err != nil {
@@ -31,8 +45,12 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.ExecuteTemplate(w, "post-id.html", struct {
-		Post PostEditar
-	}{Post: post})
+		Post   PostEditar
+		Series []Serie
+	}{
+		Post:   post,
+		Series: series,
+	})
 	if err != nil {
 		logger.Error("[editor-postid] error rendering template: %s", err.Error())
 		InternalServerErrorHandler(w, r)
