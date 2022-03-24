@@ -64,6 +64,16 @@
 		</form>
 	</main>
 	{{ template "_footer.html" . }}
+	<script>
+		let seriesSelect = document.getElementById("series-select")
+		let seriesNum = document.getElementById("serie-num")
+
+		seriesNum.disabled = seriesSelect.value == ""
+
+		seriesSelect.addEventListener("change", () => {
+			seriesNum.disabled = seriesSelect.value == ""
+		})
+	</script>
 </body>
 
 </html>

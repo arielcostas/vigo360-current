@@ -30,6 +30,10 @@ input[type="file"] {
 	border: 0;
 }
 
+input[disabled] {
+	cursor: not-allowed;
+}
+
 button,
 input,
 select {
