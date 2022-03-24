@@ -146,6 +146,12 @@ main h2 {
 	flex-direction: column;
 }
 
+#post-editor textarea {
+	width: 100%;
+	flex-grow: 1;
+	resize: none;
+}
+
 #series-list > p {
 	margin-bottom: 1.5rem;
 }

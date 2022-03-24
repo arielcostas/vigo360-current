@@ -27,12 +27,6 @@
 						administrador un ZIP con las imágenes a incluir NUMERADAS, y el artículo al que se asocian.</p>
 				</div>
 				<div class="form-row">
-					{{ if ne .Post.Publicado true }}
-					<div>
-						<input type="checkbox" name="publicar" id="publicar">
-						<label for="publicar">Publicar (irreversible)</label>
-					</div>
-					{{ end }}
 					<p>Solo cubrir si la publicación pertenece a una serie. Si no, dejar vacío.</p>
 					<label for="series-select">Selecciona serie</label>
 					<select name="serie-id" id="series-select">
@@ -56,6 +50,13 @@
 					<label for="alt-portada">Texto alternativo de portada</label>
 					<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required
 						value="{{ .Post.Alt_portada }}">
+					<hr>
+					{{ if ne .Post.Publicado true }}
+					<div>
+						<input type="checkbox" name="publicar" id="publicar">
+						<label for="publicar">Publicar (irreversible)</label>
+					</div>
+					{{ end }}
 				</div>
 			</div>
 
