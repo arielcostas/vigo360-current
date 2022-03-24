@@ -125,6 +125,9 @@ func InitRouter() *mux.Router {
 	router.HandleFunc("/admin/post/{id}", EditPostPage).Methods("GET")
 	router.HandleFunc("/admin/post/{id}", EditPostAction).Methods("POST")
 
+	router.HandleFunc("/admin/series", ListSeries).Methods("GET")
+	router.HandleFunc("/admin/series", CreateSeries).Methods("POST")
+
 	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
 	return router
 }

@@ -52,7 +52,8 @@ button.btn-theme {
 }
 
 #post-list,
-#dashboard {
+#dashboard,
+#series-list {
 	width: 100%;
 }
 
@@ -110,7 +111,8 @@ main h2 {
 	flex-wrap: wrap;
 }
 
-#post-list form {
+#post-list form,
+#series-list form {
 	display: flex;
 	flex-direction: column;
 	flex: 2;
@@ -129,7 +131,8 @@ main h2 {
 	width: 100%;
 }
 
-#post-editor .form-column {
+#post-editor .form-column,
+#series-list > div {
 	display: grid;
 	grid-template-columns: 9fr 4fr;
 	gap: 2rem;
@@ -138,4 +141,8 @@ main h2 {
 #post-editor .form-row {
 	display: flex;
 	flex-direction: column;
+}
+
+#series-list > p {
+	margin-bottom: 1.5rem;
 }

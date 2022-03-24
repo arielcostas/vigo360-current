@@ -1,32 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>Inicio de Sesión - Admin Vigo360</title>
-		{{ template "_head.html" . }}
-	</head>
-	<body>
-		<header>
-			<a href="/" id="header-brand">
-				<img alt="Logo de Vigo360" src="/includes/logo.webp">
-				<span>Vigo360</span>
-			</a>
-		</header>
-		<main>
-			<div id="login">
-				<h2>Inicie sesión para continuar</h2>
-				{{ if .LoginError }}
-					<div class="dialog-error">Nombre de usuario o contraseña inválidos.</div>
-				{{ end }}
-				<form method="POST">
-					<label for="userid">ID de Usuario</label>
-					<input type="text" id="userid" name="userid"{{with .PrefillName}}value="{{.}}"{{end}} />
-					<label for="password">Contraseña</label>
-					<input type="password" id="password" name="password" />
-					<button class="btn-theme" type="submit">Iniciar sesión</button>
-					<small>Recuerde cerrar sesión antes de abandonar la página.</small>
-				</form>
-			</div>
-		</main>
-		<footer></footer>
-	</body>
+<html lang="es">
+
+<head>
+	<title>Inicio de Sesión - Admin Vigo360</title>
+	{{ template "_head.html" . }}
+</head>
+
+<body>
+	<header>
+		<a href="/" id="header-brand">
+			<img alt="Logo de Vigo360" src="/includes/logo.webp">
+			<span>Vigo360</span>
+		</a>
+	</header>
+	<main>
+		<div id="login">
+			<h2>Inicie sesión para continuar</h2>
+			{{ if .LoginError }}
+			<div class="dialog-error">Nombre de usuario o contraseña inválidos.</div>
+			{{ end }}
+			<form method="POST">
+				<label for="userid">ID de Usuario</label>
+				<input type="text" id="userid" name="userid" {{with .PrefillName}}value="{{.}}" {{end}} />
+				<label for="password">Contraseña</label>
+				<input type="password" id="password" name="password" />
+				<button class="btn-theme" type="submit">Iniciar sesión</button>
+				<small>Recuerde cerrar sesión antes de abandonar la página.</small>
+			</form>
+		</div>
+	</main>
+	{{ template "_footer.html" . }}
+</body>
+
 </html>

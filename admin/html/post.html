@@ -1,44 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>Publicaciones - Admin Vigo360</title>
-		{{ template "_head.html" . }}
-	</head>
-	<body>
-		{{ template "_header.html" . }}
-		<main id="post-list">
-			<h2>Gestión de artículos</h2>
-			<section>
-				<form action="/admin/post" method="post">
-					<h3>Crear un nuevo artículo</h3>
-					<label for="art-id">
-						ID de artículo
-						<abbr title="Obligatorio - Solo minúsculas, números y guiones, hasta 40 caracteres.">*</abbr>
-					</label>
-					<input type="text" name="art-id" id="art-id" maxlength="40" placeholder="articulo-tema" required />
-					<label for="art-titulo">
-						Título del artículo
-						<abbr title="Obligatorio - Máximo de 80 caracteres.">*</abbr>
-					</label>
-					<input type="text" name="art-titulo" id="art-titulo" placeholder="Un artículo sobre un tema" maxlength="80" required>
-					<button type="submit" class="btn-theme">Crear artículo</button>
-				</form>
-				{{ if ne (len .Posts) 0 }}
-				<ul id="post-list">
-					{{ range .Posts }}
-					<li class="list-post">
-						<a href="/admin/post/{{ .Id }}" class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
-						<p>{{ if .Publicado }}Publicado por{{ else }}Por{{ end }} {{ .Autor_nombre }}</p>
-					</li>
-					{{ end }}
-				</ul>
-				{{ else }}
-				<h2 class="user-section-title">No se encontró ningún artículo</h2>
+<html lang="es">
+
+<head>
+	<title>Publicaciones - Admin Vigo360</title>
+	{{ template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" . }}
+	<main id="post-list">
+		<h2>Gestión de artículos</h2>
+		<section>
+			<form action="/admin/post" method="post">
+				<h3>Crear un nuevo artículo</h3>
+				<label for="art-id">
+					ID de artículo
+					<abbr title="Obligatorio - Solo minúsculas, números y guiones, hasta 40 caracteres.">*</abbr>
+				</label>
+				<input type="text" name="art-id" id="art-id" maxlength="40" placeholder="articulo-tema" required />
+				<label for="art-titulo">
+					Título del artículo
+					<abbr title="Obligatorio - Máximo de 80 caracteres.">*</abbr>
+				</label>
+				<input type="text" name="art-titulo" id="art-titulo" placeholder="Un artículo sobre un tema"
+					maxlength="80" required>
+				<button type="submit" class="btn-theme">Crear artículo</button>
+			</form>
+			{{ if ne (len .Posts) 0 }}
+			<ul id="post-list">
+				{{ range .Posts }}
+				<li class="list-post">
+					<a href="/admin/post/{{ .Id }}"
+						class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
+					<p>{{ if .Publicado }}Publicado por{{ else }}Por{{ end }} {{ .Autor_nombre }}</p>
+				</li>
 				{{ end }}
-			</section>
-		</main>
-		<footer>
-			<p>Copyright &copy; 2022 Ariel Costas. Reportar cualquier incidencia a <a href="mailto:ariel@vigo360.es">Ariel Costas</a>.</p>
-		</footer>
-	</body>
+			</ul>
+			{{ else }}
+			<h2 class="user-section-title">No se encontró ningún artículo</h2>
+			{{ end }}
+		</section>
+	</main>
+	{{ template "_footer.html" . }}
+</body>
+
 </html>
