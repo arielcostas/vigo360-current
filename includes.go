@@ -54,7 +54,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Long-term cache, to reduce server load and bandwidth consumption
 	w.Header().Add("Content-Type", mime.TypeByExtension(ext))
-	w.Header().Add("Cache-Control", "max-age=2592000")
+	w.Header().Add("Cache-Control", "no-cache")
 	w.Header().Add("ETag", etags[file])
 	_, err = w.Write(bytes)
 	if err != nil {
