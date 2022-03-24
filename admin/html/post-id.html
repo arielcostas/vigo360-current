@@ -51,8 +51,8 @@
 					<label for="alt-portada">Texto alternativo de portada</label>
 					<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required
 						value="{{ .Post.Alt_portada }}">
-					<hr>
 					{{ if ne .Post.Publicado true }}
+					<hr>
 					<div>
 						<input type="checkbox" name="publicar" id="publicar">
 						<label for="publicar">Publicar (irreversible)</label>
