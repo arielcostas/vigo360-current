@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="es-ES">
-	<head>
-		{{- template "_head.html" . }}
 
-		<link rel="alternate" href="/trabajos/atom.xml" type="application/atom+xml" title="Atom">
-	</head>
-	<body>
-		{{ template "_header.html" }}
-		<main id="papers">
+<head>
+	{{- template "_head.html" . }}
+
+	<link rel="alternate" href="/trabajos/atom.xml" type="application/atom+xml" title="Atom">
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="papers">
+		<div class="title-atom">
 			<h1>Trabajos originales Vigo360</h1>
-			<div id="papers-list">
+			<a href="/trabajos/atom.xml" title="Suscripción via Atom">
+				<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" stroke-width="2"
+					stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<circle cx="5" cy="19" r="1" />
+					<path d="M4 4a16 16 0 0 1 16 16" />
+					<path d="M4 11a9 9 0 0 1 9 9" />
+				</svg>
+			</a>
+		</div>
+		<div id="papers-list">
 			{{ range .Trabajos }}
-				<article>
-					<a href="/trabajos/{{.Id}}">
-						<img src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}" title="{{ .Titulo }}"  />
-						<div>
-							<p class="article-author">{{ .Autor_nombre }}</p>
-							<h3 class="article-title">{{ .Titulo }}</h3>
-						</div>
-					</a>
-				</article>
+			<article>
+				<a href="/trabajos/{{.Id}}">
+					<img src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}" title="{{ .Titulo }}" />
+					<div>
+						<p class="article-author">{{ .Autor_nombre }}</p>
+						<h3 class="article-title">{{ .Titulo }}</h3>
+					</div>
+				</a>
+			</article>
 			{{ end }}
-			</div>
-		</main>
-		{{ template "_footer.html" }}
-	</body>
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
 </html>

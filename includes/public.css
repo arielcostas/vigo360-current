@@ -478,7 +478,7 @@ main#authors #user-info #section-title {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 2.5rem;
-	padding: 0 1.5rem;
+	padding: 1.5rem 0;
 }
 
 #papers-list > article > a > div {
@@ -820,4 +820,15 @@ code {
 	#section-articles {
 		grid-template-columns: 1fr;
 	}
+}
+
+.title-atom {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.title-atom > a {
+	line-height: 1;
 }
