@@ -183,7 +183,7 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 		p.Id = url.PathEscape(p.Id)
 	}
 
-	w.Header().Add("Content-Type", "application/atom+xml")
+	w.Header().Add("Content-Type", "application/atom+xml; charset=utf-8")
 	err := t.ExecuteTemplate(w, feedName, &FeedParams{
 		BaseURL: os.Getenv("DOMAIN"),
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
