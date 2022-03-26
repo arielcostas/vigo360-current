@@ -1,6 +1,6 @@
 {{ safeHTML `<?xml version="1.0" encoding="utf-8"?>` }}
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
-	<id>{{ .BaseURL }}/trabajos</id>
+	<id>{{ .BaseURL }}/tags/{{ .Id }}</id>
 	<title>{{ .Nombre }} - Vigo360</title>
 	<subtitle>Últimos artículos con la etiqueta {{ .Nombre }}</subtitle>
 	<updated>{{ .Now }}</updated>
@@ -9,7 +9,8 @@
 		<email>ariel@vigo360.es</email>
 		<uri>https://costas.dev/</uri>
 	</contributor>
-	<link rel="self" href="{{ .BaseURL }}/trabajos/atom.xml" />
+	<link rel="self" href="{{ .BaseURL }}/tags/{{ .Id }}/atom.xml" />
+	<link rel="alternate" href="{{ .BaseURL }}/tags/{{ .Id }}" />
 	<icon>/includes/logo.png</icon>
 
 	{{ $domain := .BaseURL }}
@@ -19,7 +20,7 @@
 			<title>{{ .Titulo }}</title>
 			<published>{{ .Publicacion_3339 }}</published>
 			<updated>{{ .Actualizacion_3339 }}</updated>
-			<link rel="alternate" href="{{ $domain }}/tags/{{ .Id }}" />
+			<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
 			<summary>{{ .Resumen }}</summary>
 			<author>
 				<name>{{ .Autor_nombre }}</name>
