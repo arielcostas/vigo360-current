@@ -1,0 +1,34 @@
+{{ safeHTML `<?xml version="1.0" encoding="utf-8"?>` }}
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
+	<id>{{ .BaseURL }}/autores/{{ .Id }}</id>
+	<title>Por {{ .Nombre }} - Vigo360</title>
+	<subtitle>Últimos artículos escritos por {{ .Nombre }}</subtitle>
+	<updated>{{ .Now }}</updated>
+	<contributor>
+		<name>Ariel Costas</name>
+		<email>ariel@vigo360.es</email>
+		<uri>{{ .BaseURL }}/autores/ariel-costas</uri>
+	</contributor>
+	<link rel="self" href="{{ .BaseURL }}/autores/{{ .Id }}/atom.xml" />
+	<icon>/includes/logo.png</icon>
+
+	{{ $domain := .BaseURL }}
+	{{- range .Posts }}
+		<entry>
+			<id>{{ $domain }}/post/{{ .Id }}</id>
+			<title>{{ .Titulo }}</title>
+			<published>{{ .Publicacion_3339 }}</published>
+			<updated>{{ .Actualizacion_3339 }}</updated>
+			<link rel="alternate" href="{{ $domain }}/tags/{{ .Id }}" />
+			<summary>{{ .Resumen }}</summary>
+			<author>
+				<name>{{ .Autor_nombre }}</name>
+				<email>{{ .Autor_email }}</email>
+				<uri>{{ $domain }}/autores/{{ .Autor_id }}</uri>
+			</author>
+			{{ range .Tags }}
+			{{ if ne . "" }}<category term="{{ . }}" />{{ end }}
+		{{- end}}
+		</entry>
+	{{- end}}
+</feed>

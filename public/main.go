@@ -113,6 +113,7 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
 	router.HandleFunc(`/trabajos/atom.xml`, TrabajosAtomFeed).Methods("GET")
 	router.HandleFunc(`/tags/{tagid:[0-9]+}/atom.xml`, TagsAtomFeed).Methods("GET")
+	router.HandleFunc(`/autores/{autorid}/atom.xml`, AutorAtomFeed).Methods("GET")
 
 	router.HandleFunc("/", IndexPage).Methods("GET")
 

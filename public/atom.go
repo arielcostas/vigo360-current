@@ -32,6 +32,7 @@ type AtomPost struct {
 
 type FeedParams struct {
 	BaseURL string
+	Id      string
 	Nombre  string
 	Now     string
 	Posts   []AtomPost
@@ -70,7 +71,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		posts[i] = p
 	}
 
-	writeFeed(w, r, "atom.xml", posts, "Publicaciones")
+	writeFeed(w, r, "atom.xml", posts, "Publicaciones", "")
 }
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +83,7 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 		logger.Warning("unexpected error selecting trabajos: " + err.Error())
 	}
 
-	writeFeed(w, r, "trabajos-atom.xml", trabajos, "Trabajos")
+	writeFeed(w, r, "trabajos-atom.xml", trabajos, "Trabajos", "")
 }
 
 func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -103,10 +104,60 @@ func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		logger.Warning("unexpected error selecting trabajos: " + err.Error())
 	}
 
-	writeFeed(w, r, "tags-id-atom.xml", trabajos, tagnombre)
+	// TODO: Use tagid
+	writeFeed(w, r, "tags-id-atom.xml", trabajos, tagnombre, tagid)
 }
 
-func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomPost, nombre string) {
+func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
+	autorid := mux.Vars(r)["autorid"]
+
+	var autor_nombre string
+	err := db.QueryRowx("SELECT nombre FROM autores WHERE id=?", autorid).Scan(&autor_nombre)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		logger.Error("autoratom: feed not found")
+		NotFoundHandler(w, r)
+		return
+	}
+
+	tags := []Tag{}
+	tagMap := map[string]string{}
+	err = db.Select(&tags, `SELECT * FROM tags`)
+
+	// An unexpected error
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Warning("unexpected error selecting tags: " + err.Error())
+	}
+
+	for _, tag := range tags {
+		tagMap[tag.Id] = tag.Nombre
+	}
+
+	posts := []AtomPost{}
+	// TODO: Clean this query
+	err = db.Select(&posts, `SELECT PublicacionesPublicas.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas LEFT JOIN publicaciones_tags ON PublicacionesPublicas.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON PublicacionesPublicas.autor_id = autores.id WHERE autor_id=? GROUP BY id;`, autorid)
+
+	// An unexpected error
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		logger.Warning("unexpected error selecting posts by author: " + err.Error())
+	}
+
+	for i := 0; i < len(posts); i++ {
+		p := posts[i]
+		p.Tags = []string{}
+
+		for _, tag := range strings.Split(p.Raw_tags.String, ",") {
+			p.Tags = append(p.Tags, tagMap[tag])
+		}
+
+		posts[i] = p
+	}
+
+	writeFeed(w, r, "autores-atom.xml", posts, "Ariel Costas", autorid)
+}
+
+func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomPost, nombre string, id string) {
+	// TODO: Refactor line above
 	var lastUpdate time.Time
 
 	for i := 0; i < len(items); i++ {
@@ -138,6 +189,7 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
 		Posts:   items,
 		Nombre:  nombre,
+		Id:      id,
 	})
 
 	if err != nil {
