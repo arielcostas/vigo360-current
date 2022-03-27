@@ -58,7 +58,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	// Article id must be below 40 characters long, with only lowercase spanish letters, numbers and dashes
 	if !validarId(art_id) {
 		w.WriteHeader(400)
-		// TODO proper error page
+		// TODO: proper error page
 		w.Write([]byte("El id del artículo debe contener entre 3 y 40 letras minúsculas del alfabeto español, números, guiones o guiones bajos."))
 		return
 	}
@@ -84,7 +84,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	_, err = tx.Exec(`INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, "CAMBIAME","", "", ?);`, art_id, art_titulo, art_autor)
 
 	if err != nil {
-		// TODO proper error page
+		// TODO: proper error page
 		w.WriteHeader(500)
 		logger.Error("[post] error creating article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
@@ -98,7 +98,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	err = tx.Commit()
 
 	if err != nil {
-		// TODO proper error page
+		// TODO: proper error page
 		w.WriteHeader(500)
 		logger.Error("[post] error commiting article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
@@ -113,7 +113,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	photopath := os.Getenv("UPLOAD_PATH")
 	err = os.WriteFile(photopath+"/images/"+art_id+".webp", defaultImageWebp, 0o644)
 	if err != nil {
-		// TODO proper error page
+		// TODO: proper error page
 		w.WriteHeader(500)
 		logger.Error("[post] error saving article webp: %s", err.Error())
 		w.Write([]byte("Error creando foto WEBP predeterminada"))
@@ -125,7 +125,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	}
 	err = os.WriteFile(photopath+"/thumb/"+art_id+".jpg", defaultImageJPG, 0o644)
 	if err != nil {
-		// TODO proper error page
+		// TODO: proper error page
 		w.WriteHeader(500)
 		logger.Error("[post] error saving article jpg: %s", err.Error())
 		w.Write([]byte("Error creando foto JPG predeterminada"))

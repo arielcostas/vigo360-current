@@ -54,7 +54,7 @@ func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	return Sesion{}
 }
 
-// TODO Refactor this
+// TODO: Refactor this
 func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	cookie, err := r.Cookie("sess")
 

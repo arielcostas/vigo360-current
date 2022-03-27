@@ -52,7 +52,7 @@ WHERE PublicacionesPublicas.id = ? ORDER BY PublicacionesPublicas.fecha_publicac
 		}
 	}
 
-	// TODO Do this as a template function
+	// TODO: Do this as a template function
 	// Result is in markdown, convert to HTML
 	var buf bytes.Buffer
 	err = common.Parser.Convert([]byte(post.ContenidoRaw), &buf)

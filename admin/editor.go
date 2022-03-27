@@ -10,7 +10,7 @@ import (
 )
 
 func EditPostPage(w http.ResponseWriter, r *http.Request) {
-	// TODO Check author is same as session
+	// TODO: Check author is same as session
 	verifyLogin(w, r)
 	post_id := mux.Vars(r)["id"]
 	post := PostEditar{}
@@ -18,7 +18,7 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 
 	err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
 
-	// TODO Proper error handling
+	// TODO: Proper error handling
 	if err != nil {
 		logger.Error("[editor]: error getting article from database: %s", err.Error())
 		w.WriteHeader(500)
@@ -31,7 +31,7 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 
 	err = db.Select(&series, `SELECT * FROM series;`)
 
-	// TODO Proper error handling
+	// TODO: Proper error handling
 	if err != nil {
 		logger.Error("[editor]: error getting article from database: %s", err.Error())
 		w.WriteHeader(500)
@@ -76,7 +76,7 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	serie_id := r.FormValue("serie-id")
 	serie_posicion := r.FormValue("serie-num")
 
-	// TODO Proper error page
+	// TODO: Proper error page
 	if !validarTitulo(art_titulo) {
 		w.WriteHeader(400)
 		_, err2 := w.Write([]byte("El título debe contener entre 3 y 80 caracteres"))
@@ -104,7 +104,7 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO Refactor this utter piece of crap
+	// TODO: Refactor this utter piece of crap
 	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?, serie_id=?, serie_posicion=?`
 	if art_publicar == "on" {
 		query += `, fecha_publicacion = NOW()`
@@ -116,7 +116,7 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	}
 	_, err = db.Exec(query+` WHERE id=?`, art_titulo, art_resumen, art_contenido, alt_portada, NewNullString(serie_id), NewNullString(serie_posicion), post_id)
 
-	// TODO Proper error page
+	// TODO: Proper error page
 	if err != nil {
 		logger.Error("[editor] error saving edited post to database: %s", err.Error())
 		w.WriteHeader(400)
