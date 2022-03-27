@@ -25,7 +25,8 @@ func DatabaseInit() {
 		logger.Critical("couldn't ping database: %s", err.Error())
 	}
 
-	_, err = Database.Exec("SET lc_time_names = 'es_ES';")
+	Database.Exec("SET lc_time_names = 'es_ES';")
+	_, err = Database.Exec("SET @@session.time_zone='+00:00';")
 	if err != nil {
 		logger.Critical("error configuring database: %s", err.Error())
 	}
