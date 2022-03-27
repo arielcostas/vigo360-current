@@ -58,7 +58,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("ETag", etags[file])
 	_, err = w.Write(bytes)
 	if err != nil {
-		logger.Error("[autores] error querying database: %s", err.Error())
+		logger.Error("[includes] error writing file %s: %", file, err.Error())
 		return
 	}
 }
@@ -68,7 +68,7 @@ func GenerateEtag(body []byte) string {
 	hasher := sha1.New()
 	_, err := hasher.Write(body)
 	if err != nil {
-		logger.Error("error generating body hash: " + err.Error())
+		logger.Error("[load] error generating body hash: %s", err.Error())
 	}
 	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 }

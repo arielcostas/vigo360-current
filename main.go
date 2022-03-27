@@ -34,6 +34,6 @@ func main() {
 
 	err := http.ListenAndServe(PORT, nil)
 	if err != nil {
-		logger.Critical("error with HTTP server: " + err.Error())
+		logger.Critical("error with HTTP server: %s", err.Error())
 	}
 }

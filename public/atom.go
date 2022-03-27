@@ -44,7 +44,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting tags: " + err.Error())
+		logger.Warning("[atom] unexpected error selecting tags: %s", err.Error())
 	}
 
 	for _, tag := range tags {
@@ -56,7 +56,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting posts: " + err.Error())
+		logger.Warning("[atom] unexpected error selecting posts: %s", err.Error())
 	}
 
 	for i := 0; i < len(posts); i++ {
@@ -79,7 +79,7 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting trabajos: " + err.Error())
+		logger.Warning("[atom] unexpected error selecting trabajos: %s", err.Error())
 	}
 
 	writeFeed(w, r, "trabajos-atom.xml", trabajos, "Trabajos", "")
@@ -92,7 +92,7 @@ func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting trabajos: " + err.Error())
+		logger.Warning("[atom] unexpected error selecting posts for tag %s: %s", tagid, err.Error())
 	}
 
 	var tagnombre string
@@ -100,7 +100,7 @@ func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting trabajos: " + err.Error())
+		logger.Warning("[atom] unexpected error fetching tags: %s", err.Error())
 	}
 
 	// TODO: Use tagid
@@ -114,7 +114,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
 	err := db.QueryRowx("SELECT nombre FROM autores WHERE id=?", autorid).Scan(&autor_nombre)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		logger.Error("autoratom: feed not found")
+		logger.Error("[atom] autor not found")
 		NotFoundHandler(w, r)
 		return
 	}
@@ -125,7 +125,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting tags: " + err.Error())
+		logger.Warning("[atom] unexpected error selecting tags: %s", err.Error())
 	}
 
 	for _, tag := range tags {
@@ -138,7 +138,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("unexpected error selecting posts by author: " + err.Error())
+		logger.Warning("[atom] unexpected error selecting posts by author %s: %s", autorid, err.Error())
 	}
 
 	for i := 0; i < len(posts); i++ {

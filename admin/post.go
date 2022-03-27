@@ -72,7 +72,7 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	tx, err := db.Begin()
 	if err != nil {
 		w.WriteHeader(500)
-		logger.Error("[post] error beginning insert operation: %s" + err.Error())
+		logger.Error("[post] error beginning insert operation: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
 		err2 := tx.Rollback()
 		if err2 != nil {

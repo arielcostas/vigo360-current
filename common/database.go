@@ -15,7 +15,7 @@ func DatabaseInit() {
 	var err error
 	Database, err = sqlx.Connect("mysql", dsn)
 	if err != nil {
-		logger.Critical("error connecting to mysql: " + err.Error())
+		logger.Critical("error connecting to mysql: %s", err.Error())
 	}
 
 	logger.Information("database connection established")
