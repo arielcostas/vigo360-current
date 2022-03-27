@@ -138,22 +138,14 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	if !errors.Is(err, http.ErrMissingFile) {
 		portadaJpg, portadaWebp := generateImagesFromImage(portada_file, portada_mime)
 
-		file, err := os.Create(os.Getenv("UPLOAD_PATH") + "/thumb/" + post_id + ".jpg")
+		err = os.WriteFile(os.Getenv("UPLOAD_PATH")+"/thumb/"+post_id+".jpg", portadaJpg.Bytes(), os.ModePerm)
 		if err != nil {
-			log.Fatalf("error opening file for writing: %s", err)
-		}
-		_, err = file.Write(portadaJpg.Bytes())
-		if err != nil {
-			log.Fatalf("error writing file: %s", err)
+			log.Fatalf("error writing jpg image: %s", err)
 		}
 
-		file, err = os.Create(os.Getenv("UPLOAD_PATH") + "/images/" + post_id + ".webp")
+		err = os.WriteFile(os.Getenv("UPLOAD_PATH")+"/images/"+post_id+".webp", portadaWebp.Bytes(), os.ModePerm)
 		if err != nil {
-			log.Fatalf("error opening file for writing: %s", err)
-		}
-		_, err = file.Write(portadaWebp.Bytes())
-		if err != nil {
-			log.Fatalf("error writing file: %s", err)
+			log.Fatalf("error writing webp file: %s", err)
 		}
 	}
 

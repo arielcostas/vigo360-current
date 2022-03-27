@@ -34,12 +34,13 @@ func ValidatePassword(password string, hash string) bool {
 func generateImagesFromImage(photo io.Reader, mime *multipart.FileHeader) (portadaJpg bytes.Buffer, portadaWebp bytes.Buffer) {
 	var portada image.Image
 	var err error
-	if strings.HasSuffix(mime.Filename, "png") {
+	switch {
+	case strings.HasSuffix(mime.Filename, "png"):
 		portada, err = png.Decode(photo)
-	} else if strings.HasSuffix(mime.Filename, "jpg") {
+	case strings.HasSuffix(mime.Filename, "jpg"):
 		portada, err = jpeg.Decode(photo)
-	} else {
-		portada, _, err = image.Decode(photo)
+	case strings.HasSuffix(mime.Filename, "webp"):
+		portada, err = webp.Decode(photo)
 	}
 	if err != nil {
 		log.Fatalln("error imagen 78:" + err.Error())
