@@ -8,12 +8,10 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
-	"log"
-	"mime/multipart"
-	"strings"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/chai2010/webp"
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/nfnt/resize"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -31,19 +29,34 @@ func ValidatePassword(password string, hash string) bool {
 	return false
 }
 
-func generateImagesFromImage(photo io.Reader, mime *multipart.FileHeader) (portadaJpg bytes.Buffer, portadaWebp bytes.Buffer) {
+func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaWebp bytes.Buffer, err error) {
 	var portada image.Image
-	var err error
-	switch {
-	case strings.HasSuffix(mime.Filename, "png"):
-		portada, err = png.Decode(photo)
-	case strings.HasSuffix(mime.Filename, "jpg"):
-		portada, err = jpeg.Decode(photo)
-	case strings.HasSuffix(mime.Filename, "webp"):
-		portada, err = webp.Decode(photo)
-	}
+	photoBytes, err := io.ReadAll(photo)
 	if err != nil {
-		log.Fatalln("error imagen 78:" + err.Error())
+		return
+	}
+	portadaJpg = bytes.Buffer{}
+	portadaWebp = bytes.Buffer{}
+
+	ctype := mimetype.Detect(photoBytes)
+	if err != nil {
+		return
+	}
+
+	switch {
+	case ctype.Is("image/png"):
+		portada, err = png.Decode(bytes.NewReader(photoBytes))
+	case ctype.Is("image/jpeg"):
+		portada, err = jpeg.Decode(bytes.NewReader(photoBytes))
+	case ctype.Is("image/webp"):
+		portada, err = webp.Decode(bytes.NewReader(photoBytes))
+	default:
+		err = InvalidImageFormatError
+		return
+	}
+
+	if err != nil {
+		return
 	}
 
 	// Resize to 800x450

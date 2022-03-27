@@ -1,6 +1,9 @@
 package admin
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+)
 
 type Sesion struct {
 	Id     string
@@ -38,3 +41,5 @@ type Serie struct {
 	Titulo    string
 	Articulos int
 }
+
+var InvalidImageFormatError error = errors.New("invalid image MIME type")

@@ -2,7 +2,6 @@ package admin
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"os"
 
@@ -105,6 +104,7 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO Refactor this utter piece of crap
 	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?, serie_id=?, serie_posicion=?`
 	if art_publicar == "on" {
 		query += `, fecha_publicacion = NOW()`
@@ -118,34 +118,43 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 
 	// TODO Proper error page
 	if err != nil {
-		logger.Error("error saving edited post to database: %s", err.Error())
+		logger.Error("[editor] error saving edited post to database: %s", err.Error())
 		w.WriteHeader(400)
 		_, err2 := w.Write([]byte("error guardando cambios a la base de datos"))
 		if err2 != nil {
-			logger.Error("[post] error reverting database: %s", err2.Error())
+			logger.Error("[editor] error reverting database: %s", err2.Error())
 		}
 	}
 
 	logger.Information("[editor] updated post %s", post_id)
 
 	// image processing
-	portada_file, portada_mime, err := r.FormFile("portada")
+	portada_file, _, err := r.FormFile("portada")
 
 	if err != nil && !errors.Is(err, http.ErrMissingFile) {
-		log.Fatalln("error imagen 71:" + err.Error())
+		logger.Error("[editor] unexpected error extracting image: %s:", err.Error())
+		return
 	}
 
 	if !errors.Is(err, http.ErrMissingFile) {
-		portadaJpg, portadaWebp := generateImagesFromImage(portada_file, portada_mime)
+		portadaJpg, portadaWebp, err := generateImagesFromImage(portada_file)
+		if errors.Is(err, InvalidImageFormatError) {
+			logger.Error("[editor] user uploaded image with invalid mime")
+			w.Write([]byte("La imagen subida no tiene un formato válido"))
+			return
+		} else if err != nil {
+			logger.Error("unexpected error generating images: %s", err)
+			return
+		}
 
 		err = os.WriteFile(os.Getenv("UPLOAD_PATH")+"/thumb/"+post_id+".jpg", portadaJpg.Bytes(), os.ModePerm)
 		if err != nil {
-			log.Fatalf("error writing jpg image: %s", err)
+			logger.Error("[editor] error writing jpg image: %s", err)
 		}
 
 		err = os.WriteFile(os.Getenv("UPLOAD_PATH")+"/images/"+post_id+".webp", portadaWebp.Bytes(), os.ModePerm)
 		if err != nil {
-			log.Fatalf("error writing webp file: %s", err)
+			logger.Error("[editor] error writing webp file: %s", err)
 		}
 	}
 
