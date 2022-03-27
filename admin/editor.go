@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
@@ -137,7 +136,6 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !errors.Is(err, http.ErrMissingFile) {
-
 		portadaJpg, portadaWebp := generateImagesFromImage(portada_file, portada_mime)
 
 		file, err := os.Create(os.Getenv("UPLOAD_PATH") + "/thumb/" + post_id + ".jpg")
@@ -159,8 +157,6 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// If not, redirection shows the old value - Chapuza xD
-	time.Sleep(100 * time.Millisecond)
 	w.Header().Add("Location", "/admin/post")
-	w.WriteHeader(303)
+	defer w.WriteHeader(303)
 }
