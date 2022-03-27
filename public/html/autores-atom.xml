@@ -4,11 +4,7 @@
 	<title>Por {{ .Nombre }} - Vigo360</title>
 	<subtitle>Últimos artículos escritos por {{ .Nombre }}</subtitle>
 	<updated>{{ .LastUpdate }}</updated>
-	<contributor>
-		<name>Ariel Costas</name>
-		<email>ariel@vigo360.es</email>
-		<uri>{{ .BaseURL }}/autores/ariel-costas</uri>
-	</contributor>
+	<generator uri="{{ .GeneratorURI }}">Vigo360</generator>
 	<link rel="self" href="{{ .BaseURL }}/autores/{{ .Id }}/atom.xml" />
 	<icon>/includes/logo.png</icon>
 

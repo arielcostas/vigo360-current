@@ -29,11 +29,12 @@ type AtomPost struct {
 }
 
 type FeedParams struct {
-	BaseURL    string
-	Id         string
-	Nombre     string
-	LastUpdate string
-	Posts      []AtomPost
+	BaseURL      string
+	Id           string
+	Nombre       string
+	LastUpdate   string
+	GeneratorURI string
+	Posts        []AtomPost
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -176,11 +177,12 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 
 	w.Header().Add("Content-Type", "application/atom+xml; charset=utf-8")
 	err := t.ExecuteTemplate(w, feedName, &FeedParams{
-		BaseURL:    os.Getenv("DOMAIN"),
-		LastUpdate: lastUpdate.Format(time.RFC3339),
-		Posts:      items,
-		Nombre:     nombre,
-		Id:         id,
+		BaseURL:      os.Getenv("DOMAIN"),
+		LastUpdate:   lastUpdate.Format(time.RFC3339),
+		Posts:        items,
+		Nombre:       nombre,
+		Id:           id,
+		GeneratorURI: os.Getenv("SOURCE_URL"),
 	})
 
 	if err != nil {
