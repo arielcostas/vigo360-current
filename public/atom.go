@@ -16,9 +16,7 @@ import (
 type AtomPost struct {
 	Id                  string
 	Fecha_publicacion   string
-	Publicacion_3339    string
 	Fecha_actualizacion string
-	Actualizacion_3339  string
 
 	Titulo       string
 	Resumen      string
@@ -31,11 +29,11 @@ type AtomPost struct {
 }
 
 type FeedParams struct {
-	BaseURL string
-	Id      string
-	Nombre  string
-	Now     string
-	Posts   []AtomPost
+	BaseURL    string
+	Id         string
+	Nombre     string
+	LastUpdate string
+	Posts      []AtomPost
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -162,19 +160,12 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 
 	for i := 0; i < len(items); i++ {
 		p := &items[i]
-		t, err := time.Parse("2006-01-02 15:04:05", p.Fecha_publicacion)
-		if err != nil {
-			logger.Error("unexpected error parsing fecha_publicacion: %s", err.Error())
-			InternalServerErrorHandler(w, r)
-		}
-		p.Publicacion_3339 = t.Format(time.RFC3339)
 
-		t, err = time.Parse("2006-01-02 15:04:05", p.Fecha_actualizacion)
+		t, err := time.Parse("2006-01-02 15:04:05", p.Fecha_actualizacion)
 		if err != nil {
 			logger.Error("unexpected error parsing fecha_actualizacion: %s", err.Error())
 			InternalServerErrorHandler(w, r)
 		}
-		p.Actualizacion_3339 = t.Format(time.RFC3339)
 
 		if lastUpdate.Before(t) {
 			lastUpdate = t
@@ -185,11 +176,11 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 
 	w.Header().Add("Content-Type", "application/atom+xml; charset=utf-8")
 	err := t.ExecuteTemplate(w, feedName, &FeedParams{
-		BaseURL: os.Getenv("DOMAIN"),
-		Now:     lastUpdate.Format("2006-01-02T15:04:05-07:00"),
-		Posts:   items,
-		Nombre:  nombre,
-		Id:      id,
+		BaseURL:    os.Getenv("DOMAIN"),
+		LastUpdate: lastUpdate.Format(time.RFC3339),
+		Posts:      items,
+		Nombre:     nombre,
+		Id:         id,
 	})
 
 	if err != nil {

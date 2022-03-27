@@ -3,7 +3,7 @@
 	<id>{{ .BaseURL }}/tags/{{ .Id }}</id>
 	<title>{{ .Nombre }} - Vigo360</title>
 	<subtitle>Últimos artículos con la etiqueta {{ .Nombre }}</subtitle>
-	<updated>{{ .Now }}</updated>
+	<updated>{{ .LastUpdate }}</updated>
 	<contributor>
 		<name>Ariel Costas</name>
 		<email>ariel@vigo360.es</email>
@@ -18,8 +18,8 @@
 		<entry>
 			<id>{{ $domain }}/post/{{ .Id }}</id>
 			<title>{{ .Titulo }}</title>
-			<published>{{ .Publicacion_3339 }}</published>
-			<updated>{{ .Actualizacion_3339 }}</updated>
+			<published>{{ date3339 .Fecha_publicacion }}</published>
+			<updated>{{ date3339 .Fecha_actualizacion }}</updated>
 			<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
 			<summary>{{ .Resumen }}</summary>
 			<author>

@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"time"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
@@ -25,6 +26,14 @@ var t = func() *template.Template {
 	functions := template.FuncMap{
 		"safeHTML": func(text string) template.HTML {
 			return template.HTML(text)
+		},
+		// Converts a standard date returned by MySQL to a RFC3339 datetime
+		"date3339": func(date string) (string, error) {
+			t, err := time.Parse("2006-01-02 15:04:05", date)
+			if err != nil {
+				return "", err
+			}
+			return t.Format(time.RFC3339), nil
 		},
 	}
 
