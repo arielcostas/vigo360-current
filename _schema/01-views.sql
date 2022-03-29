@@ -1,3 +1,5 @@
+USE vigo360;
+
 CREATE VIEW PublicacionesPublicas AS
 SELECT * FROM publicaciones
 WHERE publicaciones.fecha_publicacion IS NOT NULL AND publicaciones.fecha_publicacion < NOW();
