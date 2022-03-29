@@ -9,7 +9,7 @@
 	<icon>/includes/logo.png</icon>
 
 	{{ $domain := .BaseURL }}
-	{{- range .Posts }}
+	{{- range .Entries }}
 		<entry>
 			<id>{{ $domain }}/post/{{ .Id }}</id>
 			<title>{{ .Titulo }}</title>
