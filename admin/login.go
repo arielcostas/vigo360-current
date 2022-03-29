@@ -101,5 +101,5 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Header().Add("Location", "/admin/dashboard")
-	w.WriteHeader(http.StatusSeeOther)
+	w.WriteHeader(303)
 }

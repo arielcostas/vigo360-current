@@ -41,7 +41,7 @@
 						min="0" max="20">
 					<hr>
 					<select name="tags" id="tags" multiple required size="{{ sum (len .Tags) 1 }}">
-						<option value="" disabled>-- Selecciona una o varias tags --</option>
+						<option value="" disabled>-- Tags --</option>
 						{{ range .Tags}}
 						<option {{ with .Seleccionada}}selected{{end}} value="{{ .Id }}">
 							{{ .Nombre }}

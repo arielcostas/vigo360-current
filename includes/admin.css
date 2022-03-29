@@ -69,7 +69,7 @@ button.btn-theme {
 }
 
 #login {
-	width: 640px;
+	max-width: 640px;
 	margin: 1rem auto;
 	font-size: 1.1rem;
 }
@@ -78,7 +78,8 @@ button.btn-theme {
 input,
 form select,
 form textarea,
-form p {
+form p,
+form button[type="submit"] {
 	margin-bottom: 1rem;
 }
 
@@ -161,6 +162,36 @@ main h2 {
 	resize: none;
 }
 
+#post-editor img {
+	height: auto;
+}
+
 #series-list > p {
 	margin-bottom: 1.5rem;
+}
+
+@media screen and (max-width: 640px) {
+	main {
+		padding: 1rem 1.5rem;
+		max-width: 90%;
+	}
+
+	#dashboard > div {
+		gap: 1rem;
+		grid-template-columns: 1fr;
+	}
+
+	#post-editor .form-column,
+	#series-list > div {
+		grid-template-columns: 1fr;
+	}
+
+	.form-column,
+	.form-row {
+		max-width: 100%;
+	}
+
+	#post-editor img {
+		width: 100%;
+	}
 }
