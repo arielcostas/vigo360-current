@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type AtomPost struct {
+type AtomEntry struct {
 	Id                  string
 	Fecha_publicacion   string
 	Fecha_actualizacion string
@@ -34,7 +34,7 @@ type FeedParams struct {
 	Nombre       string
 	LastUpdate   string
 	GeneratorURI string
-	Posts        []AtomPost
+	Entries      []AtomEntry
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +51,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 		tagMap[tag.Id] = tag.Nombre
 	}
 
-	posts := []AtomPost{}
+	posts := []AtomEntry{}
 	err = db.Select(&posts, `SELECT publicaciones.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM publicaciones LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE fecha_publicacion < NOW() GROUP BY id;`)
 
 	// An unexpected error
@@ -74,7 +74,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 }
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
-	trabajos := []AtomPost{}
+	trabajos := []AtomEntry{}
 	err := db.Select(&trabajos, `SELECT trabajos.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos LEFT JOIN autores ON trabajos.autor_id = autores.id WHERE fecha_publicacion < NOW();`)
 
 	// An unexpected error
@@ -87,7 +87,7 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	tagid := mux.Vars(r)["tagid"]
-	trabajos := []AtomPost{}
+	trabajos := []AtomEntry{}
 	err := db.Select(&trabajos, `SELECT publicaciones.id, publicaciones.fecha_publicacion, publicaciones.fecha_actualizacion, publicaciones.titulo, publicaciones.resumen, publicaciones.autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM publicaciones_tags LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones_tags.tag_id = ? AND fecha_publicacion < NOW();`, tagid)
 
 	// An unexpected error
@@ -132,7 +132,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
 		tagMap[tag.Id] = tag.Nombre
 	}
 
-	posts := []AtomPost{}
+	posts := []AtomEntry{}
 	// TODO: Clean this query
 	err = db.Select(&posts, `SELECT PublicacionesPublicas.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas LEFT JOIN publicaciones_tags ON PublicacionesPublicas.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON PublicacionesPublicas.autor_id = autores.id WHERE autor_id=? GROUP BY id;`, autorid)
 
@@ -155,7 +155,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
 	writeFeed(w, r, "autores-atom.xml", posts, "Ariel Costas", autorid)
 }
 
-func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomPost, nombre string, id string) {
+func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomEntry, nombre string, id string) {
 	// TODO: Refactor line above
 	var lastUpdate time.Time
 
@@ -179,7 +179,7 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 	err := t.ExecuteTemplate(w, feedName, &FeedParams{
 		BaseURL:      os.Getenv("DOMAIN"),
 		LastUpdate:   lastUpdate.Format(time.RFC3339),
-		Posts:        items,
+		Entries:      items,
 		Nombre:       nombre,
 		Id:           id,
 		GeneratorURI: os.Getenv("SOURCE_URL"),
