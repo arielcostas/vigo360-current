@@ -49,7 +49,7 @@ func PostListPage(w http.ResponseWriter, r *http.Request) {
 
 // Data to be input via a form to create a new post
 type CreatePostActionFormInput struct {
-	Id     string `validate:"required,min=3,max=40,lowercase,alpha"`
+	Id     string `validate:"required,min=3,max=40,lowercase"`
 	Titulo string `validate:"required,min=3,max=80"`
 }
 

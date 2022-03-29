@@ -121,7 +121,15 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("error guardando datos"))
 		return
 	}
-	tx.Exec("DELETE FROM tags WHERE publicacion_id = ?", publicacion_id)
+
+	_, err = tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacion_id)
+	if err != nil {
+		logger.Error("[editor] error deleting tags for post: %s", err.Error())
+		w.WriteHeader(500)
+		w.Write([]byte("error guardando datos"))
+		return
+	}
+
 	for _, t := range tags {
 		_, err = tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacion_id, t)
 		if err != nil {

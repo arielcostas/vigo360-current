@@ -31,7 +31,7 @@ func ListSeries(w http.ResponseWriter, r *http.Request) {
 }
 
 type CreateSeriesFormInput struct {
-	Titulo string `validate:"required,min=1.max=40"`
+	Titulo string `validate:"required,min=1,max=40"`
 }
 
 func CreateSeries(w http.ResponseWriter, r *http.Request) {
