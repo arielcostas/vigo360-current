@@ -57,7 +57,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	posts := []AtomEntry{}
-	err = db.Select(&posts, `SELECT publicaciones.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM publicaciones LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE fecha_publicacion < NOW() GROUP BY id;`)
+	err = db.Select(&posts, `SELECT pp.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas pp LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON pp.autor_id = autores.id GROUP BY id;`)
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -139,7 +139,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 	posts := []AtomEntry{}
 	// TODO: Clean this query
-	err = db.Select(&posts, `SELECT PublicacionesPublicas.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas LEFT JOIN publicaciones_tags ON PublicacionesPublicas.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON PublicacionesPublicas.autor_id = autores.id WHERE autor_id=? GROUP BY id;`, autorid)
+	err = db.Select(&posts, `SELECT pp.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas pp LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON pp.autor_id = autores.id WHERE autor_id=? GROUP BY id;`, autorid)
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {

@@ -19,13 +19,7 @@ import (
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	req_post_id := mux.Vars(r)["postid"]
-	query := `SELECT PublicacionesPublicas.id, alt_portada, titulo, resumen, contenido, 
-	DATE_FORMAT(PublicacionesPublicas.fecha_publicacion, '%d %b.') as fecha_publicacion,
-	DATE_FORMAT(PublicacionesPublicas.fecha_actualizacion, '%e %b.') as fecha_actualizacion,
-	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, serie_id as serie
-FROM PublicacionesPublicas 
-LEFT JOIN autores on PublicacionesPublicas.autor_id = autores.id
-WHERE PublicacionesPublicas.id = ? ORDER BY PublicacionesPublicas.fecha_publicacion DESC;`
+	query := `SELECT pp.id, alt_portada, titulo, resumen, contenido, DATE_FORMAT(pp.fecha_publicacion, '%d %b.') as fecha_publicacion, DATE_FORMAT(pp.fecha_actualizacion, '%e %b.') as fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, serie_id as serie FROM PublicacionesPublicas pp LEFT JOIN autores on pp.autor_id = autores.id WHERE pp.id = ? ORDER BY pp.fecha_publicacion DESC;`
 
 	post := FullPost{}
 	err := db.QueryRowx(query, req_post_id).StructScan(&post)
@@ -49,7 +43,7 @@ WHERE PublicacionesPublicas.id = ? ORDER BY PublicacionesPublicas.fecha_publicac
 			return
 		}
 
-		err = db.Select(&serie.Articulos, `SELECT id, titulo, serie_posicion FROM publicaciones WHERE serie_id=? ORDER BY serie_posicion ASC, titulo ASC`, post.Serie.String)
+		err = db.Select(&serie.Articulos, `SELECT id, titulo, serie_posicion FROM PublicacionesPublicas WHERE serie_id=? ORDER BY serie_posicion ASC, titulo ASC`, post.Serie.String)
 		if err != nil {
 			logger.Warning("[post] error fetching serie for post %s: %s", post.Id, err.Error())
 			InternalServerErrorHandler(w, r)

@@ -16,7 +16,7 @@ import (
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
 	posts := []ResumenPost{}
-	err := db.Select(&posts, "SELECT PublicacionesPublicas.id, DATE_FORMAT(PublicacionesPublicas.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, PublicacionesPublicas.alt_portada, PublicacionesPublicas.titulo, PublicacionesPublicas.resumen, autores.nombre FROM PublicacionesPublicas LEFT JOIN autores on PublicacionesPublicas.autor_id = autores.id ORDER BY PublicacionesPublicas.fecha_publicacion DESC;")
+	err := db.Select(&posts, "SELECT pp.id, DATE_FORMAT(pp.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, pp.alt_portada, pp.titulo, pp.resumen, autores.nombre FROM PublicacionesPublicas pp LEFT JOIN autores on pp.autor_id = autores.id ORDER BY pp.fecha_publicacion DESC;")
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		logger.Error("[index]: error fetching posts: %s", err.Error())
 		InternalServerErrorHandler(w, r)

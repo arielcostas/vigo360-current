@@ -45,7 +45,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 
 	publicaciones := []ResumenPost{}
 
-	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM PublicacionesPublicas WHERE autor_id = ? ORDER BY PublicacionesPublicas.fecha_publicacion DESC;`, req_author)
+	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM PublicacionesPublicas pp WHERE autor_id = ? ORDER BY pp.fecha_publicacion DESC;`, req_author)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		logger.Error("[autores]: errors fetching posts from database: %s", err.Error())
