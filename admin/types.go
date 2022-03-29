@@ -47,4 +47,10 @@ type Serie struct {
 	Articulos int
 }
 
+type Tag struct {
+	Id           string
+	Nombre       string
+	Seleccionada bool
+}
+
 var InvalidImageFormatError error = errors.New("invalid image MIME type")

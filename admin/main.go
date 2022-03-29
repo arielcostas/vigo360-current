@@ -28,6 +28,9 @@ var t = func() *template.Template {
 		"safeHTML": func(text string) template.HTML {
 			return template.HTML(text)
 		},
+		"sum": func(a int, b int) int {
+			return a + b
+		},
 	}
 
 	entries, _ := rawtemplates.ReadDir("html")
@@ -45,14 +48,6 @@ var t = func() *template.Template {
 }()
 
 var db *sqlx.DB
-
-func loadTemplates() {
-	var err error
-	t, err = template.ParseFS(rawtemplates, "html/*.html")
-	if err != nil {
-		logger.Critical("error loading admin templates: %s", err.Error())
-	}
-}
 
 func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
@@ -114,7 +109,6 @@ func redirectToDashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func InitRouter() *mux.Router {
-	loadTemplates()
 	db = common.Database
 
 	router := mux.NewRouter().StrictSlash(true)

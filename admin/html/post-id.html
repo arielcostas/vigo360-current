@@ -40,6 +40,15 @@
 					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion.Value }}"
 						min="0" max="20">
 					<hr>
+					<select name="tags" id="tags" multiple required size="{{ sum (len .Tags) 1 }}">
+						<option value="" disabled>-- Selecciona una o varias tags --</option>
+						{{ range .Tags}}
+						<option {{ with .Seleccionada}}selected{{end}} value="{{ .Id }}">
+							{{ .Nombre }}
+						</option>
+						{{ end }}
+					</select>
+					<hr>
 					<p>
 						Selecciona una imagen de portada. Debe tener una relación de aspecto 16:9, ser menor de 20 MB y
 						estar en formato PNG, JPG o WebP. Si no se selecciona ninguna, se conservará la
