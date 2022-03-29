@@ -13,6 +13,7 @@ import (
 	"os"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
+	"github.com/go-playground/validator/v10"
 )
 
 type ResumenPost struct {
@@ -46,33 +47,37 @@ func PostListPage(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// Data to be input via a form to create a new post
+type CreatePostActionFormInput struct {
+	Id     string `validate:"required,min=3,max=40,lowercase,alpha"`
+	Titulo string `validate:"required,min=3,max=80`
+}
+
 // HTTP Handler for creating posts, accessible by authenticated authors via `POST /admin/post`. It requires passing art-id and art-titulo in the body, as part of the form submission from the `GET` page with the same URI.
 func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 	sesion := verifyLogin(w, r)
 	err := r.ParseForm()
+
+	fi := CreatePostActionFormInput{}
+
 	if err != nil {
 		logger.Error("error parsing create-post form: %s", err.Error())
 		InternalServerErrorHandler(w, r)
 		return
 	}
 
-	art_id := r.FormValue("art-id")
-	art_titulo := r.FormValue("art-titulo")
+	fi.Id = r.FormValue("art-id")
+	fi.Titulo = r.FormValue("art-titulo")
+
+	err = validator.New().Struct(fi)
+	if err != nil {
+		logger.Error("[post] validation error: %s", err.Error())
+		w.WriteHeader(400)
+		w.Write([]byte("Error de validación"))
+		return
+	}
+
 	art_autor := sesion.Id
-
-	// Article id must be below 40 characters long, with only lowercase spanish letters, numbers and dashes
-	if !validarId(art_id) {
-		w.WriteHeader(400)
-		// TODO: proper error page
-		w.Write([]byte("El id del artículo debe contener entre 3 y 40 letras minúsculas del alfabeto español, números, guiones o guiones bajos."))
-		return
-	}
-
-	if !validarTitulo(art_titulo) {
-		w.WriteHeader(400)
-		w.Write([]byte("El título tiene que contener entre 3 y 80 caracteres."))
-		return
-	}
 
 	tx, err := db.Begin()
 	if err != nil {
@@ -86,13 +91,40 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = tx.Exec(`INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, "CAMBIAME","", "", ?);`, art_id, art_titulo, art_autor)
+	_, err = tx.Exec(`INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, "CAMBIAME","", "", ?);`, fi.Id, fi.Titulo, art_autor)
 
 	if err != nil {
 		// TODO: proper error page
 		w.WriteHeader(500)
 		logger.Error("[post] error creating article in database: %s", err.Error())
 		w.Write([]byte("Error creando el artículo"))
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
+		return
+	}
+
+	// Every article needs its default photo
+	photopath := os.Getenv("UPLOAD_PATH")
+	err = os.WriteFile(photopath+"/images/"+fi.Id+".webp", defaultImageWebp, 0o644)
+	if err != nil {
+		// TODO: proper error page
+		w.WriteHeader(500)
+		logger.Error("[post] error saving article webp: %s", err.Error())
+		w.Write([]byte("Error creando foto WEBP predeterminada"))
+		err2 := tx.Rollback()
+		if err2 != nil {
+			logger.Error("[post] error reverting database: %s", err2.Error())
+		}
+		return
+	}
+	err = os.WriteFile(photopath+"/thumb/"+fi.Id+".jpg", defaultImageJPG, 0o644)
+	if err != nil {
+		// TODO: proper error page
+		w.WriteHeader(500)
+		logger.Error("[post] error saving article jpg: %s", err.Error())
+		w.Write([]byte("Error creando foto JPG predeterminada"))
 		err2 := tx.Rollback()
 		if err2 != nil {
 			logger.Error("[post] error reverting database: %s", err2.Error())
@@ -114,33 +146,6 @@ func CreatePostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Every article needs its default photo
-	photopath := os.Getenv("UPLOAD_PATH")
-	err = os.WriteFile(photopath+"/images/"+art_id+".webp", defaultImageWebp, 0o644)
-	if err != nil {
-		// TODO: proper error page
-		w.WriteHeader(500)
-		logger.Error("[post] error saving article webp: %s", err.Error())
-		w.Write([]byte("Error creando foto WEBP predeterminada"))
-		err2 := tx.Rollback()
-		if err2 != nil {
-			logger.Error("[post] error reverting database: %s", err2.Error())
-		}
-		return
-	}
-	err = os.WriteFile(photopath+"/thumb/"+art_id+".jpg", defaultImageJPG, 0o644)
-	if err != nil {
-		// TODO: proper error page
-		w.WriteHeader(500)
-		logger.Error("[post] error saving article jpg: %s", err.Error())
-		w.Write([]byte("Error creando foto JPG predeterminada"))
-		err2 := tx.Rollback()
-		if err2 != nil {
-			logger.Error("[post] error reverting database: %s", err2.Error())
-		}
-		return
-	}
-
-	w.Header().Add("Location", "/admin/post/"+art_id)
+	w.Header().Add("Location", "/admin/post/"+fi.Id)
 	w.WriteHeader(303)
 }
