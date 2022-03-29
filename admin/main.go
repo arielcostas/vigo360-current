@@ -6,9 +6,7 @@
 package admin
 
 import (
-	"database/sql"
 	"embed"
-	"errors"
 	"html/template"
 	"net/http"
 
@@ -48,48 +46,6 @@ var t = func() *template.Template {
 }()
 
 var db *sqlx.DB
-
-func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
-	http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
-	return Sesion{}
-}
-
-// TODO: Refactor this
-func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
-	cookie, err := r.Cookie("sess")
-
-	if errors.Is(err, http.ErrNoCookie) && r.URL.Path != "/admin/login" {
-		logger.Notice("unauthenticated user tried accessing auth-requiring page %s", r.URL.Path)
-		return gotoLogin(w, r)
-	}
-
-	if err != nil && r.URL.Path != "/admin/login" {
-		logger.Error("error getting session cookie: %s", err.Error())
-		return gotoLogin(w, r)
-	} else if err != nil {
-		return Sesion{}
-	}
-
-	user := Sesion{}
-
-	err = db.QueryRowx("SELECT id, nombre, rol FROM sesiones LEFT JOIN autores ON sesiones.autor_id = autores.id WHERE sessid = ? AND revocada = false;", cookie.Value).StructScan(&user)
-
-	if errors.Is(err, sql.ErrNoRows) && r.URL.Path != "/admin/login" {
-		logger.Warning("error in login verification: %s", err.Error())
-		return gotoLogin(w, r)
-	} else if err != nil {
-		logger.Error("unexpected error fetching session from database: %s", err.Error())
-		return gotoLogin(w, r)
-	}
-
-	// Logged in successfully, no sense to log in again
-	if r.URL.Path == "/admin/login" {
-		http.Redirect(w, r, "/admin/dashboard", http.StatusTemporaryRedirect)
-	}
-
-	// It's not the login page and the user is logged in
-	return user
-}
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	verifyLogin(w, r)

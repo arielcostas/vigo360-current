@@ -100,6 +100,6 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 	})
 
-	w.Header().Add("Location", "/admin/dashboard")
-	w.WriteHeader(303)
+	defer w.WriteHeader(303)
+	defer w.Header().Add("Location", "/admin/dashboard")
 }

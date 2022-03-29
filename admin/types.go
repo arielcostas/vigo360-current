@@ -11,9 +11,11 @@ import (
 )
 
 type Sesion struct {
-	Id     string
-	Nombre string
-	Rol    string
+	Sessid   string
+	Id       string
+	Iniciada string
+	Nombre   string
+	Rol      string
 }
 
 type Aviso struct {
