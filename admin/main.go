@@ -75,7 +75,7 @@ func InitRouter() *mux.Router {
 
 	router.HandleFunc("/admin/dashboard", DashboardPage).Methods("GET")
 	router.HandleFunc("/admin/post", PostListPage).Methods("GET")
-	router.HandleFunc("/admin/post", CreatePostAction).Methods("POST")
+	router.Handle("/admin/post", appHandler(createPost)).Methods("POST")
 
 	router.HandleFunc("/admin/post/{id}", EditPostPage).Methods("GET")
 	router.HandleFunc("/admin/post/{id}", EditPostAction).Methods("POST")
