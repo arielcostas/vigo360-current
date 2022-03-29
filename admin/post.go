@@ -50,7 +50,7 @@ func PostListPage(w http.ResponseWriter, r *http.Request) {
 // Data to be input via a form to create a new post
 type CreatePostActionFormInput struct {
 	Id     string `validate:"required,min=3,max=40,lowercase,alpha"`
-	Titulo string `validate:"required,min=3,max=80`
+	Titulo string `validate:"required,min=3,max=80"`
 }
 
 // HTTP Handler for creating posts, accessible by authenticated authors via `POST /admin/post`. It requires passing art-id and art-titulo in the body, as part of the form submission from the `GET` page with the same URI.

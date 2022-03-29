@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
 
@@ -73,6 +74,16 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type EditPostActionFormInput struct {
+	Titulo      string `validate:"required,min=3,max=80"`
+	Resumen     string `validate:"required,min=3,max=300"`
+	Contenido   string `validate:"required"`
+	Alt_portada string `validate:"required,min=3,max=300"`
+
+	Serie_id       string
+	Serie_posicion string
+}
+
 func EditPostAction(w http.ResponseWriter, r *http.Request) {
 	verifyLogin(w, r)
 	publicacion_id := mux.Vars(r)["id"]
@@ -84,14 +95,22 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		InternalServerErrorHandler(w, r)
 	}
 
-	art_titulo := r.FormValue("art-titulo")
-	art_resumen := r.FormValue("art-resumen")
-	art_contenido := r.FormValue("art-contenido")
-	alt_portada := r.FormValue("alt-portada")
-	art_publicar := r.FormValue("publicar")
+	fi := EditPostActionFormInput{}
 
-	serie_id := r.FormValue("serie-id")
-	serie_posicion := r.FormValue("serie-num")
+	fi.Titulo = r.FormValue("art-titulo")
+	fi.Resumen = r.FormValue("art-resumen")
+	fi.Contenido = r.FormValue("art-contenido")
+	fi.Alt_portada = r.FormValue("alt-portada")
+	fi.Serie_id = r.FormValue("serie-id")
+	fi.Serie_posicion = r.FormValue("serie-num")
+
+	err = validator.New().Struct(fi)
+	if err != nil {
+		logger.Error("[editor] error validating form input: %s", err.Error())
+		w.WriteHeader(400)
+		w.Write([]byte("Error de validación"))
+		return
+	}
 
 	tags := r.Form["tags"]
 
@@ -122,45 +141,17 @@ func EditPostAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Proper error page
-	if !validarTitulo(art_titulo) {
-		w.WriteHeader(400)
-		_, err2 := w.Write([]byte("El título debe contener entre 3 y 80 caracteres"))
-		if err2 != nil {
-			logger.Error("[post] error reverting database: %s", err2.Error())
-		}
-		return
-	}
-
-	if !validarResumen(art_resumen) {
-		w.WriteHeader(400)
-		_, err2 := w.Write([]byte("El resumen debe contener entre 3 y 300 caracteres"))
-		if err2 != nil {
-			logger.Error("[post] error reverting database: %s", err2.Error())
-		}
-		return
-	}
-
-	if !validarContenido(art_contenido) {
-		w.WriteHeader(400)
-		_, err2 := w.Write([]byte("El contenido del artículo no puede estar vacío"))
-		if err2 != nil {
-			logger.Error("[post] error reverting database: %s", err2.Error())
-		}
-		return
-	}
-
 	// TODO: Refactor this utter piece of crap
 	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?, serie_id=?, serie_posicion=?`
-	if art_publicar == "on" {
+	if r.FormValue("publicar") == "on" {
 		query += `, fecha_publicacion = NOW()`
 	}
 
 	// If serie is unselected but posicion is not deleted, it will be saved, even though it doesn't make sense
-	if serie_id == "" {
-		serie_posicion = ""
+	if fi.Serie_id == "" {
+		fi.Serie_posicion = ""
 	}
-	_, err = db.Exec(query+` WHERE id=?`, art_titulo, art_resumen, art_contenido, alt_portada, NewNullString(serie_id), NewNullString(serie_posicion), publicacion_id)
+	_, err = db.Exec(query+` WHERE id=?`, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, NewNullString(fi.Serie_id), NewNullString(fi.Serie_posicion), publicacion_id)
 
 	// TODO: Proper error page
 	if err != nil {
