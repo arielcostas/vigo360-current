@@ -292,7 +292,7 @@ main#authors #user-info #section-title {
 }
 
 .article-author {
-	font-family: monospace;
+	font-family: var(--mono-fonts);
 	text-transform: uppercase;
 	font-weight: 700;
 	opacity: 0.8;
@@ -394,7 +394,7 @@ main#authors #user-info #section-title {
 }
 
 #post-info {
-	font-family: monospace;
+	font-family: var(--mono-fonts);
 	padding: 0 7%;
 	text-transform: uppercase;
 	font-weight: 700;
