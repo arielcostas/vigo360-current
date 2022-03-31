@@ -88,7 +88,7 @@ header > * {
 	margin: 0;
 }
 
-#header-brand span {
+h1 {
 	margin-left: 1rem;
 	font-size: 24px;
 	font-weight: 700;
