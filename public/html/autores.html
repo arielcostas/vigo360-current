@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="es-ES">
-	<head>
-		{{- template "_head.html" . }}
-	</head>
-	<body>
-		{{ template "_header.html" }}
-		<main id="authors">
-			<h1 id="section-title">Quiénes somos</h1>
-			<div id="authors-grid">
+
+<head>
+	{{- template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="authors">
+		<h2 id="section-title">Quiénes somos</h2>
+		<div id="authors-grid">
 			{{ range .Autores }}
-				<a href="/autores/{{ .Id }}">
-					<div>
-						<img src="/static/profile/{{ .Id }}.jpg" alt="Foto de perfil de {{ .Nombre }}" />
-						<span class="authors-name">{{ .Nombre }}</span><br />
-						<span class="authors-role">{{ .Rol }}</span>
-						<p>{{ .Biografia }}</p>
-					</div>
-				</a>
+			<a href="/autores/{{ .Id }}">
+				<div>
+					<img src="/static/profile/{{ .Id }}.jpg" alt="Foto de perfil de {{ .Nombre }}" />
+					<span class="authors-name">{{ .Nombre }}</span><br />
+					<span class="authors-role">{{ .Rol }}</span>
+					<p>{{ .Biografia }}</p>
+				</div>
+			</a>
 			{{ end }}
-			</div>
-		</main>
-		{{ template "_footer.html" }}
-	</body>
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
 </html>
