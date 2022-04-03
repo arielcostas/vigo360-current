@@ -95,11 +95,13 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthorsToAutores(w http.ResponseWriter, r *http.Request) {
-	common.Redirect(w, r, "/authors/", "/autores/")
+	w.WriteHeader(301)
+	w.Header().Add("Location", "/autores/")
 }
 
 func PapersToTrabajos(w http.ResponseWriter, r *http.Request) {
-	common.Redirect(w, r, "/papers/", "/trabajos/")
+	w.WriteHeader(301)
+	w.Header().Add("Location", "/trabajos/")
 }
 
 func InitRouter() *mux.Router {
