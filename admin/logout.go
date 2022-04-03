@@ -12,16 +12,13 @@ import (
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
-func LogoutPage(w http.ResponseWriter, r *http.Request) {
+func logoutPage(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 	sess, _ := r.Cookie("sess")
 
-	_, err := db.Exec("UPDATE sesiones SET revocada = 1 WHERE sessid = ?;", sess.Value)
-
-	if err != nil {
-		logger.Error("error revoking session %s: %s", sess.Value, err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err := revokeSession(sess.Value); err != nil {
+		return &appError{Error: err, Message: "error revoking session " + sess.Value,
+			Response: "Hubo un error cerrando la sesión", Status: 500}
 	}
 
 	http.SetCookie(w, &http.Cookie{
@@ -38,4 +35,5 @@ func LogoutPage(w http.ResponseWriter, r *http.Request) {
 	logger.Information("logging out session with id %s", sess.Value)
 	w.Header().Add("Location", "/admin/login")
 	w.WriteHeader(302)
+	return nil
 }

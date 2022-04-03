@@ -9,29 +9,23 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
-
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
-func DashboardPage(w http.ResponseWriter, r *http.Request) {
+func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	sesion := verifyLogin(w, r)
 
 	avisos := []Aviso{}
 	err := db.Select(&avisos, "SELECT DATE_FORMAT(fecha_creacion, '%d %b.') as fecha_creacion, titulo, contenido FROM avisos ORDER BY avisos.fecha_creacion DESC LIMIT 5")
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[dashboard] error getting avisos list: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return newDatabaseReadAppError(err, "avisos")
 	}
 
 	posts := []DashboardPost{}
 	err = db.Select(&posts, "SELECT publicaciones.id, titulo, DATE_FORMAT(fecha_publicacion, '%d %b.') as fecha_publicacion, resumen, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id ORDER BY publicaciones.fecha_publicacion DESC LIMIT 5;")
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[dashboard] error getting latest posts: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return newDatabaseReadAppError(err, "posts")
 	}
 
 	err = t.ExecuteTemplate(w, "admin-dashboard.html", struct {
@@ -43,8 +37,8 @@ func DashboardPage(w http.ResponseWriter, r *http.Request) {
 		Avisos: avisos,
 		Posts:  posts,
 	})
-
 	if err != nil {
-		logger.Error("[dashboard]: error rendering template: %s", err.Error())
+		return newTemplateRenderingAppError(err)
 	}
+	return nil
 }

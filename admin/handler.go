@@ -29,5 +29,6 @@ func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		logger.Error("[%s] %s: %s", r.URL.Path, err.Message, err.Error.Error())
 		w.WriteHeader(err.Status)
 		w.Write([]byte(err.Response))
+		w.Write([]byte("\nSi crees que se trata de un error, contacta con el administrador."))
 	}
 }

@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -30,21 +29,27 @@ var defaultImageJPG []byte
 //go:embed extra/default.webp
 var defaultImageWebp []byte
 
-func PostListPage(w http.ResponseWriter, r *http.Request) {
+func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 	posts := []ResumenPost{}
 
 	err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, autor_id, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id ORDER BY publicado ASC, fecha_publicacion DESC;`)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("error inesperado leyendo publicaciones de la base de datos: %s", err.Error())
+		return newDatabaseReadAppError(err, "posts")
 	}
 
-	t.ExecuteTemplate(w, "post.html", struct {
+	err = t.ExecuteTemplate(w, "post.html", struct {
 		Posts []ResumenPost
 	}{
 		Posts: posts,
 	})
+
+	if err != nil {
+		return newTemplateRenderingAppError(err)
+	}
+
+	return nil
 }
 
 // Data to be input via a form to create a new post
