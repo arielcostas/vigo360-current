@@ -30,7 +30,7 @@
 			</div>
 
 			<article id="post-inner">
-				{{ .Trabajo.Contenido }}
+				{{ .Trabajo.Contenido | markdown }}
 				{{ if ne (len .Adjuntos) 0 }}
 				<h2>Descargas</h2>
 				<ul>

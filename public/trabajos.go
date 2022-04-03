@@ -6,34 +6,29 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
-	"html/template"
 	"net/http"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
 )
 
-type TrabajosTrabajo struct {
+type Trabajo struct {
 	Id                  string
 	Fecha_publicacion   string
 	Fecha_actualizacion string
 	Alt_portada         string
 	Titulo              string
 	Resumen             string
-	ContenidoRaw        string `db:"contenido"`
-	Contenido           template.HTML
+	Contenido           string
 	Autor_id            string
 	Autor_nombre        string
 	Autor_rol           string
 	Autor_biografia     string
 }
 
-type TrabajoAdjunto struct {
+type Adjunto struct {
 	Nombre_archivo string
 	Titulo         string
 }
@@ -48,7 +43,7 @@ FROM trabajos
 LEFT JOIN autores on trabajos.autor_id = autores.id 
 WHERE trabajos.id = ?;`
 
-	trabajo := TrabajosTrabajo{}
+	trabajo := Trabajo{}
 	err := db.QueryRowx(query, req_paper_id).StructScan(&trabajo)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -62,18 +57,7 @@ WHERE trabajos.id = ?;`
 		return
 	}
 
-	// Result is in markdown, convert to HTML
-	var buf bytes.Buffer
-	md := goldmark.New(goldmark.WithExtensions(extension.Footnote))
-	err = md.Convert([]byte(trabajo.ContenidoRaw), &buf)
-	if err != nil {
-		logger.Error("[trabajos] error converting post content to HTML: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
-	}
-	trabajo.Contenido = template.HTML(buf.Bytes())
-
-	adjuntos := []TrabajoAdjunto{}
+	adjuntos := []Adjunto{}
 	err = db.Select(&adjuntos, "SELECT nombre_archivo, titulo FROM adjuntos WHERE trabajo_id = ?;", trabajo.Id)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
@@ -83,8 +67,8 @@ WHERE trabajos.id = ?;`
 	}
 
 	t.ExecuteTemplate(w, "trabajos-id.html", struct {
-		Trabajo  TrabajosTrabajo
-		Adjuntos []TrabajoAdjunto
+		Trabajo  Trabajo
+		Adjuntos []Adjunto
 		Meta     PageMeta
 	}{
 		Trabajo:  trabajo,
