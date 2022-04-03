@@ -6,16 +6,17 @@
 package admin
 
 import (
+	"bytes"
+	"database/sql"
 	"errors"
 	"net/http"
 	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
 
-func EditPostPage(w http.ResponseWriter, r *http.Request) {
+func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	// TODO: Check author is same as session
 	verifyLogin(w, r)
 	post_id := mux.Vars(r)["id"]
@@ -24,38 +25,26 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 
 	err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
 
-	// TODO: Proper error handling
 	if err != nil {
-		logger.Error("[editor]: error getting article from database: %s", err.Error())
-		w.WriteHeader(500)
-		_, err2 := w.Write([]byte("error buscando el artículo en la base de datos"))
-		if err2 != nil {
-			logger.Error("[post] error showing error message: %s", err2.Error())
+		if errors.Is(err, sql.ErrNoRows) {
+			return &appError{Error: err, Message: "trying to edit not-found article",
+				Response: "No se encontró el artículo a editar.", Status: 404}
 		}
-		return
+
+		return newDatabaseReadAppError(err, "post")
 	}
 
 	series := []Serie{}
 	err = db.Select(&series, `SELECT * FROM series;`)
 
-	// TODO: Proper error handling
 	if err != nil {
-		logger.Error("[editor] error getting article from database: %s", err.Error())
-		w.WriteHeader(500)
-		_, err2 := w.Write([]byte("error buscando el artículo en la base de datos"))
-		if err2 != nil {
-			logger.Error("[post] error showing error message: %s", err2.Error())
-		}
-		return
+		return newDatabaseReadAppError(err, "series")
 	}
 
 	tags := []Tag{}
 	err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags`, post_id)
 	if err != nil {
-		logger.Error("[editor] error fetching tags: %s", err.Error())
-		w.WriteHeader(500)
-		w.Write([]byte("error obteniendo datos"))
-		return
+		return newDatabaseReadAppError(err, "tags")
 	}
 
 	err = t.ExecuteTemplate(w, "post-id.html", struct {
@@ -68,10 +57,9 @@ func EditPostPage(w http.ResponseWriter, r *http.Request) {
 		Tags:   tags,
 	})
 	if err != nil {
-		logger.Error("[editor-postid] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return newTemplateRenderingAppError(err)
 	}
+	return nil
 }
 
 type EditPostActionFormInput struct {
@@ -84,125 +72,113 @@ type EditPostActionFormInput struct {
 	Serie_posicion string
 }
 
-func EditPostAction(w http.ResponseWriter, r *http.Request) {
+func editPost(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 	publicacion_id := mux.Vars(r)["id"]
-	err := r.ParseMultipartForm(26214400) // 25 MB
-
-	if err != nil {
-		w.WriteHeader(500)
-		logger.Error("error parsing multipart form: %s", err.Error())
-		InternalServerErrorHandler(w, r)
+	// TODO: Check post exists before parsing form
+	if err := r.ParseMultipartForm(26214400); err != nil {
+		return &appError{Error: err, Message: "error parsing multipart form",
+			Response: "Hubo un error recibiendo los datos del formulario", Status: 500}
 	}
 
-	fi := EditPostActionFormInput{}
+	fi := EditPostActionFormInput{
+		Titulo:         r.FormValue("art-titulo"),
+		Resumen:        r.FormValue("art-resumen"),
+		Contenido:      r.FormValue("art-contenido"),
+		Alt_portada:    r.FormValue("alt-portada"),
+		Serie_id:       r.FormValue("serie-id"),
+		Serie_posicion: r.FormValue("serie-num"),
+	}
 
-	fi.Titulo = r.FormValue("art-titulo")
-	fi.Resumen = r.FormValue("art-resumen")
-	fi.Contenido = r.FormValue("art-contenido")
-	fi.Alt_portada = r.FormValue("alt-portada")
-	fi.Serie_id = r.FormValue("serie-id")
-	fi.Serie_posicion = r.FormValue("serie-num")
-
-	err = validator.New().Struct(fi)
-	if err != nil {
-		logger.Error("[editor] error validating form input: %s", err.Error())
-		w.WriteHeader(400)
-		w.Write([]byte("Error de validación"))
-		return
+	if err := validator.New().Struct(fi); err != nil {
+		// TODO: Show actual validation error, and form again
+		return &appError{Error: err, Message: "form data is not valid",
+			Response: "Error de validación del formulario", Status: 400}
 	}
 
 	tags := r.Form["tags"]
+	var tx *sql.Tx
 
-	tx, err := db.Begin()
-	if err != nil {
-		logger.Error("[editor] error beginning transaction: %s", err.Error())
-		w.WriteHeader(500)
-		w.Write([]byte("error guardando datos"))
-		return
+	if nt, err := db.Begin(); err != nil {
+		return &appError{Error: err, Message: "error beginning transaction",
+			Response: "Hubo un error guardando los cambios", Status: 500}
+	} else {
+		tx = nt
 	}
 
-	_, err = tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacion_id)
-	if err != nil {
-		logger.Error("[editor] error deleting tags for post: %s", err.Error())
-		w.WriteHeader(500)
-		w.Write([]byte("error guardando datos"))
-		return
+	if _, err := tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacion_id); err != nil {
+		return &appError{Error: err, Message: "error deleting tags from post " + publicacion_id,
+			Response: "Hubo un error guardando los cambios", Status: 500}
 	}
 
 	for _, t := range tags {
-		_, err = tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacion_id, t)
-		if err != nil {
-			logger.Error("[editor] error adding tag to post %s: %s", publicacion_id, err.Error())
-			w.WriteHeader(400)
-			w.Write([]byte("error guardando datos"))
-			return
+		if _, err := tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacion_id, t); err != nil {
+			return &appError{Error: err, Message: "error saving tag for post " + publicacion_id,
+				Response: "Hubo un error guardando los cambios", Status: 500}
 		}
 	}
 
-	// TODO: Make all edits in one transaction, add locks
-	err = tx.Commit()
-	if err != nil {
-		logger.Error("[editor] error commiting tag editing %s: %s", publicacion_id, err.Error())
-		w.WriteHeader(400)
-		w.Write([]byte("error guardando datos"))
-		return
+	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
+	if _, err := db.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, publicacion_id); err != nil {
+		return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
+			Response: "Hubo un error guardando los cambios", Status: 500}
 	}
 
-	// TODO: Refactor this utter piece of crap
-	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=?, serie_id=?, serie_posicion=?`
 	if r.FormValue("publicar") == "on" {
-		query += `, fecha_publicacion = NOW()`
-	}
-
-	// If serie is unselected but posicion is not deleted, it will be saved, even though it doesn't make sense
-	if fi.Serie_id == "" {
-		fi.Serie_posicion = ""
-	}
-	_, err = db.Exec(query+` WHERE id=?`, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, NewNullString(fi.Serie_id), NewNullString(fi.Serie_posicion), publicacion_id)
-
-	// TODO: Proper error page
-	if err != nil {
-		logger.Error("[editor] error saving edited post to database: %s", err.Error())
-		w.WriteHeader(400)
-		_, err2 := w.Write([]byte("error guardando cambios a la base de datos"))
-		if err2 != nil {
-			logger.Error("[editor] error reverting database: %s", err2.Error())
+		query := `UPDATE publicaciones SET fecha_publicacion=NOW() WHERE id=?`
+		if _, err := db.Exec(query, publicacion_id); err != nil {
+			return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
+				Response: "Hubo un error guardando los cambios", Status: 500}
 		}
 	}
 
-	logger.Information("[editor] updated post %s", publicacion_id)
+	/*
+	 *  TODO: Implement again series saving
+	 */
 
-	// image processing
+	if err := tx.Commit(); err != nil {
+		return &appError{Error: err, Message: "error committing transaction for " + publicacion_id,
+			Response: "Hubo un error guardando los cambios", Status: 500}
+	}
+
 	portada_file, _, err := r.FormFile("portada")
-
 	if err != nil && !errors.Is(err, http.ErrMissingFile) {
-		logger.Error("[editor] unexpected error extracting image: %s:", err.Error())
-		return
+		return &appError{Error: err, Message: "error extracting image from form " + publicacion_id,
+			Response: "Hubo un error modificando la imagen. El resto de datos se han guardado.", Status: 400}
 	}
 
+	// Image uploaded
 	if !errors.Is(err, http.ErrMissingFile) {
-		portadaJpg, portadaWebp, err := generateImagesFromImage(portada_file)
-		if errors.Is(err, InvalidImageFormatError) {
-			logger.Error("[editor] user uploaded image with invalid mime")
-			w.Write([]byte("La imagen subida no tiene un formato válido"))
-			return
+		uppath := os.Getenv("UPLOAD_PATH")
+		if uppath == "" {
+			return &appError{Message: "UPLOAD_PATH is not set, images cannot be stored",
+				Response: "El servidor no puede guardar imágenes en este momento."}
+		}
+
+		var portadaJpg, portadaWebp bytes.Buffer
+		if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, InvalidImageFormatError) {
+			return &appError{Error: e2, Message: "error processing uploaded image",
+				Response: "La imagen subida no tiene un formato válido. El resto de datos se han guardado.", Status: 400}
 		} else if err != nil {
-			logger.Error("unexpected error generating images: %s", err)
-			return
+			return &appError{Error: e2, Message: "unexpected error processing uploaded image",
+				Response: "Error inesperado procesando la imagen. El resto de datos se han guardado.", Status: 500}
+		} else {
+			portadaJpg = pj
+			portadaWebp = pw
 		}
 
-		err = os.WriteFile(os.Getenv("UPLOAD_PATH")+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm)
-		if err != nil {
-			logger.Error("[editor] error writing jpg image: %s", err)
+		if e2 := os.WriteFile(uppath+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm); e2 != nil {
+			return &appError{Error: e2, Message: "error saving jpg image for " + publicacion_id,
+				Response: "Error guardando la imagen. El resto de cambios se han guradado.", Status: 500}
 		}
 
-		err = os.WriteFile(os.Getenv("UPLOAD_PATH")+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm)
-		if err != nil {
-			logger.Error("[editor] error writing webp file: %s", err)
+		if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm); e2 != nil {
+			return &appError{Error: e2, Message: "error saving webp image for " + publicacion_id,
+				Response: "Error guardando la imagen. El resto de cambios se han guradado.", Status: 500}
 		}
 	}
 
 	w.Header().Add("Location", "/admin/post")
 	defer w.WriteHeader(303)
+	return nil
 }

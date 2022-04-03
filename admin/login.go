@@ -6,6 +6,8 @@
 package admin
 
 import (
+	"database/sql"
+	"errors"
 	"net/http"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
@@ -23,25 +25,23 @@ type LoginRow struct {
 	Contraseña string
 }
 
-func LoginPage(w http.ResponseWriter, r *http.Request) {
+func viewLogin(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 	err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
-		logger.Error("[adminlogin]: error rendering page: %s", err.Error())
-		w.WriteHeader(500)
-		InternalServerErrorHandler(w, r)
+		return newTemplateRenderingAppError(err)
 	}
+	return nil
 }
 
-func LoginAction(w http.ResponseWriter, r *http.Request) {
+func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 
-	err := r.ParseForm()
-	if err != nil {
-		logger.Error("[login-action] error parsing form: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err := r.ParseForm(); err != nil {
+		return &appError{Error: err, Message: "error parsing form",
+			Response: "Hubo un error procesando el inicio de sesión", Status: 500}
 	}
+
 	param_userid := r.PostFormValue("userid")
 	param_password := r.PostFormValue("password")
 
@@ -53,41 +53,47 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 			LoginError:  true,
 		})
 		if err != nil {
-			logger.Error("[login-action] error rendering template: %s", err.Error())
-			InternalServerErrorHandler(w, r)
+			return &appError{Error: err, Message: "error rendering template",
+				Response: "Alguno de los datos introducidos no son correctos.", Status: 400}
 		}
-		return
+		return nil
 	}
 
-	err = db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row)
-
-	if err != nil {
-		logger.Error("[login] failed login for user %s", param_userid)
-		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+	// Fetch from database. If error is no user found, show the error document. If a different error is thrown, show 500
+	if err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row); errors.Is(err, sql.ErrNoRows) {
+		logger.Error("[/login]: no user matches " + param_userid)
+		e2 := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
-		return
+		if e2 != nil {
+			return &appError{Error: e2, Message: "error rendering template",
+				Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
+		}
+	} else if err != nil {
+		return &appError{Error: err, Message: "error fetching user",
+			Response: "Hubo un error inesperado.", Status: 500}
 	}
 
 	pass := ValidatePassword(param_password, row.Contraseña)
 
 	if !pass {
-		t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+		e2 := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
-		return
+		if e2 != nil {
+			return &appError{Error: e2, Message: "error rendering template",
+				Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
+		}
+		return nil
 	}
 
 	token := randstr.String(20)
 
-	_, err = db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid)
-
-	if err != nil {
-		logger.Error("[login] error saving new session token %s for user %s", token, param_userid)
-		InternalServerErrorHandler(w, r)
-		return
+	if _, err := db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid); err != nil {
+		return &appError{Error: err, Message: "error persisting session token to database",
+			Response: "Error guardando datos.", Status: 500}
 	}
 
 	http.SetCookie(w, &http.Cookie{
@@ -102,4 +108,5 @@ func LoginAction(w http.ResponseWriter, r *http.Request) {
 
 	defer w.WriteHeader(303)
 	defer w.Header().Add("Location", "/admin/dashboard")
+	return nil
 }

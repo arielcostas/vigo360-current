@@ -9,6 +9,11 @@ import (
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
+func revokeSession(sessid string) error {
+	_, err := db.Exec("UPDATE sesiones SET revocada = 1 WHERE sessid = ?;", sessid)
+	return err
+}
+
 func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
 	return Sesion{}
