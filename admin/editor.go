@@ -132,9 +132,16 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 		}
 	}
 
-	/*
-	 *  TODO: Implement again series saving
-	 */
+	if fi.Serie_id != "" {
+		if fi.Serie_posicion == "" {
+			fi.Serie_posicion = "1"
+		}
+
+		if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.Serie_id, fi.Serie_posicion, publicacion_id); err != nil {
+			return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
+				Response: "Hubo un error guardando los cambios", Status: 500}
+		}
+	}
 
 	if err := tx.Commit(); err != nil {
 		return &appError{Error: err, Message: "error committing transaction for " + publicacion_id,
