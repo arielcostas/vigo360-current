@@ -6,13 +6,10 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
-	"html/template"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
@@ -50,18 +47,6 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	// TODO: Do this as a template function
-	// Result is in markdown, convert to HTML
-	var buf bytes.Buffer
-	err = common.Parser.Convert([]byte(post.ContenidoRaw), &buf)
-	if err != nil {
-		logger.Error("[post] error converting markdown to HTML: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
-	}
-
-	post.Contenido = template.HTML(buf.Bytes())
 
 	err = t.ExecuteTemplate(w, "post.html", struct {
 		Post  FullPost

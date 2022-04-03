@@ -7,7 +7,6 @@ package public
 
 import (
 	"database/sql"
-	"html/template"
 )
 
 type Autor struct {
@@ -39,8 +38,7 @@ type FullPost struct {
 	Alt_portada         string
 	Titulo              string
 	Resumen             string
-	ContenidoRaw        string `db:"contenido"`
-	Contenido           template.HTML
+	Contenido           string
 	Autor_id            string
 	Autor_nombre        string
 	Autor_rol           string

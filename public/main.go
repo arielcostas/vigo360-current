@@ -6,11 +6,8 @@
 package public
 
 import (
-	"embed"
-	"html/template"
 	"net/http"
 	"os"
-	"time"
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
@@ -18,43 +15,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-var (
-	db *sqlx.DB
-)
-
-//go:embed html/*
-var rawtemplates embed.FS
-
-var t = func() *template.Template {
-	t := template.New("")
-
-	functions := template.FuncMap{
-		"safeHTML": func(text string) template.HTML {
-			return template.HTML(text)
-		},
-		// Converts a standard date returned by MySQL to a RFC3339 datetime
-		"date3339": func(date string) (string, error) {
-			t, err := time.Parse("2006-01-02 15:04:05", date)
-			if err != nil {
-				return "", err
-			}
-			return t.Format(time.RFC3339), nil
-		},
-	}
-
-	entries, _ := rawtemplates.ReadDir("html")
-	for _, de := range entries {
-		filename := de.Name()
-		contents, _ := rawtemplates.ReadFile("html/" + filename)
-
-		_, err := t.New(filename).Funcs(functions).Parse(string(contents))
-		if err != nil {
-			logger.Critical("[public-main] error parsing template: %s", err.Error())
-		}
-	}
-
-	return t
-}()
+var db *sqlx.DB
 
 func FullCanonica(path string) string {
 	return os.Getenv("DOMAIN") + path
@@ -72,7 +33,6 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		logger.Error("[main] error rendering 404 page: %s", err.Error())
-		//w.WriteHeader(500)
 		w.Write([]byte("La página solicitada no fue encontrada. Adicionalmente, no fue posible mostrar la página de error correspondiente."))
 		return
 	}
