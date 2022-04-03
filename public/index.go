@@ -10,7 +10,6 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
@@ -25,10 +24,10 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 
 	err = t.ExecuteTemplate(w, "index.html", struct {
 		Posts []ResumenPost
-		Meta  common.PageMeta
+		Meta  PageMeta
 	}{
 		Posts: posts,
-		Meta: common.PageMeta{
+		Meta: PageMeta{
 			Titulo:      "Inicio",
 			Descripcion: "Vigo360 es un proyecto dedicado a estudiar varios aspectos de la ciudad de Vigo (España) y su área de influencia, centrándose en la toponimia y el transporte.",
 			Canonica:    FullCanonica("/"),

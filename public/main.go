@@ -62,8 +62,8 @@ func FullCanonica(path string) string {
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(404)
-	err := t.ExecuteTemplate(w, "_404.html", common.NoPageData{
-		Meta: common.PageMeta{
+	err := t.ExecuteTemplate(w, "_404.html", NoPageData{
+		Meta: PageMeta{
 			Titulo:      "Página no encontrada",
 			Descripcion: "The requested resource could not be found in this server.",
 			Canonica:    FullCanonica(r.URL.Path),
@@ -80,8 +80,8 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 
 func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(500)
-	err := t.ExecuteTemplate(w, "_500.html", common.NoPageData{
-		Meta: common.PageMeta{
+	err := t.ExecuteTemplate(w, "_500.html", NoPageData{
+		Meta: PageMeta{
 			Titulo:      "Error del servidor",
 			Descripcion: "There was a server error trying to load this page.",
 			Canonica:    FullCanonica(r.URL.Path),

@@ -12,7 +12,6 @@ import (
 	"html/template"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 	"github.com/yuin/goldmark"
@@ -86,11 +85,11 @@ WHERE trabajos.id = ?;`
 	t.ExecuteTemplate(w, "trabajos-id.html", struct {
 		Trabajo  TrabajosTrabajo
 		Adjuntos []TrabajoAdjunto
-		Meta     common.PageMeta
+		Meta     PageMeta
 	}{
 		Trabajo:  trabajo,
 		Adjuntos: adjuntos,
-		Meta: common.PageMeta{
+		Meta: PageMeta{
 			Titulo:      trabajo.Titulo,
 			Descripcion: trabajo.Resumen,
 			Canonica:    FullCanonica("/trabajos/" + trabajo.Id),
@@ -111,10 +110,10 @@ func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
 
 	t.ExecuteTemplate(w, "trabajos.html", struct {
 		Trabajos []ResumenPost
-		Meta     common.PageMeta
+		Meta     PageMeta
 	}{
 		Trabajos: trabajos,
-		Meta: common.PageMeta{
+		Meta: PageMeta{
 			Titulo:      "Trabajos",
 			Descripcion: "Trabajos originales e interesantes publicados por los autores de Vigo360.",
 			Canonica:    FullCanonica("/trabajos"),

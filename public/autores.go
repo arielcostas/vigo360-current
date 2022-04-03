@@ -10,21 +10,20 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
 
 type AutoresParams struct {
 	Autores []Autor
-	Meta    common.PageMeta
+	Meta    PageMeta
 }
 
 type AutoresIdParams struct {
 	Autor    Autor
 	Posts    []ResumenPost
 	Trabajos []ResumenPost
-	Meta     common.PageMeta
+	Meta     PageMeta
 }
 
 func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
@@ -67,7 +66,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 		Autor:    autor,
 		Posts:    publicaciones,
 		Trabajos: trabajos,
-		Meta: common.PageMeta{
+		Meta: PageMeta{
 			Titulo:      autor.Nombre,
 			Descripcion: autor.Biografia,
 			Canonica:    FullCanonica("/autores/" + autor.Id),
@@ -92,7 +91,7 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) {
 
 	err = t.ExecuteTemplate(w, "autores.html", AutoresParams{
 		Autores: autores,
-		Meta: common.PageMeta{
+		Meta: PageMeta{
 			Titulo:      "Autores",
 			Descripcion: "Conoce a los autores y colaboradores de Vigo360.",
 			Canonica:    FullCanonica("/autores"),

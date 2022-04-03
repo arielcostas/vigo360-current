@@ -65,12 +65,12 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 
 	err = t.ExecuteTemplate(w, "post.html", struct {
 		Post  FullPost
-		Meta  common.PageMeta
+		Meta  PageMeta
 		Serie Serie
 	}{
 		Serie: serie,
 		Post:  post,
-		Meta: common.PageMeta{
+		Meta: PageMeta{
 			Titulo:      post.Titulo,
 			Descripcion: post.Resumen,
 			Canonica:    FullCanonica("/post/" + post.Id),
