@@ -75,6 +75,7 @@ type EditPostActionFormInput struct {
 func editPost(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 	publicacion_id := mux.Vars(r)["id"]
+
 	// TODO: Check post exists before parsing form
 	if err := r.ParseMultipartForm(26214400); err != nil {
 		return &appError{Error: err, Message: "error parsing multipart form",
@@ -119,14 +120,15 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
-	if _, err := db.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, publicacion_id); err != nil {
+	if _, err := tx.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, publicacion_id); err != nil {
+		tx.Rollback()
 		return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
 			Response: "Hubo un error guardando los cambios", Status: 500}
 	}
 
 	if r.FormValue("publicar") == "on" {
 		query := `UPDATE publicaciones SET fecha_publicacion=NOW() WHERE id=?`
-		if _, err := db.Exec(query, publicacion_id); err != nil {
+		if _, err := tx.Exec(query, publicacion_id); err != nil {
 			return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
 				Response: "Hubo un error guardando los cambios", Status: 500}
 		}
@@ -138,7 +140,8 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 		}
 
 		if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.Serie_id, fi.Serie_posicion, publicacion_id); err != nil {
-			return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
+			tx.Rollback()
+			return &appError{Error: err, Message: "error adding series for " + publicacion_id,
 				Response: "Hubo un error guardando los cambios", Status: 500}
 		}
 	}
