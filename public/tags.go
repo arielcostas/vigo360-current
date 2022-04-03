@@ -14,6 +14,31 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func listTags(w http.ResponseWriter, r *http.Request) *appError {
+	var tags = make([]Tag, 0)
+	if err := db.Select(&tags, `SELECT *, (SELECT COUNT(publicacion_id) FROM publicaciones_tags WHERE tag_id = id) as publicaciones FROM tags;`); err != nil {
+		return &appError{Error: err, Message: "error fetching tags", Response: "Hubo un error mostrando esta página.", Status: 500}
+	}
+
+	err := t.ExecuteTemplate(w, "tags.html", struct {
+		Tags []Tag
+		Meta PageMeta
+	}{
+		Tags: tags,
+		Meta: PageMeta{
+			Titulo:      "Tags",
+			Descripcion: "Las diversas tags en las que se categorizan los artículos de Vigo360",
+			Canonica:    FullCanonica("/tags"),
+		},
+	})
+
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando esta página.", Status: 500}
+	}
+
+	return nil
+}
+
 func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 	req_tagid := mux.Vars(r)["tagid"]
 

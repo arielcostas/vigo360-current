@@ -52,6 +52,7 @@ type Serie struct {
 }
 
 type Tag struct {
-	Id     string
-	Nombre string
+	Id            string
+	Nombre        string
+	Publicaciones int
 }

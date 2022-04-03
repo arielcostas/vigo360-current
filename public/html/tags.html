@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="tags-list">
+		<h2 id="section-title">Secciones</h2>
+		<ul>
+			{{ range .Tags }}
+			<li><a href="/tags/{{ .Id }}">{{ .Nombre }}</a> - {{ .Publicaciones }} artículos</li>
+			{{ end }}
+		</ul>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>

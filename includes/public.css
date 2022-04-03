@@ -108,7 +108,8 @@ main#authors {
 	background: #fff;
 }
 
-main#authors #section-title {
+main#authors #section-title,
+#tags-list #section-title {
 	padding: 1rem 2rem 0 2rem;
 }
 
@@ -639,4 +640,17 @@ code {
 
 .title-atom > a {
 	line-height: 1;
+}
+
+#tags-list {
+	max-width: 1024px;
+	margin: 3rem auto 2rem;
+	padding: 1rem 2rem;
+	width: 100%;
+	box-shadow: var(--shadow);
+	background: #fff;
+}
+
+#tags-list > ul {
+	width: 100%;
 }
