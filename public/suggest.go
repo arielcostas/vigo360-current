@@ -63,12 +63,12 @@ func generateSuggestions(original_id string) ([]PostRecommendation, error) {
 	err = db.QueryRow(`SELECT COUNT(*) FROM tags`).Scan(&tags)
 
 	for i, rp := range options {
-		var points = 0
+		var points = 10
 
-		/*	Same author => +10 points
+		/*	Same author => +12 points
 			Different => 0 */
 		if original.Autor_id == rp.Autor_id {
-			points += 10
+			points += 12
 		}
 
 		/*	If all tags match, give 3 times as many points tags are
