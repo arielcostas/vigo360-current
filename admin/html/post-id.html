@@ -27,7 +27,7 @@
 						administrador un ZIP con las imágenes a incluir NUMERADAS, y el artículo al que se asocian.</p>
 				</div>
 				<div class="form-row">
-					<p>Solo cubrir si la publicación pertenece a una serie. Si no, dejar vacío.</p>
+					<h3>Series (opcional)</h3>
 					<label for="series-select">Selecciona serie</label>
 					<select name="serie-id" id="series-select">
 						<option value="">-- Ninguna serie --</option>
@@ -40,6 +40,7 @@
 					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion.Value }}"
 						min="0" max="20">
 					<hr>
+					<h3>Etiquetas</h3>
 					<select name="tags" id="tags" multiple required size="{{ sum (len .Tags) 1 }}">
 						<option value="" disabled>-- Tags --</option>
 						{{ range .Tags}}
@@ -49,14 +50,15 @@
 						{{ end }}
 					</select>
 					<hr>
-					<p>
-						Selecciona una imagen de portada. Debe tener una relación de aspecto 16:9, ser menor de 20 MB y
-						estar en formato PNG, JPG o WebP. Si no se selecciona ninguna, se conservará la
-						actual.
-					</p>
+					<h3>Foto de portada</h3>
 					<img src="/static/images/{{ .Post.Id }}.webp" height="224px" width="400px"
 						alt="Foto de portada actual" />
 					<input type="file" id="portada" name="portada" accept="image/png, image/jpeg, image/webp">
+					<p>
+						Debe tener una relación de aspecto 16:9, ser menor de 20 MB y
+						estar en formato PNG, JPG o WebP. Si no se selecciona ninguna, se conservará la
+						actual.
+					</p>
 					<label for="alt-portada">Texto alternativo de portada</label>
 					<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required
 						value="{{ .Post.Alt_portada }}">
