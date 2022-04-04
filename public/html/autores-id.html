@@ -31,7 +31,8 @@
 					{{ .Autor.Biografia }}
 				</p>
 			</div>
-			<img class="profile_pic" src="/static/profile/{{ .Autor.Id }}.jpg" alt="Foto de {{ .Autor.Nombre}}" />
+			<img width="200" height="200" class="profile_pic" src="/static/profile/{{ .Autor.Id }}.jpg"
+				alt="Foto de {{ .Autor.Nombre}}" />
 		</div>
 
 		{{ if ne (len .Posts) 0 }}
@@ -54,7 +55,7 @@
 					<div>
 						<img class="user-article-thumbnail" src="/static/images/{{ $post.Id }}.webp"
 							alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }}
-							loading="lazy" {{ end }} />
+							loading="lazy" {{ end }} width="220" height="137" />
 						<div>
 							<h3 class="user-article-title">{{ $post.Titulo }}</h3>
 							<p class="user-article-summary">{{ $post.Resumen }}</p>
@@ -77,7 +78,7 @@
 					<div>
 						<img class="user-article-thumbnail" src="/static/images/{{ $trabajo.Id }}.webp"
 							alt="{{ $trabajo.Alt_portada }}" title="{{ $trabajo.Alt_portada }}" {{ if gt $i 3 }}
-							loading="lazy" {{ end }} />
+							loading="lazy" {{ end }} width="220" height="137" />
 						<div>
 							<h3 class="user-article-title">{{ $trabajo.Titulo }}</h3>
 							<p class="user-article-summary">{{ $trabajo.Resumen }}</p>

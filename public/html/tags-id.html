@@ -28,7 +28,7 @@
 			{{ range $i, $post := .Posts }}
 			<li>
 				<a href="/post/{{ $post.Id }}">
-					<img src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada }}"
+					<img width="370" height="270" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada }}"
 						title="{{ $post.Titulo }}" {{ if gt $i 3 }} loading="lazy" {{ end }} />
 					<div>
 						<span class="article-author">

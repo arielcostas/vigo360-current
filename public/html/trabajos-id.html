@@ -18,7 +18,8 @@
 	<main>
 		<div id="post-main">
 			<figure id="post-thumbnail">
-				<img src="/static/images/{{ .Trabajo.Id}}.webp" alt="{{ .Trabajo.Alt_portada }}">
+				<img width="1024" height="576" src="/static/images/{{ .Trabajo.Id}}.webp"
+					alt="{{ .Trabajo.Alt_portada }}">
 				<figcaption>{{ .Trabajo.Alt_portada }}</figcaption>
 			</figure>
 
@@ -44,7 +45,8 @@
 			<div id="post-author-container">
 				<a href="/autores/{{ .Trabajo.Autor_id }}">
 					<div id="post-author-card">
-						<img class="post-author-photo" src="/static/profile/{{ .Trabajo.Autor_id }}.jpg"
+						<img width="180" height="180" class="post-author-photo"
+							src="/static/profile/{{ .Trabajo.Autor_id }}.jpg"
 							alt="Fotografía de perfil de {{ .Trabajo.Autor_nombre }}" loading="lazy" />
 						<div class="post-author-info">
 							<h3>{{ .Trabajo.Autor_nombre }}</h3>

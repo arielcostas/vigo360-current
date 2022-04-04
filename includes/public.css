@@ -142,6 +142,7 @@ main#authors #section-title,
 	margin: 0 10%;
 	border-radius: 30%;
 	margin-bottom: 0.5rem;
+	height: auto;
 }
 
 .authors-name {
@@ -233,6 +234,7 @@ main#authors #user-info #section-title {
 
 .user-article img {
 	width: 25%;
+	height: auto;
 	object-fit: cover;
 	flex: 0 0 25%;
 	border-radius: 5px;
@@ -379,6 +381,7 @@ main#authors #user-info #section-title {
 
 #papers-list img {
 	width: 100%;
+	height: auto;
 }
 
 #post-main {
@@ -444,7 +447,8 @@ article#post-inner p img {
 .post-author-photo {
 	border-radius: 35%;
 	flex: 1 1;
-	max-width: 180px;
+	width: 180px;
+	height: 180px;
 }
 
 #post-author-container {
@@ -629,6 +633,8 @@ code {
 
 #section-articles > li img {
 	max-width: 100%;
+	width: 100%;
+	height: auto;
 }
 
 .title-atom {
