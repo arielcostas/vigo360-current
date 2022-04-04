@@ -20,6 +20,9 @@
 			<section>
 				<h2>Avisos</h2>
 				<ul>
+					{{ if eq (len .Avisos) 0 }}
+					<span>No hay avisos que mostrar</span>
+					{{ else }}
 					{{ range .Avisos }}
 					<li class="aviso">
 						<h3>{{ .Fecha_creacion }} - {{ .Titulo }}</h3>
@@ -28,17 +31,22 @@
 						</p>
 					</li>
 					{{ end }}
+					{{ end }}
 				</ul>
 			</section>
 
 			<section>
 				<h2>Últimas publicaciones</h2>
 				<ul>
+					{{ if eq (len .Posts) 0 }}
+					<span>No hay ninguna publicación que mostrar</span>
+					{{ else }}
 					{{ range .Posts }}
 					<li class="resumen-post">
 						<h3>{{ .Fecha_publicacion }} - {{ .Titulo }}</h3>
 						<p><i>{{ .Autor_nombre }}</i> - {{ .Resumen }}</p>
 					</li>
+					{{ end }}
 					{{ end }}
 				</ul>
 			</section>

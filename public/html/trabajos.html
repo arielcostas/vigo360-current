@@ -23,6 +23,9 @@
 			</a>
 		</div>
 		<div id="papers-list">
+			{{ if eq (len .Trabajos ) 0 }}
+			<p>No hay trabajos para mostrar</p>
+			{{ else }}
 			{{ range .Trabajos }}
 			<article>
 				<a href="/trabajos/{{.Id}}">
@@ -33,6 +36,7 @@
 					</div>
 				</a>
 			</article>
+			{{ end }}
 			{{ end }}
 		</div>
 	</main>

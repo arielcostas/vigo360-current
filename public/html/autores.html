@@ -9,6 +9,9 @@
 	{{ template "_header.html" }}
 	<main id="authors">
 		<h2 id="section-title">Quiénes somos</h2>
+		{{ if eq (len .Autores) 0 }}
+		<span>No hay ningún autor que mostrar</span>
+		{{ else }}
 		<div id="authors-grid">
 			{{ range .Autores }}
 			<a href="/autores/{{ .Id }}">
@@ -21,6 +24,7 @@
 			</a>
 			{{ end }}
 		</div>
+		{{ end }}
 	</main>
 	{{ template "_footer.html" }}
 </body>

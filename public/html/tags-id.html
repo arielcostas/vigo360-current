@@ -22,6 +22,9 @@
 			</a>
 		</div>
 		<ul id="section-articles">
+			{{ if eq (len .Posts) 0 }}
+			<span>No hay ninguna publicación</span>
+			{{ else }}
 			{{ range $i, $post := .Posts }}
 			<li>
 				<a href="/post/{{ $post.Id }}">
@@ -36,6 +39,7 @@
 					</div>
 				</a>
 			</li>
+			{{ end }}
 			{{ end }}
 		</ul>
 	</main>

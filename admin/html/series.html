@@ -15,8 +15,12 @@
 		</p>
 		<div>
 			<ul>
+				{{ if ne (len .Series) 0 }}
 				{{ range .Series }}
 				<li>{{ .Titulo }} ({{ .Articulos }} artículos)</li>
+				{{ end }}
+				{{ else }}
+				<span>No hay ninguna serie</span>
 				{{ end }}
 			</ul>
 			<form action="/admin/series" method="POST">
