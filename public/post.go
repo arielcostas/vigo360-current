@@ -16,7 +16,7 @@ import (
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	req_post_id := mux.Vars(r)["postid"]
-	query := `SELECT pp.id, alt_portada, titulo, resumen, contenido, DATE_FORMAT(pp.fecha_publicacion, '%d %b.') as fecha_publicacion, DATE_FORMAT(pp.fecha_actualizacion, '%e %b.') as fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, serie_id as serie FROM PublicacionesPublicas pp LEFT JOIN autores on pp.autor_id = autores.id WHERE pp.id = ? ORDER BY pp.fecha_publicacion DESC;`
+	query := `SELECT pp.id, alt_portada, titulo, resumen, contenido, DATE_FORMAT(pp.fecha_publicacion, '%d %b.') as fecha_publicacion, DATE_FORMAT(pp.fecha_actualizacion, '%d %b.') as fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, serie_id as serie FROM PublicacionesPublicas pp LEFT JOIN autores on pp.autor_id = autores.id WHERE pp.id = ? ORDER BY pp.fecha_publicacion DESC;`
 
 	post := FullPost{}
 	err := db.QueryRowx(query, req_post_id).StructScan(&post)
@@ -48,13 +48,20 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	recommendations, err := generateSuggestions(post.Id)
+	if err != nil {
+		panic(err)
+	}
+
 	err = t.ExecuteTemplate(w, "post.html", struct {
-		Post  FullPost
-		Meta  PageMeta
-		Serie Serie
+		Post            FullPost
+		Recommendations []PostRecommendation
+		Meta            PageMeta
+		Serie           Serie
 	}{
-		Serie: serie,
-		Post:  post,
+		Serie:           serie,
+		Post:            post,
+		Recommendations: recommendations,
 		Meta: PageMeta{
 			Titulo:      post.Titulo,
 			Descripcion: post.Resumen,

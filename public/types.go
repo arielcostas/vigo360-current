@@ -27,8 +27,6 @@ type ResumenPost struct {
 	Resumen           string
 	Autor_id          string
 	Autor_nombre      string `db:"nombre"`
-	Serie_id          string
-	Serie_posicion    int
 }
 
 type FullPost struct {

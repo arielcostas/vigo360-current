@@ -66,6 +66,25 @@
 					</div>
 				</a>
 			</div>
+
+			{{ if ne (len .Recommendations) 0}}
+			<h2 id="related-articles-header">Artículos recomendados</h2>
+			<div id="post-related-articles">
+				{{ range .Recommendations }}
+				<div class="post-related-article">
+					<a href="/post/{{ .Id }}">
+						<img src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}">
+						<p class="article-author">
+							{{ .Autor_nombre}}
+							/ {{ .Fecha_publicacion }}
+						</p>
+						<h4 class="article-title">{{ .Titulo }}</h4>
+						<p class="related-article-summary">{{ .Resumen | markdown }}</p>
+					</a>
+				</div>
+				{{ end }}
+			</div>
+			{{ end }}
 		</div>
 	</main>
 	{{ template "_footer.html" }}
