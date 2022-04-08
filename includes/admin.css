@@ -111,13 +111,31 @@ main h2 {
 	margin-left: 1rem;
 }
 
-#post-list {
+#post-listing {
 	flex: 5;
+	padding-right: 2rem;
 	min-width: 250px;
+	font-size: 1.1rem;
+	line-height: 1.40;
+}
+
+#post-listing > article {
+    background-color: #ffffff;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+    border-radius: 4px;
+}
+
+
+#post-list {
+    background-color: inherit;
+    box-shadow: unset;
+	padding: 0;
 }
 
 #post-list > section {
-	margin-top: 2rem;
+	margin-top: 1rem;
 	display: flex;
 	gap: 2rem;
 	flex-direction: row-reverse;
@@ -129,6 +147,16 @@ main h2 {
 	display: flex;
 	flex-direction: column;
 	flex: 2;
+}
+
+.list-post > p {
+	display:flex;
+	align-items: center;
+}
+
+.list-post > p > span {
+	margin-right: 1rem;
+	margin-left: 0.3rem;
 }
 
 .list-post > a {

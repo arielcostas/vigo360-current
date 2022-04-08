@@ -16,11 +16,13 @@ import (
 )
 
 type ResumenPost struct {
-	Id           string
-	Titulo       string
-	Publicado    bool
-	Autor_id     string
-	Autor_nombre string
+	Id                string
+	Titulo            string
+	Fecha_publicacion sql.NullString
+	CantTags          int
+	Publicado         bool
+	Autor_id          string
+	Autor_nombre      string
 }
 
 //go:embed extra/default.jpg
@@ -33,7 +35,7 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 	verifyLogin(w, r)
 	posts := []ResumenPost{}
 
-	err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, autor_id, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id ORDER BY publicado ASC, fecha_publicacion DESC;`)
+	err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, DATE_FORMAT(fecha_publicacion,'%d-%m-%Y') as fecha_publicacion, autor_id, autores.nombre as autor_nombre, count(tag_id) as canttags FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id GROUP BY publicaciones.id ORDER BY publicado ASC, publicaciones.fecha_publicacion DESC;`)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return newDatabaseReadAppError(err, "posts")

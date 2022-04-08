@@ -27,15 +27,24 @@
 				<button type="submit" class="btn-theme">Crear artículo</button>
 			</form>
 			{{ if ne (len .Posts) 0 }}
-			<ul id="post-list">
+			<section id="post-listing">
 				{{ range .Posts }}
-				<li class="list-post">
+				<article class="list-post">
 					<a href="/admin/post/{{ .Id }}"
 						class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
-					<p>{{ if .Publicado }}Publicado por{{ else }}Por{{ end }} {{ .Autor_nombre }}</p>
-				</li>
+					<p>
+						<img width="20" height="20" src="/includes/user-icon.svg" />
+						<span>{{ .Autor_nombre }}</span>
+						{{ if .Fecha_publicacion.Valid }}
+						<img width="20" height="20" src="/includes/clock-icon.svg" />
+						<span>{{ .Fecha_publicacion.Value }}</span>
+						{{ end }}
+						<img width="20" height="20" src="/includes/tags-icon.svg" />
+						<span>{{ .CantTags }}</span>
+					</p>
+				</article>
 				{{ end }}
-			</ul>
+			</section>
 			{{ else }}
 			<span class="user-section-title">No se encontró ningún artículo</span>
 			{{ end }}
