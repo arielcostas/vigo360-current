@@ -40,6 +40,8 @@ func InitRouter() *mux.Router {
 	router.Handle("/admin/series", appHandler(listSeries)).Methods("GET")
 	router.Handle("/admin/series", appHandler(createSeries)).Methods("POST")
 
+	router.Handle("/admin/sesiones", appHandler(listSessions)).Methods("GET")
+
 	router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		verifyLogin(w, r)
 		w.WriteHeader(404)

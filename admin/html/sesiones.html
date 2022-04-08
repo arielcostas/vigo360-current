@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<title>Sesiones - Admin Vigo360</title>
+	{{ template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" . }}
+	<main id="post-editor">
+		<h2>Listado de sesiones</h2>
+		{{ range .Sesiones }}
+		{{ . }}
+		{{ end }}
+	</main>
+	{{ template "_footer.html" . }}
+</body>
+
+</html>

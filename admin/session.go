@@ -69,3 +69,7 @@ func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
 	// It's not the login page and the user is logged in
 	return user
 }
+
+func listSessions(w http.ResponseWriter, r *http.Request) *appError {
+	return nil
+}
