@@ -16,6 +16,6 @@ func newDatabaseReadAppError(err error, datatype string) *appError {
 	if len(datatype) == 0 {
 		datatype = " "
 	}
-	return &appError{Error: err, Message: "error fetching" + datatype + "from database",
+	return &appError{Error: err, Message: "error fetching " + datatype + "from database",
 		Response: "Error leyendo datos", Status: 500}
 }

@@ -30,10 +30,11 @@ func mw(r *mux.Router) *mux.Router {
 			defer cancel()
 
 			// Generates a random RequestID to print in logs, errors and stuff
-			ctx = context.WithValue(ctx, "rid", randstr.String(14))
+			var rid = randstr.String(30)
+			ctx = context.WithValue(ctx, "rid", rid)
 			r = r.WithContext(ctx)
 
-			logger.Information("%s - %s %s", r.Header["X-Forwarded-For"], r.Method, r.RequestURI)
+			logger.Information("[%s] %s - %s %s", rid, r.Header["X-Forwarded-For"], r.Method, r.RequestURI)
 			next.ServeHTTP(w, r)
 		})
 	})
