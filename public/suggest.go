@@ -22,7 +22,7 @@ type PostRecommendation struct {
 }
 
 // Compares both slices for matching tags, and returns how many match
-func findMatchingTags(tags1, tags2 []string) int {
+func FindMatchingTags(tags1, tags2 []string) int {
 	// Make it a map to avoid passing it many times
 	var tag1map = make(map[string]bool)
 	for _, v := range tags1 {
@@ -76,7 +76,7 @@ func generateSuggestions(original_id string) ([]PostRecommendation, error) {
 		 *	3 tags all match => +9 points
 		 *	2 match => +4 points
 		 */
-		matches := findMatchingTags(original_tags, strings.Split(rp.Tags.String, ","))
+		matches := FindMatchingTags(original_tags, strings.Split(rp.Tags.String, ","))
 		if len(original_tags) == matches {
 			points += len(original_tags) * 4
 		}
