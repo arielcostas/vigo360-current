@@ -8,16 +8,18 @@
 <body>
 	{{ template "_header.html" }}
 	<main id="tags-list">
-		<h2 id="section-title">Secciones</h2>
-		<ul>
-			{{ if eq (len .Tags) 0 }}
-			<span>No hay secciones</span>
-			{{ else }}
-			{{ range .Tags }}
-			<li><a href="/tags/{{ .Id }}">{{ .Nombre }}</a> - {{ .Publicaciones }} artículos</li>
-			{{ end }}
-			{{ end }}
-		</ul>
+		<div>
+			<h2 id="section-title">Secciones</h2>
+			<ul>
+				{{ if eq (len .Tags) 0 }}
+				<span>No hay secciones</span>
+				{{ else }}
+				{{ range .Tags }}
+				<li><a href="/tags/{{ .Id }}">{{ .Nombre }}</a> - {{ .Publicaciones }} artículos</li>
+				{{ end }}
+				{{ end }}
+			</ul>
+		</div>
 	</main>
 	{{ template "_footer.html" }}
 </body>
