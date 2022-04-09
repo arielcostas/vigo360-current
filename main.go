@@ -53,16 +53,18 @@ func main() {
 	// Automatically revoke sessions every 6 hours
 	s := gocron.NewScheduler(time.Local)
 	s.Every(5).Minutes().Do(func() {
-		logger.Information("starting session cleanup")
 		res, err := common.Database.DB.Exec(`UPDATE sesiones SET revocada = 0 WHERE iniciada < DATE_SUB(NOW(), INTERVAL 6 HOUR);`)
 		if err != nil {
 			logger.Critical("error cleaning old sessions: %s", err.Error())
 		}
-		updated, err := res.RowsAffected()
+		ra, err := res.RowsAffected()
 		if err != nil {
-			logger.Critical("error getting affected rows for session-cleaning: %s", err.Error())
+			logger.Critical("error displaying cleaned sessions: %s", err.Error())
 		}
-		logger.Information("%d sessions older than 6 hours have been revoked", updated)
+
+		if ra > 0 {
+			logger.Information("automatically revoked %d session(s)", ra)
+		}
 	})
 	s.StartAsync()
 

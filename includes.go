@@ -63,7 +63,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("ETag", etags[file])
 	_, err = w.Write(bytes)
 	if err != nil {
-		logger.Error("[includes] error writing file %s: %", file, err.Error())
+		logger.Error("[includes] error writing file %s: %s", file, err.Error())
 		return
 	}
 }
