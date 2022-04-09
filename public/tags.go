@@ -10,7 +10,6 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
 
@@ -39,35 +38,26 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	return nil
 }
 
-func TagsIdPage(w http.ResponseWriter, r *http.Request) {
+func viewTag(w http.ResponseWriter, r *http.Request) *appError {
 	req_tagid := mux.Vars(r)["tagid"]
 
 	tag := Tag{}
 	err := db.QueryRowx("SELECT id,nombre FROM tags WHERE id=?;", req_tagid).StructScan(&tag)
-	if errors.Is(err, sql.ErrNoRows) {
-		logger.Notice("[tagsid]: tried to access unexistent tag %s", req_tagid)
-		NotFoundHandler(w, r)
-		return
-	} else if err != nil {
-		logger.Error("[tagsid]: error fetching tag info from database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &appError{Error: err, Message: "tag not found", Response: "La página buscada no se pudo encontrar", Status: 404}
+		}
+		return &appError{Error: err, Message: "unexpected error fetching tag", Response: "Error recuperando datos", Status: 500}
 	}
 
 	posts := []ResumenPost{}
 	err = db.Select(&posts, `SELECT pp.id, DATE_FORMAT(pp.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, pp.alt_portada, pp.titulo, autores.nombre FROM publicaciones_tags RIGHT JOIN PublicacionesPublicas pp ON publicaciones_tags.publicacion_id = pp.id LEFT JOIN autores ON pp.autor_id = autores.id WHERE tag_id = ? ORDER BY pp.fecha_publicacion DESC;`, req_tagid)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		logger.Notice("[tagsid]: no posts found for tag %s", req_tagid)
-		NotFoundHandler(w, r)
-		return
-	} else if err != nil {
-		logger.Error("[tagsid]: error fetching posts from database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return &appError{Error: err, Message: "error fetching posts for tag", Response: "Error recuperando datos", Status: 500}
 	}
 
-	t.ExecuteTemplate(w, "tags-id.html", struct {
+	err = t.ExecuteTemplate(w, "tags-id.html", struct {
 		Tag   Tag
 		Posts []ResumenPost
 		Meta  PageMeta
@@ -76,8 +66,15 @@ func TagsIdPage(w http.ResponseWriter, r *http.Request) {
 		Posts: posts,
 		Meta: PageMeta{
 			Titulo:      tag.Nombre,
+			Keywords:    tag.Nombre,
 			Descripcion: "Publicaciones en Vigo360 sobre " + tag.Nombre,
 			Canonica:    FullCanonica("/tags/" + req_tagid),
 		},
 	})
+
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página.", Status: 500}
+	}
+
+	return nil
 }

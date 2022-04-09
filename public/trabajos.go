@@ -10,7 +10,6 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
 
@@ -33,40 +32,54 @@ type Adjunto struct {
 	Titulo         string
 }
 
-func TrabajoPage(w http.ResponseWriter, r *http.Request) {
-	req_paper_id := mux.Vars(r)["paperid"]
-	query := `SELECT trabajos.id, alt_portada, titulo, resumen, contenido, 
-	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
-	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
-	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
-FROM trabajos 
-LEFT JOIN autores on trabajos.autor_id = autores.id 
-WHERE trabajos.id = ?;`
-
-	trabajo := Trabajo{}
-	err := db.QueryRowx(query, req_paper_id).StructScan(&trabajo)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			logger.Warning("[trabajos] could not find post with that id")
-			NotFoundHandler(w, r)
-			return
-		}
-
-		logger.Error("[trabajos] unexpected error fetching post from database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
-	}
-
-	adjuntos := []Adjunto{}
-	err = db.Select(&adjuntos, "SELECT nombre_archivo, titulo FROM adjuntos WHERE trabajo_id = ?;", trabajo.Id)
+func listTrabajos(w http.ResponseWriter, r *http.Request) *appError {
+	trabajos := []ResumenPost{}
+	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre FROM trabajos LEFT JOIN autores on trabajos.autor_id = autores.id WHERE trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC`)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[trabajos] fetching post attachments: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error listing trabajos", Response: "Error recuperando datos", Status: 500}
 	}
 
-	t.ExecuteTemplate(w, "trabajos-id.html", struct {
+	err = t.ExecuteTemplate(w, "trabajos.html", struct {
+		Trabajos []ResumenPost
+		Meta     PageMeta
+	}{
+		Trabajos: trabajos,
+		Meta: PageMeta{
+			Titulo:      "Trabajos",
+			Descripcion: "Trabajos originales e interesantes publicados por los autores de Vigo360.",
+			Canonica:    FullCanonica("/trabajos"),
+		},
+	})
+
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando la página", Status: 500}
+	}
+
+	return nil
+}
+
+func viewTrabajo(w http.ResponseWriter, r *http.Request) *appError {
+	trabajoid := mux.Vars(r)["trabajoid"]
+
+	var trabajo Trabajo
+	if nt, err := GetFullTrabajo(trabajoid); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &appError{Error: err, Message: "trabajo not found", Response: "El trabajo buscado no se ha encontrado", Status: 404}
+		}
+		return &appError{Error: err, Message: "error fetching trabajo", Response: "Error recuperando datos", Status: 500}
+	} else {
+		trabajo = nt
+	}
+
+	var adjuntos = make([]Adjunto, 0)
+	err := db.Select(&adjuntos, "SELECT nombre_archivo, titulo FROM adjuntos WHERE trabajo_id = ?;", trabajo.Id)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return &appError{Error: err, Message: "error fetching attachments", Response: "Error recuperando datos", Status: 500}
+	}
+
+	err = t.ExecuteTemplate(w, "trabajos-id.html", struct {
 		Trabajo  Trabajo
 		Adjuntos []Adjunto
 		Meta     PageMeta
@@ -80,27 +93,10 @@ WHERE trabajos.id = ?;`
 			Miniatura:   FullCanonica("/static/thumb/" + trabajo.Id + ".jpg"),
 		},
 	})
-}
 
-func TrabajoListPage(w http.ResponseWriter, r *http.Request) {
-	trabajos := []ResumenPost{}
-	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre FROM trabajos LEFT JOIN autores on trabajos.autor_id = autores.id WHERE trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC`)
-
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[trabajos] error getting trabajos list: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 	}
 
-	t.ExecuteTemplate(w, "trabajos.html", struct {
-		Trabajos []ResumenPost
-		Meta     PageMeta
-	}{
-		Trabajos: trabajos,
-		Meta: PageMeta{
-			Titulo:      "Trabajos",
-			Descripcion: "Trabajos originales e interesantes publicados por los autores de Vigo360.",
-			Canonica:    FullCanonica("/trabajos"),
-		},
-	})
+	return nil
 }

@@ -9,17 +9,13 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
-
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
-func IndexPage(w http.ResponseWriter, r *http.Request) {
+func indexPage(w http.ResponseWriter, r *http.Request) *appError {
 	posts := []ResumenPost{}
 	err := db.Select(&posts, "SELECT pp.id, DATE_FORMAT(pp.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, pp.alt_portada, pp.titulo, pp.resumen, autores.nombre FROM PublicacionesPublicas pp LEFT JOIN autores on pp.autor_id = autores.id ORDER BY pp.fecha_publicacion DESC;")
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[index]: error fetching posts: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error fetching posts", Response: "Error recuperando datos", Status: 500}
 	}
 
 	err = t.ExecuteTemplate(w, "index.html", struct {
@@ -35,8 +31,8 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		logger.Error("[index] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 	}
+
+	return nil
 }

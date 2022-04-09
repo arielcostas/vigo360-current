@@ -54,14 +54,18 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AuthorsToAutores(w http.ResponseWriter, r *http.Request) {
+func AuthorsToAutores(w http.ResponseWriter, r *http.Request) *appError {
 	w.WriteHeader(301)
 	w.Header().Add("Location", "/autores/")
+
+	return nil
 }
 
-func PapersToTrabajos(w http.ResponseWriter, r *http.Request) {
+func PapersToTrabajos(w http.ResponseWriter, r *http.Request) *appError {
 	w.WriteHeader(301)
 	w.Header().Add("Location", "/trabajos/")
+
+	return nil
 }
 
 func InitRouter() *mux.Router {
@@ -72,19 +76,19 @@ func InitRouter() *mux.Router {
 	router.Handle(`/post/{postid:[A-Za-z0-9\-\_|ñ]+}`, appHandler(PostPage)).Methods("GET")
 
 	router.Handle(`/tags`, appHandler(listTags)).Methods(http.MethodGet)
-	router.HandleFunc(`/tags/{tagid:[0-9]+}/`, TagsIdPage).Methods("GET")
+	router.Handle(`/tags/{tagid:[0-9]+}/`, appHandler(viewTag)).Methods("GET")
 
-	router.HandleFunc(`/papers/{.*}`, PapersToTrabajos).Methods("GET")
-	router.HandleFunc(`/trabajos/{paperid:[A-Za-z0-9\-\_|ñ]+}`, TrabajoPage).Methods("GET")
-	router.HandleFunc(`/trabajos`, TrabajoListPage).Methods("GET")
+	router.Handle(`/papers/{.*}`, appHandler(PapersToTrabajos)).Methods("GET")
+	router.Handle(`/trabajos`, appHandler(listTrabajos)).Methods("GET")
+	router.Handle(`/trabajos/{trabajoid:[A-Za-z0-9\-\_|ñ]+}`, appHandler(viewTrabajo)).Methods("GET")
 
-	router.HandleFunc(`/authors/{.*}`, AuthorsToAutores).Methods("GET")
-	router.HandleFunc(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, AutoresIdPage).Methods("GET")
-	router.HandleFunc(`/autores`, AutoresPage).Methods("GET")
+	router.Handle(`/authors/{.*}`, appHandler(AuthorsToAutores)).Methods("GET")
+	router.Handle(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, appHandler(AutoresIdPage)).Methods("GET")
+	router.Handle(`/autores`, appHandler(AutoresPage)).Methods("GET")
 
-	router.HandleFunc(`/siguenos`, SiguenosPage).Methods("GET")
-	router.HandleFunc(`/licencia`, LicenciasPage).Methods("GET")
-	router.HandleFunc(`/contacto`, ContactoPage).Methods("GET")
+	router.Handle(`/siguenos`, appHandler(SiguenosPage)).Methods("GET")
+	router.Handle(`/licencia`, appHandler(LicenciasPage)).Methods("GET")
+	router.Handle(`/contacto`, appHandler(ContactoPage)).Methods("GET")
 
 	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
 	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
@@ -92,7 +96,7 @@ func InitRouter() *mux.Router {
 	router.HandleFunc(`/tags/{tagid:[0-9]+}/atom.xml`, TagsAtomFeed).Methods("GET")
 	router.HandleFunc(`/autores/{autorid}/atom.xml`, AutorAtomFeed).Methods("GET")
 
-	router.HandleFunc("/", IndexPage).Methods("GET")
+	router.Handle("/", appHandler(indexPage)).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
 

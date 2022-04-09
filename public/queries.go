@@ -36,3 +36,20 @@ func GetSerieById(id string) (Serie, error) {
 
 	return serie, nil
 }
+
+func GetFullTrabajo(id string) (Trabajo, error) {
+	query := `SELECT trabajos.id, alt_portada, titulo, resumen, contenido, 
+	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
+	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
+	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
+	FROM trabajos 
+	LEFT JOIN autores on trabajos.autor_id = autores.id 
+	WHERE trabajos.id = ?;`
+
+	trabajo := Trabajo{}
+	if err := db.QueryRowx(query, id).StructScan(&trabajo); err != nil {
+		return Trabajo{}, err
+	}
+
+	return trabajo, nil
+}

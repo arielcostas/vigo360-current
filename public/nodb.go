@@ -7,11 +7,13 @@ package public
 
 import (
 	"net/http"
-
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
-func SiguenosPage(w http.ResponseWriter, r *http.Request) {
+func nodbPageError(err error) *appError {
+	return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
+}
+
+func SiguenosPage(w http.ResponseWriter, r *http.Request) *appError {
 	err := t.ExecuteTemplate(w, "siguenos.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Síguenos",
@@ -20,13 +22,13 @@ func SiguenosPage(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		logger.Error("[siguenos] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return nodbPageError(err)
 	}
+
+	return nil
 }
 
-func LicenciasPage(w http.ResponseWriter, r *http.Request) {
+func LicenciasPage(w http.ResponseWriter, r *http.Request) *appError {
 	err := t.ExecuteTemplate(w, "licencias.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Licencias",
@@ -35,13 +37,13 @@ func LicenciasPage(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		logger.Error("[licencias] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return nodbPageError(err)
 	}
+
+	return nil
 }
 
-func ContactoPage(w http.ResponseWriter, r *http.Request) {
+func ContactoPage(w http.ResponseWriter, r *http.Request) *appError {
 	err := t.ExecuteTemplate(w, "contacto.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Contacto",
@@ -50,8 +52,8 @@ func ContactoPage(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		logger.Error("[contacto] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return nodbPageError(err)
 	}
+
+	return nil
 }

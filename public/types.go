@@ -9,16 +9,6 @@ import (
 	"database/sql"
 )
 
-type Autor struct {
-	Id         string
-	Nombre     string
-	Email      string
-	Rol        string
-	Biografia  string
-	Web_url    string
-	Web_titulo string
-}
-
 type ResumenPost struct {
 	Id                string
 	Fecha_publicacion string

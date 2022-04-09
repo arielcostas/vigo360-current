@@ -10,9 +10,18 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 )
+
+type Autor struct {
+	Id         string
+	Nombre     string
+	Email      string
+	Rol        string
+	Biografia  string
+	Web_url    string
+	Web_titulo string
+}
 
 type AutoresParams struct {
 	Autores []Autor
@@ -26,40 +35,30 @@ type AutoresIdParams struct {
 	Meta     PageMeta
 }
 
-func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
+func AutoresIdPage(w http.ResponseWriter, r *http.Request) *appError {
 	req_author := mux.Vars(r)["id"]
-	autor := Autor{}
-
+	var autor Autor
 	err := db.QueryRowx("SELECT id, nombre, email, rol, biografia, web_url, web_titulo FROM autores WHERE id=?", req_author).StructScan(&autor)
 
-	if errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[autores]: author not found with id %s", req_author)
-		NotFoundHandler(w, r)
-		return
-	} else if err != nil {
-		logger.Error("[autores]: unexpected error getting autor from database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &appError{Error: err, Message: "autor not found", Response: "Autor no encontrado", Status: 404}
+		}
+		return &appError{Error: err, Message: "unexpected error fetching autor", Response: "Error recuperando datos", Status: 500}
 	}
 
-	publicaciones := []ResumenPost{}
-
+	var publicaciones = make([]ResumenPost, 0)
 	err = db.Select(&publicaciones, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM PublicacionesPublicas pp WHERE autor_id = ? ORDER BY pp.fecha_publicacion DESC;`, req_author)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[autores]: errors fetching posts from database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error fetching posts for autor", Response: "Error recuperando datos", Status: 500}
 	}
 
-	trabajos := []ResumenPost{}
-
+	var trabajos = make([]ResumenPost, 0)
 	err = db.Select(&trabajos, `SELECT id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, resumen FROM TrabajosPublicos WHERE autor_id = ? ORDER BY TrabajosPublicos.fecha_publicacion DESC;`, req_author)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[autores]: errors fetching trabajos from database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error fetching trabajos for autor", Response: "Error recuperando datos", Status: 500}
 	}
 
 	err = t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
@@ -74,19 +73,17 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		logger.Error("[autores-id] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 	}
+
+	return nil
 }
 
-func AutoresPage(w http.ResponseWriter, r *http.Request) {
+func AutoresPage(w http.ResponseWriter, r *http.Request) *appError {
 	autores := []Autor{}
 	err := db.Select(&autores, `SELECT id, nombre, rol, biografia FROM autores;`)
-	if err != nil {
-		logger.Error("[autores] error querying database: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return &appError{Error: err, Message: "error fetching autores", Response: "Error recuperando datos", Status: 500}
 	}
 
 	err = t.ExecuteTemplate(w, "autores.html", AutoresParams{
@@ -98,8 +95,8 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		logger.Error("[autores] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error rendering template", Response: "error mostrando la página", Status: 500}
 	}
+
+	return nil
 }
