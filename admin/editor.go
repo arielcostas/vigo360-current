@@ -42,7 +42,7 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	tags := []Tag{}
-	err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags`, post_id)
+	err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags ORDER BY nombre ASC`, post_id)
 	if err != nil {
 		return newDatabaseReadAppError(err, "tags")
 	}
