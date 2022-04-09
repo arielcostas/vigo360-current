@@ -16,7 +16,7 @@ import (
 
 func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	var tags = make([]Tag, 0)
-	if err := db.Select(&tags, `SELECT *, (SELECT COUNT(publicacion_id) FROM publicaciones_tags WHERE tag_id = id) as publicaciones FROM tags;`); err != nil {
+	if err := db.Select(&tags, `SELECT *, (SELECT COUNT(publicacion_id) FROM publicaciones_tags LEFT JOIN publicaciones p2 ON publicaciones_tags.publicacion_id = p2.id WHERE tag_id = tags.id AND p2.fecha_publicacion < NOW()) as publicaciones FROM tags;`); err != nil {
 		return &appError{Error: err, Message: "error fetching tags", Response: "Hubo un error mostrando esta página.", Status: 500}
 	}
 
