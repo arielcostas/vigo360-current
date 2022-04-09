@@ -97,9 +97,9 @@ figcaption {
 	margin-left: 0.5rem;
 }
 
-main#authors {
+main#authors > div {
 	max-width: 1024px;
-	margin: 3rem auto 2rem;
+	margin: 0 auto 2rem;
 
 	padding: 1rem 2rem;
 	border-radius: 4px;
