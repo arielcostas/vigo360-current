@@ -16,10 +16,8 @@ import (
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	req_post_id := mux.Vars(r)["postid"]
-	query := `SELECT pp.id, alt_portada, titulo, resumen, contenido, DATE_FORMAT(pp.fecha_publicacion, '%d %b.') as fecha_publicacion, DATE_FORMAT(pp.fecha_actualizacion, '%d %b.') as fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, serie_id as serie FROM PublicacionesPublicas pp LEFT JOIN autores on pp.autor_id = autores.id WHERE pp.id = ? ORDER BY pp.fecha_publicacion DESC;`
 
-	post := FullPost{}
-	err := db.QueryRowx(query, req_post_id).StructScan(&post)
+	var post, err = GetFullPost(req_post_id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			logger.Warning("[post] could not find post with that id")
@@ -32,15 +30,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 	// Fetch series
 	var serie Serie
 	if post.Serie.Valid {
-		serie = Serie{}
-		err := db.QueryRowx(`SELECT titulo FROM series WHERE id = ?;`, post.Serie.String).Scan(&serie.Titulo)
-		if err != nil {
-			logger.Warning("[post] error fetching serie for post %s: %s", post.Id, err.Error())
-			InternalServerErrorHandler(w, r)
-			return
-		}
-
-		err = db.Select(&serie.Articulos, `SELECT id, titulo, serie_posicion FROM PublicacionesPublicas WHERE serie_id=? ORDER BY serie_posicion ASC, titulo ASC`, post.Serie.String)
+		serie, err = GetSerieById(post.Serie.String)
 		if err != nil {
 			logger.Warning("[post] error fetching serie for post %s: %s", post.Id, err.Error())
 			InternalServerErrorHandler(w, r)
@@ -65,6 +55,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		Meta: PageMeta{
 			Titulo:      post.Titulo,
 			Descripcion: post.Resumen,
+			Keywords:    post.Tags.String,
 			Canonica:    FullCanonica("/post/" + post.Id),
 			Miniatura:   FullCanonica("/static/thumb/" + post.Id + ".jpg"),
 		},

@@ -42,6 +42,7 @@ type FullPost struct {
 	Autor_rol           string
 	Autor_biografia     string
 	Serie               sql.NullString
+	Tags                sql.NullString
 }
 
 type Serie struct {
