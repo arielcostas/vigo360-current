@@ -14,36 +14,36 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func PostPage(w http.ResponseWriter, r *http.Request) {
+func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 	req_post_id := mux.Vars(r)["postid"]
-
-	var post, err = GetFullPost(req_post_id)
-	if err != nil {
+	var post FullPost
+	if np, err := GetFullPost(req_post_id); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			logger.Warning("[post] could not find post with that id")
-			NotFoundHandler(w, r)
-			return
+			return &appError{Error: err, Message: "post with that ID not found", Response: "No se ha encontrado una publicación en esta URL.", Status: 404}
 		}
-		logger.Error("[post] unexpected error fetching post from database: %s", err.Error())
+		return &appError{Error: err, Message: "database error fetching post", Response: "Error obteniendo ladatos.", Status: 500}
+	} else {
+		post = np
 	}
 
-	// Fetch series
 	var serie Serie
 	if post.Serie.Valid {
-		serie, err = GetSerieById(post.Serie.String)
-		if err != nil {
-			logger.Warning("[post] error fetching serie for post %s: %s", post.Id, err.Error())
-			InternalServerErrorHandler(w, r)
-			return
+		if ns, err := GetSerieById(post.Serie.String); err != nil {
+			return &appError{Error: err, Message: "database error fetching series for post", Response: "Error obteniendo datos.", Status: 500}
+		} else {
+			serie = ns
 		}
 	}
 
-	recommendations, err := generateSuggestions(post.Id)
-	if err != nil {
-		panic(err)
+	var recommendations []PostRecommendation
+	if nr, err := generateSuggestions(post.Id); err != nil {
+		logger.Error("[%s] error fetching recommendations: %s", r.Context().Value("rid"), err.Error())
+		recommendations = make([]PostRecommendation, 0)
+	} else {
+		recommendations = nr
 	}
 
-	err = t.ExecuteTemplate(w, "post.html", struct {
+	var err = t.ExecuteTemplate(w, "post.html", struct {
 		Post            FullPost
 		Recommendations []PostRecommendation
 		Meta            PageMeta
@@ -61,8 +61,8 @@ func PostPage(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	if err != nil {
-		logger.Error("[autores] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
+		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando la página solicitada.", Status: 500}
 	}
+
+	return nil
 }
