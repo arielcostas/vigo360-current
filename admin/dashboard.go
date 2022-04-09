@@ -9,13 +9,25 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
 
 func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
-	sesion := verifyLogin(w, r)
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
 
 	avisos := []Aviso{}
-	err := db.Select(&avisos, "SELECT DATE_FORMAT(fecha_creacion, '%d %b.') as fecha_creacion, titulo, contenido FROM avisos ORDER BY avisos.fecha_creacion DESC LIMIT 5")
+	err = db.Select(&avisos, "SELECT DATE_FORMAT(fecha_creacion, '%d %b.') as fecha_creacion, titulo, contenido FROM avisos ORDER BY avisos.fecha_creacion DESC LIMIT 5")
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return newDatabaseReadAppError(err, "avisos")
@@ -29,11 +41,9 @@ func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	err = t.ExecuteTemplate(w, "admin-dashboard.html", struct {
-		Sesion Sesion
 		Avisos []Aviso
 		Posts  []DashboardPost
 	}{
-		Sesion: sesion,
 		Avisos: avisos,
 		Posts:  posts,
 	})

@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -32,10 +33,21 @@ var defaultImageJPG []byte
 var defaultImageWebp []byte
 
 func listPosts(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+
 	posts := []ResumenPost{}
 
-	err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, DATE_FORMAT(fecha_publicacion,'%d-%m-%Y') as fecha_publicacion, autor_id, autores.nombre as autor_nombre, count(tag_id) as canttags FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id GROUP BY publicaciones.id ORDER BY publicado ASC, publicaciones.fecha_publicacion DESC;`)
+	err = db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, DATE_FORMAT(fecha_publicacion,'%d-%m-%Y') as fecha_publicacion, autor_id, autores.nombre as autor_nombre, count(tag_id) as canttags FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id GROUP BY publicaciones.id ORDER BY publicado ASC, publicaciones.fecha_publicacion DESC;`)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return newDatabaseReadAppError(err, "posts")
@@ -56,7 +68,19 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 
 // Data to be input via a form to create a new post
 func createPost(w http.ResponseWriter, r *http.Request) *appError {
-	art_autor := verifyLogin(w, r).Id
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	sess, err := getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+
+	var art_autor = sess.Autor_id
 
 	if err := r.ParseForm(); err != nil {
 		return &appError{Error: err, Message: "error parsing form",

@@ -43,7 +43,6 @@ func InitRouter() *mux.Router {
 	router.Handle("/admin/sesiones", appHandler(listSessions)).Methods("GET")
 
 	router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		verifyLogin(w, r)
 		w.WriteHeader(404)
 		t.ExecuteTemplate(w, "_404.html", struct{}{})
 	})

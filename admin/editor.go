@@ -12,18 +12,29 @@ import (
 	"net/http"
 	"os"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
 
 func postEditor(w http.ResponseWriter, r *http.Request) *appError {
-	// TODO: Check author is same as session
-	verifyLogin(w, r)
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
 	post_id := mux.Vars(r)["id"]
 
+	// TODO: Check author is same as session
 	post := PostEditar{}
 
-	err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
+	err = db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -73,7 +84,18 @@ type EditPostActionFormInput struct {
 }
 
 func editPost(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+
 	publicacion_id := mux.Vars(r)["id"]
 
 	// TODO: Check post exists before parsing form

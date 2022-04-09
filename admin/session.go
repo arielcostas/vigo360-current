@@ -5,71 +5,46 @@ import (
 	"errors"
 	"net/http"
 	"time"
-
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 )
-
-func revokeSession(sessid string) error {
-	_, err := db.Exec("UPDATE sesiones SET revocada = 1 WHERE sessid = ?;", sessid)
-	return err
-}
-
-func gotoLogin(w http.ResponseWriter, r *http.Request) Sesion {
-	http.Redirect(w, r, "/admin/login", http.StatusTemporaryRedirect)
-	return Sesion{}
-}
-
-func verifyLogin(w http.ResponseWriter, r *http.Request) Sesion {
-	// TODO: Refactor this to return an error or the session AND DO NOT SEND TO LOG IN
-	cookie, err := r.Cookie("sess")
-
-	if errors.Is(err, http.ErrNoCookie) && r.URL.Path != "/admin/login" {
-		logger.Notice("unauthenticated user tried accessing auth-requiring page %s", r.URL.Path)
-		return gotoLogin(w, r)
-	}
-
-	if err != nil && r.URL.Path != "/admin/login" {
-		logger.Error("error getting session cookie: %s", err.Error())
-		return gotoLogin(w, r)
-	} else if err != nil {
-		return Sesion{}
-	}
-
-	user := Sesion{}
-
-	err = db.QueryRowx("SELECT sessid, iniciada, id, nombre, rol FROM sesiones LEFT JOIN autores ON sesiones.autor_id = autores.id WHERE sessid = ? AND revocada = false;", cookie.Value).StructScan(&user)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("error in login verification: %s", err.Error())
-	} else if err != nil {
-		logger.Error("unexpected error fetching session from database: %s", err.Error())
-	}
-
-	if err != nil && r.URL.Path != "/admin/login" {
-		return gotoLogin(w, r)
-	}
-
-	hora, _ := time.Parse("2006-01-02 15:04:05", user.Iniciada)
-
-	if time.Since(hora).Hours() > 6 {
-		db.Exec("UPDATE sesiones SET revocada=true WHERE sessid=?", user.Sessid)
-		logger.Warning("session older than 6 hours, revoking automatically")
-		if r.URL.Path != "/admin/login" {
-			return gotoLogin(w, r)
-		} else {
-			return Sesion{}
-		}
-	}
-
-	// Logged in successfully, no sense to log in again
-	if r.URL.Path == "/admin/login" {
-		http.Redirect(w, r, "/admin/dashboard", http.StatusTemporaryRedirect)
-	}
-
-	// It's not the login page and the user is logged in
-	return user
-}
 
 func listSessions(w http.ResponseWriter, r *http.Request) *appError {
 	return nil
+}
+
+func revokeSession(sessid string) error {
+	_, err := db.Exec("UPDATE sesiones SET revocada = 1 WHERE sessid = ?;", sessid)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var ErrExpiredSession = errors.New("session was older than 6 hours and was revoked automatically")
+var ErrInvalidSession = errors.New("session was older than 6 hours and was revoked automatically")
+
+/*
+	Verifies a login token's validity and returns whether is valid or not
+	and an error explaining what went wrong
+*/
+func getSession(token string) (Session, error) {
+	var session Session
+	err := db.QueryRowx("SELECT sessid as id, iniciada, id as autor_id, nombre as autor_nombre, rol as autor_rol FROM sesiones LEFT JOIN autores ON sesiones.autor_id = autores.id WHERE sessid = ? AND revocada = false;", token).StructScan(&session)
+	if err != nil {
+		if !errors.Is(err, sql.ErrNoRows) {
+			return Session{}, ErrInvalidSession
+		}
+		return Session{}, err
+	}
+
+	hora, err := time.Parse("2006-01-02 15:04:05", session.Iniciada)
+	if time.Since(hora).Hours() > 6 {
+		_, err = db.Exec("UPDATE sesiones SET revocada=true WHERE sessid=?", session.Id)
+		if err != nil {
+			return Session{}, err
+		}
+		return Session{}, ErrExpiredSession
+	}
+
+	return session, nil
 }

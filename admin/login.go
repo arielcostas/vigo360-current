@@ -26,8 +26,18 @@ type LoginRow struct {
 }
 
 func viewLogin(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
-	err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
+	var sc, err = r.Cookie("sess")
+	if err == nil {
+		sess, err := getSession(sc.Value)
+
+		if err == nil { // User is logged in
+			logger.Notice("%s is already logged in", sess.Autor_id)
+			http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
+			return nil
+		}
+	}
+
+	err = t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
 		return newTemplateRenderingAppError(err)
 	}
@@ -35,7 +45,17 @@ func viewLogin(w http.ResponseWriter, r *http.Request) *appError {
 }
 
 func doLogin(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
+	// TODO: Revise this
+	var sc, err = r.Cookie("sess")
+	if err == nil {
+		sess, err := getSession(sc.Value)
+
+		if err == nil { // User is logged in
+			logger.Notice("%s is already logged in", sess.Autor_id)
+			http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
+			return nil
+		}
+	}
 
 	if err := r.ParseForm(); err != nil {
 		return &appError{Error: err, Message: "error parsing form",

@@ -11,13 +11,25 @@ import (
 	"net/http"
 	"strings"
 
+	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
 )
 
 func listSeries(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+
 	series := []Serie{}
-	err := db.Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)
+	err = db.Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return newDatabaseReadAppError(err, "series")
 	}
@@ -39,7 +51,17 @@ type CreateSeriesFormInput struct {
 }
 
 func createSeries(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
 
 	if err := r.ParseForm(); err != nil {
 		return &appError{Error: err, Message: "error parsing form",

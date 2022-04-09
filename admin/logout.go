@@ -13,11 +13,15 @@ import (
 )
 
 func logoutPage(w http.ResponseWriter, r *http.Request) *appError {
-	verifyLogin(w, r)
-	sess, _ := r.Cookie("sess")
+	sc, err := r.Cookie("sess")
+	if err != nil { // User isn't logged in
+		http.Redirect(w, r, "/admin/login", 302)
+		return nil
+	}
 
-	if err := revokeSession(sess.Value); err != nil {
-		return &appError{Error: err, Message: "error revoking session " + sess.Value,
+	sess, _ := getSession(sc.Value)
+	if err := revokeSession(sess.Id); err != nil {
+		return &appError{Error: err, Message: "error revoking session with token " + sess.Id,
 			Response: "Hubo un error cerrando la sesión", Status: 500}
 	}
 
@@ -32,7 +36,7 @@ func logoutPage(w http.ResponseWriter, r *http.Request) *appError {
 		Secure:   true,
 	})
 
-	logger.Information("logging out session with id %s", sess.Value)
+	logger.Information("revoked session with id %s", sess.Id)
 	w.Header().Add("Location", "/admin/login")
 	w.WriteHeader(302)
 	return nil

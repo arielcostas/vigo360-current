@@ -10,12 +10,12 @@ import (
 	"errors"
 )
 
-type Sesion struct {
-	Sessid   string
-	Id       string
-	Iniciada string
-	Nombre   string
-	Rol      string
+type Session struct {
+	Id           string
+	Iniciada     string
+	Autor_id     string
+	Autor_nombre string
+	Autor_rol    string
 }
 
 type Aviso struct {
