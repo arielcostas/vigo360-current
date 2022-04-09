@@ -15,6 +15,7 @@ import (
 	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"git.sr.ht/~arielcostas/new.vigo360.es/public"
+	"github.com/go-co-op/gocron"
 	"github.com/gorilla/mux"
 	"github.com/thanhpk/randstr"
 )
@@ -48,6 +49,22 @@ func main() {
 	logger.Information("starting web server on %s", PORT)
 
 	common.DatabaseInit()
+
+	// Automatically revoke sessions every 6 hours
+	s := gocron.NewScheduler(time.Local)
+	s.Every(5).Minutes().Do(func() {
+		logger.Information("starting session cleanup")
+		res, err := common.Database.DB.Exec(`UPDATE sesiones SET revocada = 0 WHERE iniciada < DATE_SUB(NOW(), INTERVAL 6 HOUR);`)
+		if err != nil {
+			logger.Critical("error cleaning old sessions: %s", err.Error())
+		}
+		updated, err := res.RowsAffected()
+		if err != nil {
+			logger.Critical("error getting affected rows for session-cleaning: %s", err.Error())
+		}
+		logger.Information("%d sessions older than 6 hours have been revoked", updated)
+	})
+	s.StartAsync()
 
 	http.Handle("/admin/", mw(admin.InitRouter()))
 	http.Handle("/includes/", mw(initIncludesRouter()))
