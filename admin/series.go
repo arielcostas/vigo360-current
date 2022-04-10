@@ -21,7 +21,7 @@ func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return nil
 	}
-	_, err = getSession(sc.Value)
+	sess, err := getSession(sc.Value)
 	if err != nil {
 		logger.Notice("unauthenticated user tried to access this page")
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
@@ -35,9 +35,11 @@ func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	err = t.ExecuteTemplate(w, "series.html", struct {
-		Series []Serie
+		Series  []Serie
+		Session Session
 	}{
-		Series: series,
+		Series:  series,
+		Session: sess,
 	})
 	if err != nil {
 		return &appError{Error: err, Message: "error rendering page",

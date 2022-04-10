@@ -16,6 +16,7 @@ type Session struct {
 	Autor_id     string
 	Autor_nombre string
 	Autor_rol    string
+	Permisos     map[string]bool
 }
 
 type Aviso struct {
@@ -55,4 +56,10 @@ type Tag struct {
 	Seleccionada bool
 }
 
-var InvalidImageFormatError error = errors.New("invalid image MIME type")
+type PageMeta struct {
+	Titulo string
+	Sesion Session
+}
+
+var ErrImageFormatError error = errors.New("invalid image MIME type")
+var ErrNotAuthorized error = errors.New("user not authorized to see this page")

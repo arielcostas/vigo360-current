@@ -8,6 +8,7 @@
 
 <body>
 	{{ template "_header.html" . }}
+	{{ $session := .Session }}
 	<main id="post-list">
 		<h2>Gestión de artículos</h2>
 		<section>
@@ -15,19 +16,17 @@
 				<h3>Crear un nuevo artículo</h3>
 				<label for="art-id">
 					ID de artículo
-					<abbr title="Obligatorio - Solo minúsculas, números y guiones, hasta 40 caracteres.">*</abbr>
 				</label>
 				<input type="text" name="art-id" id="art-id" maxlength="40" placeholder="articulo-tema" required />
 				<label for="art-titulo">
 					Título del artículo
-					<abbr title="Obligatorio - Máximo de 80 caracteres.">*</abbr>
 				</label>
 				<input type="text" name="art-titulo" id="art-titulo" placeholder="Un artículo sobre un tema"
 					maxlength="80" required>
 				<button type="submit" class="btn-theme">Crear artículo</button>
 			</form>
-			{{ if ne (len .Posts) 0 }}
 			<section id="post-listing">
+				{{ if ne (len .Posts) 0 }}
 				{{ range .Posts }}
 				<article class="list-post">
 					<a href="/admin/post/{{ .Id }}"
@@ -40,14 +39,20 @@
 						<span>{{ .Fecha_publicacion.Value }}</span>
 						{{ end }}
 						<img width="20" height="20" src="/includes/tags-icon.svg" />
+						{{ $postid := .Id }}
 						<span>{{ .CantTags }}</span>
+						{{ with $session }}
+						{{ if eq (index .Permisos "publicaciones_delete" ) true }}
+						<a href="/admin/post/{{ $postid }}/delete" class="text-danger">Eliminar</a>
+						{{ end }}
+						{{ end }}
 					</p>
 				</article>
 				{{ end }}
+				{{ else }}
+				<span class="user-section-title">No se encontró ningún artículo</span>
+				{{ end }}
 			</section>
-			{{ else }}
-			<span class="user-section-title">No se encontró ningún artículo</span>
-			{{ end }}
 		</section>
 	</main>
 	{{ template "_footer.html" . }}

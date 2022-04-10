@@ -36,6 +36,7 @@ func InitRouter() *mux.Router {
 
 	router.Handle("/admin/post/{id}", appHandler(postEditor)).Methods("GET")
 	router.Handle("/admin/post/{id}", appHandler(editPost)).Methods("POST")
+	router.Handle("/admin/post/{postid}/delete", appHandler(deletePost)).Methods("GET")
 
 	router.Handle("/admin/series", appHandler(listSeries)).Methods("GET")
 	router.Handle("/admin/series", appHandler(createSeries)).Methods("POST")

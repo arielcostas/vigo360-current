@@ -23,7 +23,7 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return nil
 	}
-	_, err = getSession(sc.Value)
+	sess, err := getSession(sc.Value)
 	if err != nil {
 		logger.Notice("unauthenticated user tried to access this page")
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
@@ -59,13 +59,15 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	err = t.ExecuteTemplate(w, "post-id.html", struct {
-		Post   PostEditar
-		Series []Serie
-		Tags   []Tag
+		Post    PostEditar
+		Series  []Serie
+		Tags    []Tag
+		Session Session
 	}{
-		Post:   post,
-		Series: series,
-		Tags:   tags,
+		Post:    post,
+		Series:  series,
+		Tags:    tags,
+		Session: sess,
 	})
 	if err != nil {
 		return newTemplateRenderingAppError(err)
@@ -188,7 +190,7 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 		}
 
 		var portadaJpg, portadaWebp bytes.Buffer
-		if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, InvalidImageFormatError) {
+		if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
 			return &appError{Error: e2, Message: "error processing uploaded image",
 				Response: "La imagen subida no tiene un formato válido. El resto de datos se han guardado.", Status: 400}
 		} else if err != nil {
