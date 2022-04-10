@@ -122,7 +122,7 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 			Response: "Hubo un error guardando el artículo", Status: 500}
 	}
 
-	if err := os.WriteFile(photopath+"/thumb/"+fi.Id+".jpg", defaultImageWebp, 0o644); err != nil {
+	if err := os.WriteFile(photopath+"/thumb/"+fi.Id+".jpg", defaultImageJPG, 0o644); err != nil {
 		tx.Rollback()
 		return &appError{Error: err, Message: "error saving jpg to disk",
 			Response: "Hubo un error guardando el artículo", Status: 500}
