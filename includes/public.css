@@ -649,15 +649,6 @@ code {
 	line-height: 1;
 }
 
-/* #tags-list {
-	max-width: 1024px;
-	margin: 3rem auto 2rem;
-	padding: 1rem 2rem;
-	width: 100%;
-	box-shadow: var(--shadow);
-	background: #fff;
-} */
-
 #tags-list > ul {
 	width: 100%;
 }
