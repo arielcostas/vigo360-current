@@ -7,6 +7,7 @@ package public
 
 import (
 	"database/sql"
+	"errors"
 	"math/rand"
 	"strings"
 )
@@ -90,6 +91,10 @@ func generateSuggestions(original_id string) ([]PostRecommendation, error) {
 		// Persist it
 		rp.Points = points
 		options[i] = rp
+	}
+
+	if len(options) < 2 {
+		return []PostRecommendation{}, errors.New("insufficient posts to recommend")
 	}
 
 	resultado[0] = options[0]
