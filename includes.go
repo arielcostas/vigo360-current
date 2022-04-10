@@ -17,17 +17,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//go:embed includes
+//go:embed .includes
 var includes embed.FS
 
 // Map each file to its etag
 var etags map[string]string = make(map[string]string)
 
 func pregenerateEtags() {
-	entries, _ := includes.ReadDir("includes")
+	entries, _ := includes.ReadDir(".includes")
 	for _, e := range entries {
 		filename := e.Name()
-		bytes, err := includes.ReadFile("includes/" + filename)
+		bytes, err := includes.ReadFile(".includes/" + filename)
 		if err != nil { // Log the error and skip to next one
 			logger.Error("error pregenerating etag for %s: %s", filename, err.Error())
 			continue
@@ -49,7 +49,7 @@ func includesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// We need the extension to return the correct MIME, needed by browsers
 	ext := regexp.MustCompile(`\.[A-Za-z]+$`).FindString(file)
-	bytes, err := includes.ReadFile("includes/" + file)
+	bytes, err := includes.ReadFile(".includes/" + file)
 
 	if err != nil {
 		logger.Error("[includes]: error serving file %s: %s", file, err.Error())

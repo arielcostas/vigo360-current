@@ -4,11 +4,19 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 if [ "$1" == "run" ];
 then
+	mkdir .includes
+	cp static/* .includes/
+	sass styles/:.includes/
 	export $(cat .env | grep -v '^#' | xargs)
 	go run -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
+	rm -r .includes
 elif  [ "$1" == "build" ];
 then
+	mkdir .includes
+	cp static/* .includes/
+	sass --no-source-maps styles/:.includes/
 	go build -o vigo360 -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
+	rm -r .includes
 else
 	printf "Vigo360 launcher script\nusage: ${0} [command]\n\n	build: compiles vigo360 to a binary to be ran in production\n	  run: runs vigo360 via in memory.\n"
 fi
