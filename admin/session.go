@@ -21,7 +21,8 @@ func revokeSession(sessid string) error {
 }
 
 var ErrExpiredSession = errors.New("session was older than 6 hours and was revoked automatically")
-var ErrInvalidSession = errors.New("session was older than 6 hours and was revoked automatically")
+var ErrInvalidSession = errors.New("session token is not valid")
+var ErrUnablePermissions = errors.New("unable to get permissions for session")
 
 /*
 	Verifies a login token's validity and returns whether is valid or not
@@ -44,6 +45,21 @@ func getSession(token string) (Session, error) {
 			return Session{}, err
 		}
 		return Session{}, ErrExpiredSession
+	}
+
+	session.Permisos = make(map[string]bool)
+	perms, err := db.Queryx("SELECT permiso_id FROM permisos_usuarios WHERE autor_id = ?;", session.Autor_id)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return Session{}, ErrUnablePermissions
+	}
+
+	for perms.Next() {
+		var p string
+		err = perms.Scan(&p)
+		if err != nil {
+			continue
+		}
+		session.Permisos[p] = true
 	}
 
 	return session, nil

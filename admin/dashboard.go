@@ -19,7 +19,7 @@ func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return nil
 	}
-	_, err = getSession(sc.Value)
+	sess, err := getSession(sc.Value)
 	if err != nil {
 		logger.Notice("unauthenticated user tried to access this page")
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
@@ -41,11 +41,13 @@ func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	err = t.ExecuteTemplate(w, "admin-dashboard.html", struct {
-		Avisos []Aviso
-		Posts  []DashboardPost
+		Avisos  []Aviso
+		Posts   []DashboardPost
+		Session Session
 	}{
-		Avisos: avisos,
-		Posts:  posts,
+		Avisos:  avisos,
+		Posts:   posts,
+		Session: sess,
 	})
 	if err != nil {
 		return newTemplateRenderingAppError(err)

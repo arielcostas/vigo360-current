@@ -14,6 +14,7 @@ import (
 
 	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/mux"
 )
 
 type ResumenPost struct {
@@ -38,7 +39,7 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return nil
 	}
-	_, err = getSession(sc.Value)
+	sess, err := getSession(sc.Value)
 	if err != nil {
 		logger.Notice("unauthenticated user tried to access this page")
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
@@ -54,9 +55,11 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	err = t.ExecuteTemplate(w, "post.html", struct {
-		Posts []ResumenPost
+		Posts   []ResumenPost
+		Session Session
 	}{
-		Posts: posts,
+		Posts:   posts,
+		Session: sess,
 	})
 
 	if err != nil {
@@ -136,5 +139,44 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 
 	w.Header().Add("Location", "/admin/post/"+fi.Id)
 	w.WriteHeader(303)
+	return nil
+}
+
+func deletePost(w http.ResponseWriter, r *http.Request) *appError {
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	sess, err := getSession(sc.Value)
+	if err != nil {
+		logger.Notice("unauthenticated user tried to access this page")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return nil
+	}
+	if sess.Permisos["publicaciones_delete"] != true {
+		return &appError{Error: ErrUnablePermissions, Message: "user doesn't have permission to delete posts", Response: "No tienes permiso para realizar esta acción", Status: 403}
+	}
+
+	var postid = mux.Vars(r)["postid"]
+	tx, err := db.Begin()
+	if err != nil {
+		return &appError{Error: err, Message: "error beginning transaction", Response: "Error eliminando la publicación", Status: 500}
+	}
+	_, err = tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id=?", postid)
+	if err != nil {
+		return &appError{Error: err, Message: "error deleting from publicaciones_tags", Response: "Error eliminando la publicación", Status: 500}
+	}
+	_, err = tx.Exec("DELETE FROM publicaciones WHERE id=?", postid)
+	if err != nil {
+		return &appError{Error: err, Message: "error deleting from publicaciones", Response: "Error eliminando la publicación", Status: 500}
+	}
+	err = tx.Commit()
+	if err != nil {
+		return &appError{Error: err, Message: "error committing transaction", Response: "Error eliminando la publicación", Status: 500}
+	}
+
+	w.Header().Add("Location", "/admin/post")
+	defer w.WriteHeader(307)
 	return nil
 }

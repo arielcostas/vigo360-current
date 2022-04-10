@@ -56,7 +56,7 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 	case ctype.Is("image/webp"):
 		portada, err = webp.Decode(bytes.NewReader(photoBytes))
 	default:
-		err = InvalidImageFormatError
+		err = ErrImageFormatError
 		return
 	}
 
