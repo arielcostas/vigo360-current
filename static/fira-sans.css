@@ -1,0 +1,41 @@
+/* fira-sans-bold */
+@font-face {
+	font-family: Fira Sans;
+	font-style: normal;
+	font-weight: 700;
+	src: local("Fira Sans Bold"), local("FiraSans-Bold"), url(fira-sans-bold.woff2) format("woff2");
+	font-display: swap;
+}
+/* fira-sans-light */
+@font-face {
+	font-family: Fira Sans;
+	font-style: normal;
+	font-weight: 300;
+	src: local("Fira Sans Light"), local("FiraSans-Light"), url(fira-sans-light.woff2) format("woff2");
+	font-display: swap;
+}
+/* fira-sans-medium */
+@font-face {
+	font-family: Fira Sans;
+	font-style: normal;
+	font-weight: 500;
+	src: local("Fira Sans Medium"), local("FiraSans-Medium"), url(fira-sans-medium.woff2) format("woff2");
+	font-display: swap;
+}
+/* fira-sans */
+@font-face {
+	font-family: Fira Sans;
+	font-style: normal;
+	font-weight: 400;
+	src: local("Fira Sans"), local("FiraSans-Regular"), url(fira-sans.woff2) format("woff2");
+	font-display: swap;
+}
+/* fira-sans-thin */
+@font-face {
+	font-family: Fira Sans;
+	font-style: normal;
+	font-weight: 100;
+	src: local("Fira Sans Thin"), local("FiraSans-Thin"), url(fira-sans-thin.woff2) format("woff2");
+	font-display: swap;
+}
+
