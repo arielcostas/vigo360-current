@@ -90,7 +90,7 @@ func InitRouter(database *sqlx.DB) *mux.Router {
 	router.Handle(`/contacto`, appHandler(ContactoPage)).Methods("GET")
 
 	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
-	router.HandleFunc(`/atom.xml`, PostsAtomFeed).Methods("GET")
+	router.Handle(`/atom.xml`, appHandler(PostsAtomFeed)).Methods("GET")
 	router.HandleFunc(`/trabajos/atom.xml`, TrabajosAtomFeed).Methods("GET")
 	router.HandleFunc(`/tags/{tagid:[0-9]+}/atom.xml`, TagsAtomFeed).Methods("GET")
 	router.HandleFunc(`/autores/{autorid}/atom.xml`, AutorAtomFeed).Methods("GET")

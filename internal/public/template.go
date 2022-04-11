@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"embed"
 	"html/template"
+	"strings"
 	"time"
 
 	goldmarkfigures "github.com/mdigger/goldmark-figures"
@@ -44,6 +45,9 @@ var t = func() *template.Template {
 			var buf bytes.Buffer
 			parser.Convert([]byte(text), &buf)
 			return template.HTML(buf.Bytes())
+		},
+		"split": func(text string, separator string) []string {
+			return strings.Split(text, separator)
 		},
 	}
 

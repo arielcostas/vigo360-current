@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -42,40 +43,34 @@ type FeedParams struct {
 	Entries      []AtomEntry
 }
 
-func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
-	tags := []Tag{}
-	tagMap := map[string]string{}
-	err := db.Select(&tags, `SELECT * FROM tags`)
-
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error selecting tags: %s", err.Error())
+func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
+	pp, err := ListarPublicacionesPublicas()
+	if err != nil {
+		return &appError{Error: err, Message: "error obtaining public posts", Response: "Error obteniendo datos", Status: 500}
 	}
 
-	for _, tag := range tags {
-		tagMap[tag.Id] = tag.Nombre
+	var lastUpdate time.Time
+	for _, pub := range pp {
+		time.Parse("2006-01-02 15:04:05", pub.Fecha_actualizacion)
 	}
 
-	posts := []AtomEntry{}
-	err = db.Select(&posts, `SELECT pp.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas pp LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON pp.autor_id = autores.id GROUP BY id;`)
-
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error selecting posts: %s", err.Error())
+	var result bytes.Buffer
+	err = t.ExecuteTemplate(&result, "atom.xml", struct {
+		BaseURL      string
+		LastUpdate   string
+		GeneratorURI string
+		Entries      []ResumenPublicacion
+	}{
+		BaseURL:      os.Getenv("DOMAIN"),
+		LastUpdate:   lastUpdate.Format(time.RFC3339),
+		GeneratorURI: os.Getenv("SOURCE_URL"),
+		Entries:      pp,
+	})
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Error produciendo feed", Status: 500}
 	}
-
-	for i := 0; i < len(posts); i++ {
-		p := posts[i]
-		p.Tags = []string{}
-
-		for _, tag := range strings.Split(p.Raw_tags.String, ",") {
-			p.Tags = append(p.Tags, tagMap[tag])
-		}
-
-		posts[i] = p
-	}
-
-	writeFeed(w, r, "atom.xml", posts, "Publicaciones", "")
+	w.Write(result.Bytes())
+	return nil
 }
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {

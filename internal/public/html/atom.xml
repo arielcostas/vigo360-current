@@ -1,7 +1,7 @@
 {{ safeHTML `<?xml version="1.0" encoding="utf-8"?>` }}
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
 	<id>{{ .BaseURL }}/</id>
-	<title>{{ .Nombre }} - Vigo360</title>
+	<title>Publicaciones - Vigo360</title>
 	<subtitle>Últimas publicaciones en el sitio web de Vigo360</subtitle>
 	<updated>{{ .LastUpdate }}</updated>
 	<generator uri="{{ .GeneratorURI }}">Vigo360</generator>
@@ -18,11 +18,11 @@
 			<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
 			<summary>{{ .Resumen }}</summary>
 			<author>
-				<name>{{ .Autor_nombre }}</name>
-				<email>{{ .Autor_email }}</email>
-				<uri>{{ $domain }}/autores/{{ .Autor_id }}</uri>
+				<name>{{ .Autor.Nombre }}</name>
+				<email>{{ .Autor.Email }}</email>
+				<uri>{{ $domain }}/autores/{{ .Autor.Id }}</uri>
 			</author>
-			{{ range .Tags }}
+			{{ range (split .Tags ",") }}
 				{{ if ne . "" }}<category term="{{ . }}" />{{ end }}
 			{{- end}}
 		</entry>
