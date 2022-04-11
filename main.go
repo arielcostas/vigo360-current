@@ -69,7 +69,6 @@ func main() {
 	s.StartAsync()
 
 	http.Handle("/admin/", mw(admin.InitRouter()))
-	http.Handle("/includes/", mw(initIncludesRouter()))
 	http.Handle("/", mw(public.InitRouter()))
 
 	err := http.ListenAndServe(PORT, nil)
