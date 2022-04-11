@@ -8,7 +8,6 @@ package admin
 import (
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/common"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 )
@@ -21,8 +20,8 @@ func redirectToDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	return nil
 }
 
-func InitRouter() *mux.Router {
-	db = common.Database
+func InitRouter(database *sqlx.DB) *mux.Router {
+	db = database
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.Handle("/admin/", appHandler(redirectToDashboard)).Methods("GET")
