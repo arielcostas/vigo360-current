@@ -11,10 +11,10 @@ import (
 	"html/template"
 	"time"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	goldmarkfigures "github.com/mdigger/goldmark-figures"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
+	"vigo360.es/new/internal/logger"
 )
 
 var parser goldmark.Markdown = goldmark.New(

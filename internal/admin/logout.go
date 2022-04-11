@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
+	"vigo360.es/new/internal/logger"
 )
 
 func logoutPage(w http.ResponseWriter, r *http.Request) *appError {

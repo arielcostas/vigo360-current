@@ -10,8 +10,8 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/thanhpk/randstr"
+	"vigo360.es/new/internal/logger"
 )
 
 type AdminLoginParams struct {

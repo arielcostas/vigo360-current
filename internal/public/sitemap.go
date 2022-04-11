@@ -10,7 +10,7 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
+	"vigo360.es/new/internal/logger"
 )
 
 type SitemapQuery struct {

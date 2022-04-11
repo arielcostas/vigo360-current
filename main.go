@@ -11,12 +11,12 @@ import (
 	"os"
 	"time"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/admin"
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
-	"git.sr.ht/~arielcostas/new.vigo360.es/public"
 	"github.com/go-co-op/gocron"
 	"github.com/gorilla/mux"
 	"github.com/thanhpk/randstr"
+	"vigo360.es/new/internal/admin"
+	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/public"
 )
 
 var (

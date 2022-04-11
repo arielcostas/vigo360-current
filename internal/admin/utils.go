@@ -14,11 +14,11 @@ import (
 	"image/png"
 	"io"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/chai2010/webp"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/nfnt/resize"
 	"golang.org/x/crypto/bcrypt"
+	"vigo360.es/new/internal/logger"
 )
 
 func ValidatePassword(password string, hash string) bool {

@@ -1,4 +1,4 @@
-module git.sr.ht/~arielcostas/new.vigo360.es
+module vigo360.es/new
 
 go 1.17
 

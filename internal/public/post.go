@@ -10,8 +10,8 @@ import (
 	"errors"
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/logger"
 )
 
 func PostPage(w http.ResponseWriter, r *http.Request) *appError {

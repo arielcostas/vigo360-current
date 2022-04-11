@@ -12,9 +12,9 @@ import (
 	"net/http"
 	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/logger"
 )
 
 type ResumenPost struct {

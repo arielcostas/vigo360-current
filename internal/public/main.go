@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/logger"
 )
 
 var db *sqlx.DB

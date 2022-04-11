@@ -11,8 +11,8 @@ import (
 	"net/http"
 	"strings"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/go-playground/validator/v10"
+	"vigo360.es/new/internal/logger"
 )
 
 func listSeries(w http.ResponseWriter, r *http.Request) *appError {

@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/logger"
 )
 
 type AtomEntry struct {

@@ -3,12 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package public
+package admin
 
 import (
 	"net/http"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
+	"vigo360.es/new/internal/logger"
 )
 
 type appError struct {
@@ -26,9 +26,12 @@ type appHandler func(http.ResponseWriter, *http.Request) *appError
 
 func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := fn(w, r); err != nil {
-		logger.Error("[%s] %s: %s", r.URL.Path, err.Message, err.Error.Error())
+		var rid = r.Context().Value("rid").(string)
+		logger.Error("[%s] `%s` %s: %s", rid, r.URL.Path, err.Message, err.Error.Error())
+
+		w.Header().Add("Vigo360-RID", rid)
 		w.WriteHeader(err.Status)
 		w.Write([]byte(err.Response))
-		w.Write([]byte("\nSi crees que se trata de un error, contacta con el administrador."))
+		w.Write([]byte("\nSi crees que se trata de un error, contacta con el administrador e incluye el siguiente código: " + rid))
 	}
 }

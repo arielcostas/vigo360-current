@@ -8,9 +8,9 @@ package main
 import (
 	"os"
 
-	"git.sr.ht/~arielcostas/new.vigo360.es/logger"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/logger"
 )
 
 func DatabaseInit() *sqlx.DB {
