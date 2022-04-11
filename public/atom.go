@@ -80,7 +80,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) {
 
 func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 	trabajos := []AtomEntry{}
-	err := db.Select(&trabajos, `SELECT trabajos.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos LEFT JOIN autores ON trabajos.autor_id = autores.id WHERE fecha_publicacion < NOW();`)
+	err := db.Select(&trabajos, `SELECT trabajos.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM TrabajosPublicos trabajos LEFT JOIN autores ON trabajos.autor_id = autores.id`)
 
 	// An unexpected error
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {

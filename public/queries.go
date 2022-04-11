@@ -42,7 +42,7 @@ func GetFullTrabajo(id string) (Trabajo, error) {
 	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
 	DATE_FORMAT(trabajos.fecha_publicacion, '%d %b. %Y') as fecha_actualizacion, 
 	autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
-	FROM trabajos 
+	FROM TrabajosPublicos trabajos 
 	LEFT JOIN autores on trabajos.autor_id = autores.id 
 	WHERE trabajos.id = ?;`
 

@@ -6,7 +6,7 @@ if [ "$1" == "run" ];
 then
 	mkdir .includes
 	cp static/* .includes/
-	sass --no-source-map styles/:.includes/
+	sass --source-map --embed-source-map styles/:.includes/
 	export $(cat .env | grep -v '^#' | xargs)
 	go run -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
 	rm -r .includes

@@ -34,7 +34,7 @@ type Adjunto struct {
 
 func listTrabajos(w http.ResponseWriter, r *http.Request) *appError {
 	trabajos := []ResumenPost{}
-	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre FROM trabajos LEFT JOIN autores on trabajos.autor_id = autores.id WHERE trabajos.fecha_publicacion < NOW() ORDER BY trabajos.fecha_publicacion DESC`)
+	err := db.Select(&trabajos, `SELECT trabajos.id, DATE_FORMAT(fecha_publicacion, '%d %b. %Y') as fecha_publicacion, alt_portada, titulo, autores.nombre FROM TrabajosPublicos trabajos LEFT JOIN autores on trabajos.autor_id = autores.id ORDER BY trabajos.fecha_publicacion DESC`)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return &appError{Error: err, Message: "error listing trabajos", Response: "Error recuperando datos", Status: 500}
