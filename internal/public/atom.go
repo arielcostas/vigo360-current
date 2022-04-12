@@ -17,6 +17,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/model"
 )
 
 type AtomEntry struct {
@@ -44,7 +45,7 @@ type FeedParams struct {
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
-	pp, err := ListarPublicacionesPublicas()
+	pp, err := model.ListarPublicacionesPublicas()
 	if err != nil {
 		return &appError{Error: err, Message: "error obtaining public posts", Response: "Error obteniendo datos", Status: 500}
 	}
@@ -66,7 +67,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 		BaseURL      string
 		LastUpdate   string
 		GeneratorURI string
-		Entries      []ResumenPublicacion
+		Entries      []model.ResumenPublicacion
 	}{
 		BaseURL:      os.Getenv("DOMAIN"),
 		LastUpdate:   lastUpdate.Format(time.RFC3339),
