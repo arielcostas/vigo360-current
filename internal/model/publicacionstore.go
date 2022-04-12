@@ -75,6 +75,25 @@ func (s *PublicacionStore) ListarPorAutor(autor_id string) (Publicaciones, error
 	return resultado, nil
 }
 
+func (s *PublicacionStore) ListarPorTag(tag_id string) (Publicaciones, error) {
+	var resultado = make(Publicaciones, 0)
+	publicaciones, err := s.Listar()
+	if err != nil {
+		return Publicaciones{}, err
+	}
+
+	for _, pub := range publicaciones {
+		for _, tag := range pub.Tags {
+			if tag.Id == tag_id {
+				resultado = append(resultado, pub)
+				break
+			}
+		}
+	}
+
+	return resultado, nil
+}
+
 func (s *PublicacionStore) ObtenerPorId(id string) (Publicacion, error) {
 	panic("not implemented")
 }

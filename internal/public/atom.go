@@ -59,7 +59,7 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 	ps := model.NewPublicacionStore(database.GetDB())
 	pp, err := ps.Listar()
 	if err != nil {
-		return &appError{Error: err, Message: "error obtaining public posts", Response: "Error obteniendo datos", Status: 500}
+		return &appError{Error: err, Message: "error obtaining posts", Response: "Error obteniendo datos", Status: 500}
 	}
 	pp = pp.FiltrarPublicas()
 
@@ -96,26 +96,47 @@ func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
 	writeFeed(w, r, "trabajos-atom.xml", trabajos, "Trabajos", "")
 }
 
-func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
+func TagsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
+	var (
+		db = database.GetDB()
+		ts = model.NewTagStore(db)
+		ps = model.NewPublicacionStore(db)
+	)
+
 	tagid := mux.Vars(r)["tagid"]
-	trabajos := []AtomEntry{}
-	err := db.Select(&trabajos, `SELECT publicaciones.id, publicaciones.fecha_publicacion, publicaciones.fecha_actualizacion, publicaciones.titulo, publicaciones.resumen, publicaciones.autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM publicaciones_tags LEFT JOIN publicaciones ON publicaciones_tags.publicacion_id = publicaciones.id LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones_tags.tag_id = ? AND fecha_publicacion < NOW();`, tagid)
+	tag, err := ts.Obtener(tagid)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &appError{Error: err, Message: "tried generating feed for non-existent tag", Response: "Tag no encontrada", Status: 404}
+		}
+		return &appError{Error: err, Message: "error getting tag", Response: "Error recuperando datos", Status: 500}
+	}
+	pp, err := ps.ListarPorTag(tag.Id)
+	if err != nil {
+		return &appError{Error: err, Message: "error obtaining posts", Response: "Error obteniendo datos", Status: 500}
+	}
+	pp = pp.FiltrarPublicas()
 
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error selecting posts for tag %s: %s", tagid, err.Error())
+	lastUpdate, err := pp.ObtenerUltimaActualizacion()
+	if err != nil {
+		return &appError{Error: err, Message: "error parsing date", Response: "Error obteniendo datos", Status: 500}
 	}
 
-	var tagnombre string
-	err = db.QueryRowx(`SELECT nombre FROM tags WHERE id = ?;`, tagid).Scan(&tagnombre)
-
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error fetching tags: %s", err.Error())
+	var result bytes.Buffer
+	err = t.ExecuteTemplate(&result, "atom.xml", AtomParams{
+		Dominio:    os.Getenv("DOMAIN"),
+		Path:       "/tags/" + tag.Id + "/atom.xml",
+		Titulo:     tag.Nombre,
+		Subtitulo:  "Últimas publicaciones con la etiqueta " + tag.Nombre,
+		LastUpdate: lastUpdate.Format(time.RFC3339),
+		Entries:    pp,
+	})
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Error produciendo feed", Status: 500}
 	}
+	w.Write(result.Bytes())
+	return nil
 
-	// TODO: Use tagid
-	writeFeed(w, r, "tags-id-atom.xml", trabajos, tagnombre, tagid)
 }
 
 func AutorAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
@@ -136,7 +157,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 
 	pp, err := ps.ListarPorAutor(autorid)
 	if err != nil {
-		return &appError{Error: err, Message: "error obtaining public posts", Response: "Error obteniendo datos", Status: 500}
+		return &appError{Error: err, Message: "error obtaining posts", Response: "Error obteniendo datos", Status: 500}
 	}
 	pp = pp.FiltrarPublicas()
 
