@@ -51,7 +51,14 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 
 	var lastUpdate time.Time
 	for _, pub := range pp {
-		time.Parse("2006-01-02 15:04:05", pub.Fecha_actualizacion)
+		var ut, err = time.Parse("2006-01-02 15:04:05", pub.Fecha_actualizacion)
+		if err != nil {
+			return &appError{Error: err, Message: "error parsing date", Response: "Error obteniendo datos", Status: 500}
+		}
+
+		if ut.Unix() > lastUpdate.Unix() {
+			lastUpdate = ut
+		}
 	}
 
 	var result bytes.Buffer
