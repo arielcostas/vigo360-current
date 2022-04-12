@@ -36,6 +36,8 @@ type AtomEntry struct {
 	Tags         []string
 }
 
+// DEPRECATED
+// TODO: Get rid of this
 type FeedParams struct {
 	BaseURL      string
 	Id           string
@@ -43,6 +45,15 @@ type FeedParams struct {
 	LastUpdate   string
 	GeneratorURI string
 	Entries      []AtomEntry
+}
+
+type AtomParams struct {
+	Dominio    string
+	Path       string
+	Titulo     string
+	Subtitulo  string
+	LastUpdate string
+	Entries    model.Publicaciones
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
@@ -66,16 +77,13 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	var result bytes.Buffer
-	err = t.ExecuteTemplate(&result, "atom.xml", struct {
-		BaseURL      string
-		LastUpdate   string
-		GeneratorURI string
-		Entries      model.Publicaciones
-	}{
-		BaseURL:      os.Getenv("DOMAIN"),
-		LastUpdate:   lastUpdate.Format(time.RFC3339),
-		GeneratorURI: os.Getenv("SOURCE_URL"),
-		Entries:      pp,
+	err = t.ExecuteTemplate(&result, "atom.xml", AtomParams{
+		Dominio:    os.Getenv("DOMAIN"),
+		Path:       "/atom.xml",
+		Titulo:     "Publicaciones",
+		Subtitulo:  "Últimas publicaciones en el sitio web de Vigo360",
+		LastUpdate: lastUpdate.Format(time.RFC3339),
+		Entries:    pp,
 	})
 	if err != nil {
 		return &appError{Error: err, Message: "error rendering template", Response: "Error produciendo feed", Status: 500}

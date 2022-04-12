@@ -1,14 +1,14 @@
 {{ safeHTML `<?xml version="1.0" encoding="utf-8"?>` }}
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
-	<id>{{ .BaseURL }}/</id>
-	<title>Publicaciones - Vigo360</title>
-	<subtitle>Últimas publicaciones en el sitio web de Vigo360</subtitle>
+	<id>{{ .Dominio }}{{ .Path }}</id>
+	<title>{{ .Titulo }} - Vigo360</title>
+	<subtitle>{{ .Subtitulo }}</subtitle>
 	<updated>{{ .LastUpdate }}</updated>
-	<generator uri="{{ .GeneratorURI }}">Vigo360</generator>
-	<link rel="self" href="{{ .BaseURL }}/atom.xml" />
+	<generator uri="https://gitlab.com/vigo360/new.vigo360.es">Vigo360</generator>
+	<link rel="self" href="{{ .Dominio }}{{ .Path }}" />
 	<icon>/includes/logo.png</icon>
 	
-	{{- $domain := .BaseURL }}
+	{{- $domain := .Dominio }}
 	{{- range .Entries }}
 	<entry>
 		<id>{{ $domain }}/post/{{ .Id }}</id>
