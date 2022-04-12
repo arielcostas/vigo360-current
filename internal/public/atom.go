@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -57,8 +56,8 @@ type AtomParams struct {
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
-	rps := model.NewPublicacionStore(database.GetDB())
-	pp, err := rps.Listar()
+	ps := model.NewPublicacionStore(database.GetDB())
+	pp, err := ps.Listar()
 	if err != nil {
 		return &appError{Error: err, Message: "error obtaining public posts", Response: "Error obteniendo datos", Status: 500}
 	}
@@ -119,52 +118,47 @@ func TagsAtomFeed(w http.ResponseWriter, r *http.Request) {
 	writeFeed(w, r, "tags-id-atom.xml", trabajos, tagnombre, tagid)
 }
 
-func AutorAtomFeed(w http.ResponseWriter, r *http.Request) {
+func AutorAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
+	var (
+		db = database.GetDB()
+		as = model.NewAutorStore(db)
+		ps = model.NewPublicacionStore(db)
+	)
+
 	autorid := mux.Vars(r)["autorid"]
-
-	var autor_nombre string
-	err := db.QueryRowx("SELECT nombre FROM autores WHERE id=?", autorid).Scan(&autor_nombre)
-
-	if errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[atom] autor not found")
-		NotFoundHandler(w, r)
-		return
-	}
-
-	tags := []Tag{}
-	tagMap := map[string]string{}
-	err = db.Select(&tags, `SELECT * FROM tags`)
-
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error selecting tags: %s", err.Error())
-	}
-
-	for _, tag := range tags {
-		tagMap[tag.Id] = tag.Nombre
-	}
-
-	posts := []AtomEntry{}
-	// TODO: Clean this query
-	err = db.Select(&posts, `SELECT pp.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, tag_id, GROUP_CONCAT(tag_id) as raw_tags FROM PublicacionesPublicas pp LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id LEFT JOIN autores ON pp.autor_id = autores.id WHERE autor_id=? GROUP BY id;`, autorid)
-
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error selecting posts by author %s: %s", autorid, err.Error())
-	}
-
-	for i := 0; i < len(posts); i++ {
-		p := posts[i]
-		p.Tags = []string{}
-
-		for _, tag := range strings.Split(p.Raw_tags.String, ",") {
-			p.Tags = append(p.Tags, tagMap[tag])
+	var autor, err = as.ObtenerBasico(autorid)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return &appError{Error: err, Message: "tried generating feed for nonexistent author", Response: "Autor no encontrado", Status: 404}
 		}
-
-		posts[i] = p
+		return &appError{Error: err, Message: "error checking author exists", Response: "Error obteniendo datos", Status: 500}
 	}
 
-	writeFeed(w, r, "autores-atom.xml", posts, "Ariel Costas", autorid)
+	pp, err := ps.ListarPorAutor(autorid)
+	if err != nil {
+		return &appError{Error: err, Message: "error obtaining public posts", Response: "Error obteniendo datos", Status: 500}
+	}
+	pp = pp.FiltrarPublicas()
+
+	lastUpdate, err := pp.ObtenerUltimaActualizacion()
+	if err != nil {
+		return &appError{Error: err, Message: "error parsing date", Response: "Error obteniendo datos", Status: 500}
+	}
+
+	var result bytes.Buffer
+	err = t.ExecuteTemplate(&result, "atom.xml", AtomParams{
+		Dominio:    os.Getenv("DOMAIN"),
+		Path:       "/autores/" + autorid + "/atom.xml",
+		Titulo:     autor.Nombre,
+		Subtitulo:  "Últimas publicaciones escritas por " + autor.Nombre,
+		LastUpdate: lastUpdate.Format(time.RFC3339),
+		Entries:    pp,
+	})
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering template", Response: "Error produciendo feed", Status: 500}
+	}
+	w.Write(result.Bytes())
+	return nil
 }
 
 func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomEntry, nombre string, id string) {

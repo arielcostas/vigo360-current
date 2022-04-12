@@ -80,7 +80,7 @@ func InitRouter() *mux.Router {
 	router.Handle(`/atom.xml`, appHandler(PostsAtomFeed)).Methods("GET")
 	router.HandleFunc(`/trabajos/atom.xml`, TrabajosAtomFeed).Methods("GET")
 	router.HandleFunc(`/tags/{tagid:[0-9]+}/atom.xml`, TagsAtomFeed).Methods("GET")
-	router.HandleFunc(`/autores/{autorid}/atom.xml`, AutorAtomFeed).Methods("GET")
+	router.Handle(`/autores/{autorid}/atom.xml`, appHandler(AutorAtomFeed)).Methods("GET")
 
 	router.Handle("/", appHandler(indexPage)).Methods("GET")
 
