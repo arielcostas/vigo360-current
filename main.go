@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/admin"
+	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/public"
 )
@@ -47,7 +48,7 @@ func main() {
 
 	logger.Information("starting web server on %s", PORT)
 
-	var db = DatabaseInit()
+	var db = database.GetDB()
 
 	// Automatically revoke sessions every 6 hours
 	s := gocron.NewScheduler(time.Local)
