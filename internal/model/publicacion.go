@@ -15,5 +15,5 @@ type Publicacion struct {
 	Contenido           string
 
 	Autor Autor
-	Tags  string
+	Tags  []Tag
 }

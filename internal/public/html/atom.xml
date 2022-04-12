@@ -7,24 +7,24 @@
 	<generator uri="{{ .GeneratorURI }}">Vigo360</generator>
 	<link rel="self" href="{{ .BaseURL }}/atom.xml" />
 	<icon>/includes/logo.png</icon>
-
-	{{ $domain := .BaseURL }}
+	
+	{{- $domain := .BaseURL }}
 	{{- range .Entries }}
-		<entry>
-			<id>{{ $domain }}/post/{{ .Id }}</id>
-			<title>{{ .Titulo }}</title>
-			<published>{{ date3339 .Fecha_publicacion }}</published>
-			<updated>{{ date3339 .Fecha_actualizacion }}</updated>
-			<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
-			<summary>{{ .Resumen }}</summary>
-			<author>
-				<name>{{ .Autor.Nombre }}</name>
-				<email>{{ .Autor.Email }}</email>
-				<uri>{{ $domain }}/autores/{{ .Autor.Id }}</uri>
-			</author>
-			{{ range (split .Tags ",") }}
-				{{ if ne . "" }}<category term="{{ . }}" />{{ end }}
-			{{- end}}
-		</entry>
+	<entry>
+		<id>{{ $domain }}/post/{{ .Id }}</id>
+		<title>{{ .Titulo }}</title>
+		<published>{{ date3339 .Fecha_publicacion }}</published>
+		<updated>{{ date3339 .Fecha_actualizacion }}</updated>
+		<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
+		<summary>{{ .Resumen }}</summary>
+		<author>
+			<name>{{ .Autor.Nombre }}</name>
+			<email>{{ .Autor.Email }}</email>
+			<uri>{{ $domain }}/autores/{{ .Autor.Id }}</uri>
+		</author>
+		{{- range .Tags }}
+		<category term="{{ .Nombre }}" />
+		{{- end}}
+	</entry>
 	{{- end}}
 </feed>
