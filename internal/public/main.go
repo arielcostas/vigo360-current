@@ -11,6 +11,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 )
 
@@ -53,22 +54,8 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AuthorsToAutores(w http.ResponseWriter, r *http.Request) *appError {
-	w.WriteHeader(301)
-	w.Header().Add("Location", "/autores/")
-
-	return nil
-}
-
-func PapersToTrabajos(w http.ResponseWriter, r *http.Request) *appError {
-	w.WriteHeader(301)
-	w.Header().Add("Location", "/trabajos/")
-
-	return nil
-}
-
-func InitRouter(database *sqlx.DB) *mux.Router {
-	db = database
+func InitRouter() *mux.Router {
+	db = database.GetDB()
 
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -77,11 +64,11 @@ func InitRouter(database *sqlx.DB) *mux.Router {
 	router.Handle(`/tags`, appHandler(listTags)).Methods(http.MethodGet)
 	router.Handle(`/tags/{tagid:[0-9]+}/`, appHandler(viewTag)).Methods("GET")
 
-	router.Handle(`/papers/{.*}`, appHandler(PapersToTrabajos)).Methods("GET")
+	router.Handle(`/papers/{.*}`, http.RedirectHandler("/trabajos", 301)).Methods("GET")
 	router.Handle(`/trabajos`, appHandler(listTrabajos)).Methods("GET")
 	router.Handle(`/trabajos/{trabajoid:[A-Za-z0-9\-\_|ñ]+}`, appHandler(viewTrabajo)).Methods("GET")
 
-	router.Handle(`/authors/{.*}`, appHandler(AuthorsToAutores)).Methods("GET")
+	router.Handle(`/authors/{.*}`, http.RedirectHandler("/autores", 301)).Methods("GET")
 	router.Handle(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, appHandler(AutoresIdPage)).Methods("GET")
 	router.Handle(`/autores`, appHandler(AutoresPage)).Methods("GET")
 

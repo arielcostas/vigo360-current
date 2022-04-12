@@ -10,21 +10,16 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/database"
 )
 
 var db *sqlx.DB
 
-func redirectToDashboard(w http.ResponseWriter, r *http.Request) *appError {
-	w.Header().Add("Location", "/admin/login")
-	w.WriteHeader(302)
-	return nil
-}
-
-func InitRouter(database *sqlx.DB) *mux.Router {
-	db = database
+func InitRouter() *mux.Router {
+	db = database.GetDB()
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.Handle("/admin/", appHandler(redirectToDashboard)).Methods("GET")
+	router.Handle("/admin/", http.RedirectHandler("/admin/login", 302)).Methods("GET")
 	router.Handle("/admin/login", appHandler(viewLogin)).Methods("GET")
 	router.Handle("/admin/login", appHandler(doLogin)).Methods("POST")
 	router.Handle("/admin/logout", appHandler(logoutPage)).Methods("GET")
