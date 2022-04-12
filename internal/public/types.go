@@ -35,11 +35,6 @@ type FullPost struct {
 	Tags                sql.NullString
 }
 
-type Serie struct {
-	Titulo    string
-	Articulos []ResumenPost
-}
-
 type Tag struct {
 	Id            string
 	Nombre        string

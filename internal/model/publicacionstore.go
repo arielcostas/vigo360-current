@@ -94,6 +94,45 @@ func (s *PublicacionStore) ListarPorTag(tag_id string) (Publicaciones, error) {
 	return resultado, nil
 }
 
-func (s *PublicacionStore) ObtenerPorId(id string) (Publicacion, error) {
-	panic("not implemented")
+func (s *PublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error) {
+	var resultado = make(Publicaciones, 0)
+	publicaciones, err := s.Listar()
+	if err != nil {
+		return Publicaciones{}, err
+	}
+
+	for _, pub := range publicaciones {
+		if pub.Serie.Id == serie_id {
+			resultado = append(resultado, pub)
+		}
+	}
+
+	return resultado, nil
+}
+
+func (s *PublicacionStore) ObtenerPorId(id string, public bool) (Publicacion, error) {
+	var post Publicacion
+	var query = `SELECT pp.id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), GROUP_CONCAT(tags.nombre) as tags FROM PublicacionesPublicas pp
+	LEFT JOIN autores on pp.autor_id = autores.id
+	LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id
+	LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id
+	WHERE pp.id = ?
+	GROUP BY pp.id 
+	ORDER BY pp.fecha_publicacion DESC;`
+
+	var (
+		rawTagNombres string
+	)
+
+	var err = s.db.QueryRow(query, id).Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Autor.Id, &post.Autor.Nombre, &post.Autor.Biografia, &post.Autor.Rol, &post.Serie.Id, &rawTagNombres)
+
+	if err != nil {
+		return Publicacion{}, err
+	}
+
+	for _, tag := range strings.Split(rawTagNombres, ",") {
+		post.Tags = append(post.Tags, Tag{Nombre: tag})
+	}
+
+	return post, nil
 }

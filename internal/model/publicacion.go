@@ -14,6 +14,7 @@ type Publicacion struct {
 	Resumen             string
 	Contenido           string
 
+	Serie Serie
 	Autor Autor
 	Tags  []Tag
 }

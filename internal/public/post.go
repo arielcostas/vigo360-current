@@ -11,13 +11,21 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/model"
 )
 
 func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 	req_post_id := mux.Vars(r)["postid"]
-	var post FullPost
-	if np, err := GetFullPost(req_post_id); err != nil {
+	var (
+		db = database.GetDB()
+		ps = model.NewPublicacionStore(db)
+		ss = model.NewSerieStore(db)
+		e2 error
+	)
+	var post model.Publicacion
+	if np, err := ps.ObtenerPorId(req_post_id, true); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &appError{Error: err, Message: "post with that ID not found", Response: "No se ha encontrado una publicación en esta URL.", Status: 404}
 		}
@@ -26,12 +34,10 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		post = np
 	}
 
-	var serie Serie
-	if post.Serie.Valid {
-		if ns, err := GetSerieById(post.Serie.String); err != nil {
-			return &appError{Error: err, Message: "database error fetching series for post", Response: "Error obteniendo datos.", Status: 500}
-		} else {
-			serie = ns
+	if post.Serie.Id != "" {
+		post.Serie, e2 = ss.Obtener(post.Serie.Id)
+		if e2 != nil {
+			return &appError{Error: e2, Message: "database error fetching series for post", Response: "Error obteniendo datos.", Status: 500}
 		}
 	}
 
@@ -43,19 +49,21 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		recommendations = nr
 	}
 
+	var keywords = ""
+	for _, t := range post.Tags {
+		keywords += t.Nombre + ","
+	}
 	var err = t.ExecuteTemplate(w, "post.html", struct {
-		Post            FullPost
+		Post            model.Publicacion
 		Recommendations []PostRecommendation
 		Meta            PageMeta
-		Serie           Serie
 	}{
-		Serie:           serie,
 		Post:            post,
 		Recommendations: recommendations,
 		Meta: PageMeta{
 			Titulo:      post.Titulo,
 			Descripcion: post.Resumen,
-			Keywords:    post.Tags.String,
+			Keywords:    keywords,
 			Canonica:    FullCanonica("/post/" + post.Id),
 			Miniatura:   FullCanonica("/static/thumb/" + post.Id + ".jpg"),
 		},

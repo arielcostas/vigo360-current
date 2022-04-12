@@ -27,15 +27,15 @@
 			<h2 id="post-title">{{ .Post.Titulo }}</h2>
 
 			<div id="post-info">
-				<a href="/autores/{{ .Post.Autor_id }}">{{ .Post.Autor_nombre }}</a>
-				<time>/ {{ .Post.Fecha_publicacion }} {{ if ne .Post.Fecha_actualizacion
-					.Post.Fecha_publicacion }}(actualizado {{ .Post.Fecha_actualizacion }}){{end}}</time>
+				<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
+				<time>{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
+					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ .Post.Fecha_actualizacion }}){{end}}</time>
 			</div>
 
 			<article id="post-inner">
-				{{ if ne .Serie.Titulo "" }}
+				{{ if ne .Post.Serie.Id "" }}
 				<aside class="post-series">
-					<h4>{{ .Serie.Titulo }}</h4>
+					<h4>{{ .Post.Serie.Titulo }}</h4>
 					<ul>
 						{{ $postid := .Post.Id }}
 						{{ range .Serie.Articulos }}
@@ -54,15 +54,15 @@
 			</article>
 
 			<div id="post-author-container">
-				<a href="/autores/{{ .Post.Autor_id }}">
+				<a href="/autores/{{ .Post.Autor.Id }}">
 					<div id="post-author-card">
 						<img width="180" height="180" class="post-author-photo"
-							src="/static/profile/{{ .Post.Autor_id }}.jpg"
-							alt="Fotografía de perfil de {{ .Post.Autor_nombre }}" />
+							src="/static/profile/{{ .Post.Autor.Id }}.jpg"
+							alt="Fotografía de perfil de {{ .Post.Autor.Nombre }}" />
 						<div class="post-author-info">
-							<h3>{{ .Post.Autor_nombre }}</h3>
-							<span>{{ .Post.Autor_rol}}</span>
-							<p>{{ .Post.Autor_biografia }}</p>
+							<h3>{{ .Post.Autor.Nombre }}</h3>
+							<span>{{ .Post.Autor.Rol}}</span>
+							<p>{{ .Post.Autor.Biografia }}</p>
 						</div>
 					</div>
 				</a>
@@ -77,7 +77,7 @@
 						<img width="300" height="170" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}">
 						<p class="article-author">
 							{{ .Autor_nombre}}
-							/ {{ .Fecha_publicacion }}
+							- {{ .Fecha_publicacion }}
 						</p>
 						<h4 class="article-title">{{ .Titulo }}</h4>
 						<p class="related-article-summary">{{ .Resumen | markdown }}</p>

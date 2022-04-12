@@ -41,6 +41,13 @@ var t = func() *template.Template {
 			}
 			return t.Format(time.RFC3339), nil
 		},
+		"dateDayMonth": func(date string) (string, error) {
+			t, err := time.Parse("2006-01-02 15:04:05", date)
+			if err != nil {
+				return "", err
+			}
+			return t.Format("02/01/2006"), nil
+		},
 		"markdown": func(text string) template.HTML {
 			var buf bytes.Buffer
 			parser.Convert([]byte(text), &buf)
