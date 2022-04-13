@@ -4,9 +4,9 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 prebuild() {
-	mkdir -p assets/{static,content}
-	cp static/* assets/static/
-	sass --source-map --embed-source-map styles/:assets/static/
+	mkdir -p assets/{extra,images,papers,profile,thumb}
+	cp static/* assets/
+	sass --source-map --embed-source-map styles/:assets/
 	chmod -R a+r assets/
 }
 

@@ -6,7 +6,7 @@
 	<updated>{{ .LastUpdate }}</updated>
 	<generator uri="https://gitlab.com/vigo360/new.vigo360.es">Vigo360</generator>
 	<link rel="self" href="{{ .Dominio }}{{ .Path }}" />
-	<icon>/includes/logo.png</icon>
+	<icon>/static/logo.png</icon>
 	
 	{{- $domain := .Dominio }}
 	{{- range .Entries }}

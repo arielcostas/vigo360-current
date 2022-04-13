@@ -6,7 +6,7 @@
 	<updated>{{ .LastUpdate }}</updated>
 	<generator uri="{{ .GeneratorURI }}">Vigo360</generator>
 	<link rel="self" href="{{ .BaseURL }}/trabajos/atom.xml" />
-	<icon>/includes/logo.png</icon>
+	<icon>/static/logo.png</icon>
 
 	{{ $domain := .BaseURL }}
 	{{- range .Entries }}

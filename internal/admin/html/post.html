@@ -32,13 +32,13 @@
 					<a href="/admin/post/{{ .Id }}"
 						class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
 					<p>
-						<img width="20" height="20" src="/includes/user-icon.svg" />
+						<img width="20" height="20" src="/static/user-icon.svg" />
 						<span>{{ .Autor_nombre }}</span>
 						{{ if .Fecha_publicacion.Valid }}
-						<img width="20" height="20" src="/includes/clock-icon.svg" />
+						<img width="20" height="20" src="/static/clock-icon.svg" />
 						<span>{{ .Fecha_publicacion.Value }}</span>
 						{{ end }}
-						<img width="20" height="20" src="/includes/tags-icon.svg" />
+						<img width="20" height="20" src="/static/tags-icon.svg" />
 						{{ $postid := .Id }}
 						<span>{{ .CantTags }}</span>
 						{{ with $session }}

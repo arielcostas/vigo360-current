@@ -1,5 +1,7 @@
 ## Instalación de Vigo360
 
+** TODO: Actualizar esto **
+
 1. Crear un nuevo usuario en el sistema y MySQL
 
 ```bash
