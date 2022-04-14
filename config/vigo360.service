@@ -3,13 +3,13 @@ Description=Vigo360
 After=network.target
 
 [Service]
-WorkingDirectory=/home/vigo360/live
+WorkingDirectory=/opt/vigo360
 User=vigo360
 Type=simple
 Restart=on-failure
 RestartSec=15
-EnvironmentFile=/home/vigo360/live/.env
-ExecStart=/home/vigo360/live/vigo360
+EnvironmentFile=/opt/vigo360/.env
+ExecStart=/opt/vigo360/vigo360
 
 ProtectDevices=yes
 ProtectKernelTunables=yes

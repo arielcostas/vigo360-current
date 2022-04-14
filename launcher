@@ -12,7 +12,6 @@ prebuild() {
 
 if [ "$1" == "run" ];
 then
-	rm -r assets/static
 	prebuild
 	export $(cat .env | grep -v '^#' | xargs)
 	go run -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
