@@ -29,7 +29,7 @@
 			<div id="post-info">
 				<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
 				<time>{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
-					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ .Post.Fecha_actualizacion }}){{end}}</time>
+					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion }}){{end}}</time>
 			</div>
 
 			<article id="post-inner">
