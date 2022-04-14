@@ -50,7 +50,6 @@ blockquote {
 	background-repeat: no-repeat;
 	background-size: 5rem;
 	background-position: 50% 50%;
-	position: relative;
 }
 
 blockquote::before {
@@ -91,6 +90,7 @@ figure:not(#post-thumbnail) {
 
 figure img {
 	width: 100%;
+	height: auto;
 }
 
 figcaption {
