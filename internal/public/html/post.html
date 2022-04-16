@@ -80,7 +80,9 @@
 							- {{ .Fecha_publicacion }}
 						</p>
 						<h4 class="article-title">{{ .Titulo }}</h4>
-						<p class="related-article-summary">{{ .Resumen | markdown }}</p>
+						<div class="related-article-summary">
+							{{ .Resumen | markdown }}
+						</div>
 					</a>
 				</div>
 				{{ end }}

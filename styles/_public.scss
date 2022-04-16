@@ -17,6 +17,7 @@ a img {
 
 a p,
 a h3,
+a h4,
 a span {
 	transition: color 300ms;
 }
@@ -494,14 +495,15 @@ code {
 	gap: 1rem;
 }
 
-.post-related-article a,
-.post-related-article a:hover .article-author {
-	color: var(--text);
-}
 
-.post-related-article a:hover {
-	color: var(--theme);
-	text-decoration: none;
+.post-related-article a {
+	color: var(--text);
+	&:hover {
+		text-decoration: none;
+		.article-title {
+			color: var(--theme);
+		}
+	}
 }
 
 .post-related-article a:hover img {
