@@ -1,3 +1,5 @@
+USE vigo360;
+
 CREATE TABLE permisos (
 	id varchar(50) NOT NULL,
 	comentario varchar(255) NOT NULL,
