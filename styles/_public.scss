@@ -127,11 +127,10 @@ main#authors #section-title,
 
 #authors-grid a {
 	color: var(--text);
-}
-
-#authors-grid a:hover {
-	color: var(--theme);
 	text-decoration: none;
+	&:hover .authors-name {
+		color: var(--theme);
+	}
 }
 
 #authors-grid a:hover img {
@@ -154,11 +153,6 @@ main#authors #section-title,
 .authors-role {
 	opacity: 0.7;
 	font-size: 1.125rem;
-}
-
-#authors-grid a:hover p,
-#authors-grid a:hover .authors-role {
-	color: var(--text);
 }
 
 /*
