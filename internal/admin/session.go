@@ -20,10 +20,6 @@ func revokeSession(sessid string) error {
 	return nil
 }
 
-var ErrExpiredSession = errors.New("session was older than 6 hours and was revoked automatically")
-var ErrInvalidSession = errors.New("session token is not valid")
-var ErrUnablePermissions = errors.New("unable to get permissions for session")
-
 /*
 	Verifies a login token's validity and returns whether is valid or not
 	and an error explaining what went wrong
@@ -39,6 +35,9 @@ func getSession(token string) (Session, error) {
 	}
 
 	hora, err := time.Parse("2006-01-02 15:04:05", session.Iniciada)
+	if err != nil {
+		return Session{}, err
+	}
 	if time.Since(hora).Hours() > 6 {
 		_, err = db.Exec("UPDATE sesiones SET revocada=true WHERE sessid=?", session.Id)
 		if err != nil {

@@ -5,6 +5,13 @@
  */
 package admin
 
+import "errors"
+
+var ErrInvalidFormInput = errors.New("provided data is not valid")
+var ErrExpiredSession = errors.New("session was older than 6 hours and was revoked automatically")
+var ErrInvalidSession = errors.New("session token is not valid")
+var ErrUnablePermissions = errors.New("unable to get permissions for session")
+
 // Creates an error related with template rendering
 func newTemplateRenderingAppError(err error) *appError {
 	return &appError{Error: err, Message: "error rendering template",

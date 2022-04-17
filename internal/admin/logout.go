@@ -15,7 +15,7 @@ import (
 func logoutPage(w http.ResponseWriter, r *http.Request) *appError {
 	sc, err := r.Cookie("sess")
 	if err != nil { // User isn't logged in
-		http.Redirect(w, r, "/admin/login", 302)
+		http.Redirect(w, r, "/admin/login", http.StatusFound)
 		return nil
 	}
 

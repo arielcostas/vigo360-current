@@ -69,7 +69,6 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 	return nil
 }
 
-// Data to be input via a form to create a new post
 func createPost(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
@@ -90,12 +89,19 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 			Response: "Hubo un error leyendo el formulario", Status: 500}
 	}
 
+	// TODO: Refactor this
 	fi := struct {
-		Id     string `validate:"required,min=3,max=40,lowercase"`
 		Titulo string `validate:"required,min=3,max=80"`
-	}{}
-	fi.Id = r.FormValue("art-id")
-	fi.Titulo = r.FormValue("art-titulo")
+	}{
+		Titulo: r.FormValue("art-titulo"),
+	}
+
+	var id = r.FormValue("art-id")
+
+	if !ValidatePostId(id) {
+		return &appError{Error: ErrInvalidFormInput, Message: "error de validacion",
+			Response: "Ha habido un error validando el formulario. Revise los campos e inténtelo de nuevo.", Status: 400}
+	}
 
 	if err := validator.New().Struct(fi); err != nil {
 		// TODO: Mostrar de nuevo formulario con los errores
@@ -112,20 +118,20 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	q := "INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, 'CAMBIAME','', '', ?);"
-	if _, err := tx.Exec(q, fi.Id, fi.Titulo, art_autor); err != nil {
+	if _, err := tx.Exec(q, id, fi.Titulo, art_autor); err != nil {
 		tx.Rollback()
 		return &appError{Error: err, Message: "error creating article in database",
 			Response: "Error creando publicación en la de datos", Status: 500}
 	}
 
 	photopath := os.Getenv("UPLOAD_PATH")
-	if err := os.WriteFile(photopath+"/images/"+fi.Id+".webp", defaultImageWebp, 0o644); err != nil {
+	if err := os.WriteFile(photopath+"/images/"+id+".webp", defaultImageWebp, 0o644); err != nil {
 		tx.Rollback()
 		return &appError{Error: err, Message: "error saving webp to disk",
 			Response: "Hubo un error guardando el artículo", Status: 500}
 	}
 
-	if err := os.WriteFile(photopath+"/thumb/"+fi.Id+".jpg", defaultImageJPG, 0o644); err != nil {
+	if err := os.WriteFile(photopath+"/thumb/"+id+".jpg", defaultImageJPG, 0o644); err != nil {
 		tx.Rollback()
 		return &appError{Error: err, Message: "error saving jpg to disk",
 			Response: "Hubo un error guardando el artículo", Status: 500}
@@ -137,7 +143,7 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 			Response: "Error creando publicación en la de datos", Status: 500}
 	}
 
-	w.Header().Add("Location", "/admin/post/"+fi.Id)
+	w.Header().Add("Location", "/admin/post/"+id)
 	w.WriteHeader(303)
 	return nil
 }
@@ -154,7 +160,7 @@ func deletePost(w http.ResponseWriter, r *http.Request) *appError {
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return nil
 	}
-	if sess.Permisos["publicaciones_delete"] != true {
+	if !sess.Permisos["publicaciones_delete"] {
 		return &appError{Error: ErrUnablePermissions, Message: "user doesn't have permission to delete posts", Response: "No tienes permiso para realizar esta acción", Status: 403}
 	}
 

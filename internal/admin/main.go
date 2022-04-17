@@ -19,7 +19,7 @@ func InitRouter() *mux.Router {
 	db = database.GetDB()
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.Handle("/admin/", http.RedirectHandler("/admin/login", 302)).Methods("GET")
+	router.Handle("/admin/", http.RedirectHandler("/admin/login", http.StatusFound)).Methods("GET")
 	router.Handle("/admin/login", appHandler(viewLogin)).Methods("GET")
 	router.Handle("/admin/login", appHandler(doLogin)).Methods("POST")
 	router.Handle("/admin/logout", appHandler(logoutPage)).Methods("GET")
