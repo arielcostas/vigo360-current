@@ -70,11 +70,11 @@ func InitRouter() *mux.Router {
 	router.Handle(`/tags`, appHandler(listTags)).Methods(http.MethodGet)
 	router.Handle(`/tags/{tagid:[0-9]+}/`, appHandler(viewTag)).Methods("GET")
 
-	router.Handle(`/papers/{.*}`, http.RedirectHandler("/trabajos", 301)).Methods("GET")
+	router.Handle(`/papers/{.*}`, http.RedirectHandler("/trabajos", http.StatusMovedPermanently)).Methods("GET")
 	router.Handle(`/trabajos`, appHandler(listTrabajos)).Methods("GET")
 	router.Handle(`/trabajos/{trabajoid:[A-Za-z0-9\-\_|ñ]+}`, appHandler(viewTrabajo)).Methods("GET")
 
-	router.Handle(`/authors/{.*}`, http.RedirectHandler("/autores", 301)).Methods("GET")
+	router.Handle(`/authors/{.*}`, http.RedirectHandler("/autores", http.StatusMovedPermanently)).Methods("GET")
 	router.Handle(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, appHandler(AutoresIdPage)).Methods("GET")
 	router.Handle(`/autores`, appHandler(AutoresPage)).Methods("GET")
 

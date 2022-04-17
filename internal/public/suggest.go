@@ -63,6 +63,10 @@ func generateSuggestions(original_id string) ([]PostRecommendation, error) {
 	var tags int
 	err = db.QueryRow(`SELECT COUNT(*) FROM tags`).Scan(&tags)
 
+	if err != nil {
+		return []PostRecommendation{}, err
+	}
+
 	for i, rp := range options {
 		var points = 10
 
