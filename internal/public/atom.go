@@ -10,13 +10,11 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
-	"net/url"
 	"os"
 	"time"
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/database"
-	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/model"
 )
 
@@ -52,7 +50,7 @@ type AtomParams struct {
 	Titulo     string
 	Subtitulo  string
 	LastUpdate string
-	Entries    model.Publicaciones
+	Entries    interface{}
 }
 
 func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
@@ -82,18 +80,6 @@ func PostsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 	}
 	w.Write(result.Bytes())
 	return nil
-}
-
-func TrabajosAtomFeed(w http.ResponseWriter, r *http.Request) {
-	trabajos := []AtomEntry{}
-	err := db.Select(&trabajos, `SELECT trabajos.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM TrabajosPublicos trabajos LEFT JOIN autores ON trabajos.autor_id = autores.id`)
-
-	// An unexpected error
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Warning("[atom] unexpected error selecting trabajos: %s", err.Error())
-	}
-
-	writeFeed(w, r, "trabajos-atom.xml", trabajos, "Trabajos", "")
 }
 
 func TagsAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
@@ -180,42 +166,4 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 	}
 	w.Write(result.Bytes())
 	return nil
-}
-
-func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []AtomEntry, nombre string, id string) {
-	// TODO: Refactor line above
-	var lastUpdate time.Time
-
-	for i := 0; i < len(items); i++ {
-		p := &items[i]
-
-		t, err := time.Parse("2006-01-02 15:04:05", p.Fecha_actualizacion)
-		if err != nil {
-			logger.Error("unexpected error parsing fecha_actualizacion: %s", err.Error())
-			InternalServerErrorHandler(w, r)
-		}
-
-		if lastUpdate.Before(t) {
-			lastUpdate = t
-		}
-
-		p.Id = url.PathEscape(p.Id)
-	}
-
-	w.Header().Add("Content-Type", "application/atom+xml; charset=utf-8")
-	var output bytes.Buffer
-	err := t.ExecuteTemplate(&output, feedName, &FeedParams{
-		BaseURL:      os.Getenv("DOMAIN"),
-		LastUpdate:   lastUpdate.Format(time.RFC3339),
-		Entries:      items,
-		Nombre:       nombre,
-		Id:           id,
-		GeneratorURI: os.Getenv("SOURCE_URL"),
-	})
-
-	if err != nil {
-		logger.Error("unexpected error rendering feed %s: %s", feedName, err.Error())
-		InternalServerErrorHandler(w, r)
-	}
-	w.Write(output.Bytes())
 }

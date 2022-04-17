@@ -3,19 +3,12 @@
 
 <head>
 	{{- template "_head.html" . }}
-
-	<link rel="alternate" href="/trabajos/atom.xml" type="application/atom+xml" title="Atom">
 </head>
 
 <body>
 	{{ template "_header.html" }}
 	<main id="papers">
-		<div class="title-atom">
-			<h2>Trabajos originales Vigo360</h2>
-			<a href="/trabajos/atom.xml" title="Suscripción via Atom">
-				<img src="/static/rss-icon.svg" />
-			</a>
-		</div>
+		<h2>Trabajos originales Vigo360</h2>
 		<div id="papers-list">
 			{{ if eq (len .Trabajos ) 0 }}
 			<p>No hay trabajos para mostrar</p>
