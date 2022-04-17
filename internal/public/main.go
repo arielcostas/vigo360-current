@@ -78,9 +78,9 @@ func InitRouter() *mux.Router {
 	router.Handle(`/autores/{id:[A-Za-z0-9\-\_|ñ]+}`, appHandler(AutoresIdPage)).Methods("GET")
 	router.Handle(`/autores`, appHandler(AutoresPage)).Methods("GET")
 
-	router.Handle(`/siguenos`, appHandler(SiguenosPage)).Methods("GET")
-	router.Handle(`/licencia`, appHandler(LicenciasPage)).Methods("GET")
-	router.Handle(`/contacto`, appHandler(ContactoPage)).Methods("GET")
+	router.Handle(`/siguenos`, appHandler(NoDbPage)).Methods("GET")
+	router.Handle(`/legal`, appHandler(NoDbPage)).Methods("GET")
+	router.Handle(`/contacto`, appHandler(NoDbPage)).Methods("GET")
 
 	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
 	router.Handle(`/atom.xml`, appHandler(PostsAtomFeed)).Methods("GET")
