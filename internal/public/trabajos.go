@@ -12,21 +12,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/model"
 )
-
-type Trabajo struct {
-	Id                  string
-	Fecha_publicacion   string
-	Fecha_actualizacion string
-	Alt_portada         string
-	Titulo              string
-	Resumen             string
-	Contenido           string
-	Autor_id            string
-	Autor_nombre        string
-	Autor_rol           string
-	Autor_biografia     string
-}
 
 type Adjunto struct {
 	Nombre_archivo string
@@ -65,8 +52,10 @@ func listTrabajos(w http.ResponseWriter, r *http.Request) *appError {
 func viewTrabajo(w http.ResponseWriter, r *http.Request) *appError {
 	trabajoid := mux.Vars(r)["trabajoid"]
 
-	var trabajo Trabajo
-	if nt, err := GetFullTrabajo(trabajoid); err != nil {
+	var ts = model.NewTrabajoStore(db)
+	var trabajo model.Trabajo
+
+	if nt, err := ts.ObtenerPorId(trabajoid, true); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &appError{Error: err, Message: "trabajo not found", Response: "El trabajo buscado no se ha encontrado", Status: 404}
 		}
@@ -84,7 +73,7 @@ func viewTrabajo(w http.ResponseWriter, r *http.Request) *appError {
 
 	var output bytes.Buffer
 	err = t.ExecuteTemplate(&output, "trabajos-id.html", struct {
-		Trabajo  Trabajo
+		Trabajo  model.Trabajo
 		Adjuntos []Adjunto
 		Meta     PageMeta
 	}{

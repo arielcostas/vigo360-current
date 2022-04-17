@@ -6,6 +6,8 @@
 package model
 
 import (
+	"database/sql"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -42,6 +44,24 @@ func (s *TrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
 	panic("por implementar")
 }
 
-func (s *TrabajoStore) ObtenerPorId() (Trabajos, error) {
-	panic("por implementar")
+func (s *TrabajoStore) ObtenerPorId(id string, requirePublic bool) (Trabajo, error) {
+	var post Trabajo
+	var query = `SELECT trabajos.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
+	FROM trabajos
+	LEFT JOIN autores on trabajos.autor_id = autores.id
+	WHERE trabajos.id = ?
+	GROUP BY trabajos.id 
+	ORDER BY trabajos.fecha_publicacion DESC;`
+
+	var err = s.db.QueryRow(query, id).Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Autor.Id, &post.Autor.Nombre, &post.Autor.Biografia, &post.Autor.Rol)
+
+	if err != nil {
+		return Trabajo{}, err
+	}
+
+	if requirePublic && post.Fecha_publicacion == "" {
+		return Trabajo{}, sql.ErrNoRows
+	}
+
+	return post, nil
 }
