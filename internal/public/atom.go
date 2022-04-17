@@ -33,17 +33,6 @@ type AtomEntry struct {
 	Tags         []string
 }
 
-// DEPRECATED
-// TODO: Get rid of this
-type FeedParams struct {
-	BaseURL      string
-	Id           string
-	Nombre       string
-	LastUpdate   string
-	GeneratorURI string
-	Entries      []AtomEntry
-}
-
 type AtomParams struct {
 	Dominio    string
 	Path       string
