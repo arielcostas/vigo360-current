@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"net/http"
 	"os"
 
@@ -23,7 +24,8 @@ func FullCanonica(path string) string {
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(404)
-	err := t.ExecuteTemplate(w, "_404.html", NoPageData{
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, "_404.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Página no encontrada",
 			Descripcion: "The requested resource could not be found in this server.",
@@ -36,11 +38,14 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("La página solicitada no fue encontrada. Adicionalmente, no fue posible mostrar la página de error correspondiente."))
 		return
 	}
+
+	w.Write(output.Bytes())
 }
 
 func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(500)
-	err := t.ExecuteTemplate(w, "_500.html", NoPageData{
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, "_500.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Error del servidor",
 			Descripcion: "There was a server error trying to load this page.",
@@ -52,6 +57,7 @@ func InternalServerErrorHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Error interno del servidor. Adicionalmente, la página de error no puede ser mostrada."))
 		return
 	}
+	w.Write(output.Bytes())
 }
 
 func InitRouter() *mux.Router {

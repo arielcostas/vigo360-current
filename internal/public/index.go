@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -18,7 +19,8 @@ func indexPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error fetching posts", Response: "Error recuperando datos", Status: 500}
 	}
 
-	err = t.ExecuteTemplate(w, "index.html", struct {
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "index.html", struct {
 		Posts []ResumenPost
 		Meta  PageMeta
 	}{
@@ -34,5 +36,6 @@ func indexPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }

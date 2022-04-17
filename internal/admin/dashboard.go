@@ -6,6 +6,7 @@
 package admin
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -40,7 +41,8 @@ func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 		return newDatabaseReadAppError(err, "posts")
 	}
 
-	err = t.ExecuteTemplate(w, "admin-dashboard.html", struct {
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "admin-dashboard.html", struct {
 		Avisos  []Aviso
 		Posts   []DashboardPost
 		Session Session
@@ -52,5 +54,6 @@ func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	if err != nil {
 		return newTemplateRenderingAppError(err)
 	}
+	w.Write(output.Bytes())
 	return nil
 }

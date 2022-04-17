@@ -58,7 +58,8 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 		return newDatabaseReadAppError(err, "tags")
 	}
 
-	err = t.ExecuteTemplate(w, "post-id.html", struct {
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "post-id.html", struct {
 		Post    PostEditar
 		Series  []Serie
 		Tags    []Tag
@@ -72,6 +73,7 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	if err != nil {
 		return newTemplateRenderingAppError(err)
 	}
+	w.Write(output.Bytes())
 	return nil
 }
 

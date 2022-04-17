@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"net/http"
 )
 
@@ -13,8 +14,11 @@ func nodbPageError(err error) *appError {
 	return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 }
 
+// TODO Refactor all this to single function
+
 func SiguenosPage(w http.ResponseWriter, r *http.Request) *appError {
-	err := t.ExecuteTemplate(w, "siguenos.html", NoPageData{
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, "siguenos.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Síguenos",
 			Descripcion: "Información sobre cómo seguir a Vigo360, y enterarse de sus últimas publicaciones y novedades.",
@@ -25,11 +29,13 @@ func SiguenosPage(w http.ResponseWriter, r *http.Request) *appError {
 		return nodbPageError(err)
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }
 
 func LicenciasPage(w http.ResponseWriter, r *http.Request) *appError {
-	err := t.ExecuteTemplate(w, "licencias.html", NoPageData{
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, "licencias.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Licencias",
 			Descripcion: "Información legal relativa a Vigo360, desde licencias de uso libre hasta la política de privacidad.",
@@ -40,11 +46,13 @@ func LicenciasPage(w http.ResponseWriter, r *http.Request) *appError {
 		return nodbPageError(err)
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }
 
 func ContactoPage(w http.ResponseWriter, r *http.Request) *appError {
-	err := t.ExecuteTemplate(w, "contacto.html", NoPageData{
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, "contacto.html", NoPageData{
 		Meta: PageMeta{
 			Titulo:      "Contacto",
 			Descripcion: "Si necesitases contactar con Vigo360, aquí encontrarás cómo hacerlo.",
@@ -55,5 +63,6 @@ func ContactoPage(w http.ResponseWriter, r *http.Request) *appError {
 		return nodbPageError(err)
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }

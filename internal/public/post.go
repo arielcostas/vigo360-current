@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -53,7 +54,9 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 	for _, t := range post.Tags {
 		keywords += t.Nombre + ","
 	}
-	var err = t.ExecuteTemplate(w, "post.html", struct {
+
+	var output bytes.Buffer
+	var err = t.ExecuteTemplate(&output, "post.html", struct {
 		Post            model.Publicacion
 		Recommendations []PostRecommendation
 		Meta            PageMeta
@@ -72,5 +75,6 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando la página solicitada.", Status: 500}
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }

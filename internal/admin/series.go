@@ -6,6 +6,7 @@
 package admin
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -34,7 +35,8 @@ func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 		return newDatabaseReadAppError(err, "series")
 	}
 
-	err = t.ExecuteTemplate(w, "series.html", struct {
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "series.html", struct {
 		Series  []Serie
 		Session Session
 	}{
@@ -45,6 +47,7 @@ func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering page",
 			Response: "Hubo un error mostrando esta página.", Status: 500}
 	}
+	w.Write(output.Bytes())
 	return nil
 }
 

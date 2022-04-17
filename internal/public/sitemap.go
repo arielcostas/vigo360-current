@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -39,7 +40,14 @@ func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
 	pages = append(pages, SitemapQuery{Uri: "/contacto", Changefreq: "yearly", Priority: "0.3"})
 	pages = append(pages, SitemapQuery{Uri: "/siguenos", Changefreq: "yearly", Priority: "0.3"})
 
-	t.ExecuteTemplate(w, "sitemap.xml", SitemapPage{
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "sitemap.xml", SitemapPage{
 		Urls: pages,
 	})
+	if err != nil {
+		logger.Error("[sitemap] error rendering template: %s", err.Error())
+		InternalServerErrorHandler(w, r)
+		return
+	}
+	w.Write(output.Bytes())
 }

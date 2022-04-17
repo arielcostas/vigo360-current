@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -19,7 +20,8 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error fetching tags", Response: "Hubo un error mostrando esta página.", Status: 500}
 	}
 
-	err := t.ExecuteTemplate(w, "tags.html", struct {
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, "tags.html", struct {
 		Tags []Tag
 		Meta PageMeta
 	}{
@@ -35,6 +37,7 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando esta página.", Status: 500}
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }
 
@@ -57,7 +60,8 @@ func viewTag(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error fetching posts for tag", Response: "Error recuperando datos", Status: 500}
 	}
 
-	err = t.ExecuteTemplate(w, "tags-id.html", struct {
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "tags-id.html", struct {
 		Tag   Tag
 		Posts []ResumenPost
 		Meta  PageMeta
@@ -76,5 +80,6 @@ func viewTag(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página.", Status: 500}
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }

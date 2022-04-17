@@ -6,6 +6,7 @@
 package admin
 
 import (
+	"bytes"
 	"database/sql"
 	_ "embed"
 	"errors"
@@ -54,7 +55,8 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 		return newDatabaseReadAppError(err, "posts")
 	}
 
-	err = t.ExecuteTemplate(w, "post.html", struct {
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "post.html", struct {
 		Posts   []ResumenPost
 		Session Session
 	}{
@@ -66,6 +68,7 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 		return newTemplateRenderingAppError(err)
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }
 

@@ -6,6 +6,7 @@
 package admin
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -37,10 +38,12 @@ func viewLogin(w http.ResponseWriter, r *http.Request) *appError {
 		}
 	}
 
-	err = t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{})
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
 		return newTemplateRenderingAppError(err)
 	}
+	w.Write(output.Bytes())
 	return nil
 }
 
@@ -68,7 +71,8 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 	row := LoginRow{}
 
 	if param_userid == "" || param_password == "" {
-		err := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+		var output bytes.Buffer
+		err := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
@@ -76,13 +80,15 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 			return &appError{Error: err, Message: "error rendering template",
 				Response: "Alguno de los datos introducidos no son correctos.", Status: 400}
 		}
+		w.Write(output.Bytes())
 		return nil
 	}
 
+	// TODO refactor this
 	// Fetch from database. If error is no user found, show the error document. If a different error is thrown, show 500
 	if err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row); errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[/login]: no user matches " + param_userid)
-		e2 := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+		var output bytes.Buffer
+		e2 := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
@@ -90,6 +96,8 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 			return &appError{Error: e2, Message: "error rendering template",
 				Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
 		}
+		w.Write(output.Bytes())
+		return nil
 	} else if err != nil {
 		return &appError{Error: err, Message: "error fetching user",
 			Response: "Hubo un error inesperado.", Status: 500}
@@ -98,7 +106,8 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 	pass := ValidatePassword(param_password, row.Contraseña)
 
 	if !pass {
-		e2 := t.ExecuteTemplate(w, "admin-login.html", &AdminLoginParams{
+		var output bytes.Buffer
+		e2 := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
@@ -106,6 +115,7 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 			return &appError{Error: e2, Message: "error rendering template",
 				Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
 		}
+		w.Write(output.Bytes())
 		return nil
 	}
 

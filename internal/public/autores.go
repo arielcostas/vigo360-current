@@ -6,6 +6,7 @@
 package public
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -61,7 +62,8 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error fetching trabajos for autor", Response: "Error recuperando datos", Status: 500}
 	}
 
-	err = t.ExecuteTemplate(w, "autores-id.html", AutoresIdParams{
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "autores-id.html", AutoresIdParams{
 		Autor:    autor,
 		Posts:    publicaciones,
 		Trabajos: trabajos,
@@ -76,6 +78,7 @@ func AutoresIdPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }
 
@@ -86,7 +89,8 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error fetching autores", Response: "Error recuperando datos", Status: 500}
 	}
 
-	err = t.ExecuteTemplate(w, "autores.html", AutoresParams{
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "autores.html", AutoresParams{
 		Autores: autores,
 		Meta: PageMeta{
 			Titulo:      "Autores",
@@ -98,5 +102,6 @@ func AutoresPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "error mostrando la página", Status: 500}
 	}
 
+	w.Write(output.Bytes())
 	return nil
 }

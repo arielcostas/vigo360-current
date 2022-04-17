@@ -203,7 +203,8 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 	}
 
 	w.Header().Add("Content-Type", "application/atom+xml; charset=utf-8")
-	err := t.ExecuteTemplate(w, feedName, &FeedParams{
+	var output bytes.Buffer
+	err := t.ExecuteTemplate(&output, feedName, &FeedParams{
 		BaseURL:      os.Getenv("DOMAIN"),
 		LastUpdate:   lastUpdate.Format(time.RFC3339),
 		Entries:      items,
@@ -216,4 +217,5 @@ func writeFeed(w http.ResponseWriter, r *http.Request, feedName string, items []
 		logger.Error("unexpected error rendering feed %s: %s", feedName, err.Error())
 		InternalServerErrorHandler(w, r)
 	}
+	w.Write(output.Bytes())
 }
