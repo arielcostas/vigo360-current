@@ -48,7 +48,6 @@ func viewLogin(w http.ResponseWriter, r *http.Request) *appError {
 }
 
 func doLogin(w http.ResponseWriter, r *http.Request) *appError {
-	// TODO: Revise this
 	var sc, err = r.Cookie("sess")
 	if err == nil {
 		sess, err := getSession(sc.Value)
@@ -84,21 +83,23 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 		return nil
 	}
 
-	// TODO refactor this
 	// Fetch from database. If error is no user found, show the error document. If a different error is thrown, show 500
-	if err := db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row); errors.Is(err, sql.ErrNoRows) {
-		var output bytes.Buffer
-		e2 := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
-			PrefillName: param_userid,
-			LoginError:  true,
-		})
-		if e2 != nil {
-			return &appError{Error: e2, Message: "error rendering template",
-				Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
+	err = db.QueryRowx("SELECT id, nombre, contraseña FROM autores WHERE id=?;", param_userid).StructScan(&row)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			var output bytes.Buffer
+			e2 := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
+				PrefillName: param_userid,
+				LoginError:  true,
+			})
+			if e2 != nil {
+				return &appError{Error: e2, Message: "error rendering template",
+					Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
+			}
+			w.Write(output.Bytes())
+			return nil
 		}
-		w.Write(output.Bytes())
-		return nil
-	} else if err != nil {
 		return &appError{Error: err, Message: "error fetching user",
 			Response: "Hubo un error inesperado.", Status: 500}
 	}
