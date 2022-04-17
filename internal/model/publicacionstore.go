@@ -6,6 +6,7 @@
 package model
 
 import (
+	"database/sql"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
@@ -26,7 +27,6 @@ func (s *PublicacionStore) Listar() (Publicaciones, error) {
 	query := `SELECT p.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, GROUP_CONCAT(tags.id) as tags_ids, GROUP_CONCAT(tags.nombre) as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id GROUP BY id ORDER BY fecha_publicacion;`
 
 	rows, err := s.db.Query(query)
-	defer rows.Close()
 
 	if err != nil {
 		return publicaciones, err
@@ -110,17 +110,16 @@ func (s *PublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error
 	return resultado, nil
 }
 
-func (s *PublicacionStore) ObtenerPorId(id string, public bool) (Publicacion, error) {
-	// TODO: Enforce post being public
+func (s *PublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicacion, error) {
 	var post Publicacion
-	var query = `SELECT pp.id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), GROUP_CONCAT(tags.nombre) as tags
-	FROM PublicacionesPublicas pp
-	LEFT JOIN autores on pp.autor_id = autores.id
-	LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id
+	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), GROUP_CONCAT(tags.nombre) as tags
+	FROM publicaciones
+	LEFT JOIN autores on publicaciones.autor_id = autores.id
+	LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id
 	LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id
-	WHERE pp.id = ?
-	GROUP BY pp.id 
-	ORDER BY pp.fecha_publicacion DESC;`
+	WHERE publicaciones.id = ?
+	GROUP BY publicaciones.id 
+	ORDER BY publicaciones.fecha_publicacion DESC;`
 
 	var (
 		rawTagNombres string
@@ -130,6 +129,10 @@ func (s *PublicacionStore) ObtenerPorId(id string, public bool) (Publicacion, er
 
 	if err != nil {
 		return Publicacion{}, err
+	}
+
+	if requirePublic && post.Fecha_publicacion == "" {
+		return Publicacion{}, sql.ErrNoRows
 	}
 
 	for _, tag := range strings.Split(rawTagNombres, ",") {

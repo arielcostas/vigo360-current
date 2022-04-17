@@ -30,7 +30,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &appError{Error: err, Message: "post with that ID not found", Response: "No se ha encontrado una publicación en esta URL.", Status: 404}
 		}
-		return &appError{Error: err, Message: "database error fetching post", Response: "Error obteniendo ladatos.", Status: 500}
+		return &appError{Error: err, Message: "database error fetching post", Response: "Error obteniendo datos.", Status: 500}
 	} else {
 		post = np
 	}
