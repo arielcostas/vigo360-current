@@ -19,8 +19,23 @@ func NewAutorStore(db *sqlx.DB) AutorStore {
 	}
 }
 
-func (s *AutorStore) Listar() (Publicaciones, error) {
-	panic("por implementar")
+func (s *AutorStore) Listar() ([]Autor, error) {
+	var autores = make([]Autor, 0)
+	var rows, err = s.db.Query(`SELECT id, nombre, email, rol, biografia FROM autores`)
+	if err != nil {
+		return []Autor{}, err
+	}
+
+	for rows.Next() {
+		var na Autor
+		err = rows.Scan(&na.Id, &na.Nombre, &na.Email, &na.Rol, &na.Biografia)
+		if err != nil {
+			return []Autor{}, err
+		}
+		autores = append(autores, na)
+	}
+
+	return autores, nil
 }
 
 func (s *AutorStore) ObtenerBasico(autor_id string) (Autor, error) {

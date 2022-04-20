@@ -106,22 +106,3 @@ ALTER TABLE sesiones ADD FOREIGN KEY sesiones_autor(autor_id) REFERENCES autores
 
 -- publicación pertenece (opcionalmente) a serie
 ALTER TABLE publicaciones ADD FOREIGN KEY publicaciones_series(serie_id) REFERENCES series(id);
-
-CREATE VIEW sitemap AS SELECT uri, DATE(fecha_actualizacion) as fecha_actualizacion, priority, changefreq FROM (
-	SELECT CONCAT("/tags/", publicaciones_tags.tag_id) as uri, fecha_actualizacion, "0.3" as priority, "weekly" as changefreq FROM publicaciones
-		RIGHT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id
-		WHERE fecha_actualizacion = (SELECT MAX(fecha_actualizacion) FROM publicaciones pub2
-		RIGHT JOIN publicaciones_tags pt2 ON pub2.id = pt2.publicacion_id WHERE publicaciones_tags.tag_id = pt2.tag_id)
-	UNION
-	SELECT CONCAT("/autores/", publicaciones.autor_id) as uri, fecha_actualizacion, "0.7" as priority, "weekly" as changefreq FROM publicaciones
-		WHERE fecha_actualizacion = (SELECT MAX(fecha_actualizacion) FROM publicaciones pub2
-		WHERE publicaciones.autor_id = pub2.autor_id)
-	UNION
-	SELECT CONCAT("/trabajos/", trabajos.id), fecha_actualizacion, "0.5" as priority, "monthly" as changefreq FROM trabajos
-	UNION
-	SELECT CONCAT("/post/", publicaciones.id), fecha_actualizacion, "0.5" as priority, "monthly" as changefreq FROM publicaciones
-	UNION
-	(SELECT "/trabajos" as uri, fecha_actualizacion, "0.7" as priority, "weekly" as changefreq FROM trabajos ORDER BY fecha_actualizacion DESC LIMIT 1)
-	UNION
-	(SELECT "/" as uri, fecha_actualizacion, "0.9" as priority, "weekly" as changefreq FROM publicaciones ORDER BY fecha_actualizacion DESC LIMIT 1)
-) as pq;

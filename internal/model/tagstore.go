@@ -19,8 +19,23 @@ func NewTagStore(db *sqlx.DB) TagStore {
 	}
 }
 
-func (s *TagStore) Listar() (Publicaciones, error) {
-	panic("por implementar")
+func (s *TagStore) Listar() ([]Tag, error) {
+	var tags = make([]Tag, 0)
+	var rows, err = s.db.Query(`SELECT id, nombre FROM tags`)
+	if err != nil {
+		return []Tag{}, err
+	}
+
+	for rows.Next() {
+		var nt Tag
+		err = rows.Scan(&nt.Id, &nt.Nombre)
+		if err != nil {
+			return []Tag{}, err
+		}
+		tags = append(tags, nt)
+	}
+
+	return tags, nil
 }
 
 func (s *TagStore) Obtener(tag_id string) (Tag, error) {

@@ -23,7 +23,7 @@ func NewTrabajoStore(db *sqlx.DB) TrabajoStore {
 
 func (s *TrabajoStore) Listar() (Trabajos, error) {
 	trabajos := make(Trabajos, 0)
-	query := `SELECT t.id, fecha_publicacion, fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos t LEFT JOIN autores ON t.autor_id = autores.id ORDER BY fecha_publicacion;`
+	query := `SELECT t.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos t LEFT JOIN autores ON t.autor_id = autores.id ORDER BY fecha_publicacion;`
 	rows, err := s.db.Query(query)
 
 	if err != nil {
