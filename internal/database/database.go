@@ -30,10 +30,13 @@ func start() {
 		logger.Critical("couldn't ping database: %s", err.Error())
 	}
 
-	conn.Exec("SET lc_time_names = 'es_ES';")
+	_, err = conn.Exec("SET lc_time_names = 'es_ES';")
+	if err != nil {
+		logger.Critical("error configuring database locale: %s", err.Error())
+	}
 	_, err = conn.Exec("SET @@session.time_zone='+00:00';")
 	if err != nil {
-		logger.Critical("error configuring database: %s", err.Error())
+		logger.Critical("error configuring database timezone: %s", err.Error())
 	}
 	logger.Information("database configured")
 	db = conn

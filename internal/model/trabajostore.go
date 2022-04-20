@@ -33,7 +33,10 @@ func (s *TrabajoStore) Listar() (Trabajos, error) {
 	for rows.Next() {
 		var nt Trabajo
 
-		rows.Scan(&nt.Id, &nt.Fecha_publicacion, &nt.Fecha_actualizacion, &nt.Titulo, &nt.Resumen, &nt.Autor.Id, &nt.Autor.Nombre, &nt.Autor.Email)
+		err = rows.Scan(&nt.Id, &nt.Fecha_publicacion, &nt.Fecha_actualizacion, &nt.Titulo, &nt.Resumen, &nt.Autor.Id, &nt.Autor.Nombre, &nt.Autor.Email)
+		if err != nil {
+			return Trabajos{}, err
+		}
 
 		trabajos = append(trabajos, nt)
 	}

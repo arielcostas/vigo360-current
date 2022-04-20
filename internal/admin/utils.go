@@ -68,8 +68,14 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 	portada = resize.Resize(800, 450, portada, resize.Bicubic)
 
 	// Encode as formats
-	jpeg.Encode(&portadaJpg, portada, &jpeg.Options{Quality: 95})
-	webp.Encode(&portadaWebp, portada, &webp.Options{Quality: 98})
+	err = jpeg.Encode(&portadaJpg, portada, &jpeg.Options{Quality: 95})
+	if err != nil {
+		return
+	}
+	err = webp.Encode(&portadaWebp, portada, &webp.Options{Quality: 98})
+	if err != nil {
+		return
+	}
 
 	return
 }

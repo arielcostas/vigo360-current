@@ -48,10 +48,13 @@ var t = func() *template.Template {
 			}
 			return t.Format("02/01/2006"), nil
 		},
-		"markdown": func(text string) template.HTML {
+		"markdown": func(text string) (template.HTML, error) {
 			var buf bytes.Buffer
-			parser.Convert([]byte(text), &buf)
-			return template.HTML(buf.Bytes())
+			err := parser.Convert([]byte(text), &buf)
+			if err != nil {
+				return template.HTML(""), err
+			}
+			return template.HTML(buf.Bytes()), nil
 		},
 		"split": func(text string, separator string) []string {
 			return strings.Split(text, separator)

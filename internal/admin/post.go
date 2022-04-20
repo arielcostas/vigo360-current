@@ -122,26 +122,38 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 
 	q := "INSERT INTO publicaciones(id, titulo, alt_portada, resumen, contenido, autor_id) VALUES (?, ?, 'CAMBIAME','', '', ?);"
 	if _, err := tx.Exec(q, id, fi.Titulo, art_autor); err != nil {
-		tx.Rollback()
+		e2 := tx.Rollback()
+		if e2 != nil {
+			return &appError{e2, "error rolling back. Original error " + err.Error() + " | ", "Hubo un error guardando los cambios", 500}
+		}
 		return &appError{Error: err, Message: "error creating article in database",
 			Response: "Error creando publicación en la de datos", Status: 500}
 	}
 
 	photopath := os.Getenv("UPLOAD_PATH")
 	if err := os.WriteFile(photopath+"/images/"+id+".webp", defaultImageWebp, 0o644); err != nil {
-		tx.Rollback()
+		e2 := tx.Rollback()
+		if e2 != nil {
+			return &appError{e2, "error rolling back. Original error " + err.Error() + " | ", "Hubo un error guardando los cambios", 500}
+		}
 		return &appError{Error: err, Message: "error saving webp to disk",
 			Response: "Hubo un error guardando el artículo", Status: 500}
 	}
 
 	if err := os.WriteFile(photopath+"/thumb/"+id+".jpg", defaultImageJPG, 0o644); err != nil {
-		tx.Rollback()
+		e2 := tx.Rollback()
+		if e2 != nil {
+			return &appError{e2, "error rolling back. Original error " + err.Error() + " | ", "Hubo un error guardando los cambios", 500}
+		}
 		return &appError{Error: err, Message: "error saving jpg to disk",
 			Response: "Hubo un error guardando el artículo", Status: 500}
 	}
 
 	if err := tx.Commit(); err != nil {
-		tx.Rollback()
+		e2 := tx.Rollback()
+		if e2 != nil {
+			return &appError{e2, "error rolling back. Original error " + err.Error() + " | ", "Hubo un error guardando los cambios", 500}
+		}
 		return &appError{Error: err, Message: "error performing transaction",
 			Response: "Error creando publicación en la de datos", Status: 500}
 	}

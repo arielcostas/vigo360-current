@@ -147,16 +147,17 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 
 	query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
 	if _, err := tx.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, publicacion_id); err != nil {
-		tx.Rollback()
-		return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
-			Response: "Hubo un error guardando los cambios", Status: 500}
+		e2 := tx.Rollback()
+		if e2 != nil {
+			return &appError{e2, "error rolling back. Original error " + err.Error() + " | ", "Hubo un error guardando los cambios", 500}
+		}
+		return &appError{err, "error saving new post data for " + publicacion_id, "Hubo un error guardando los cambios", 500}
 	}
 
 	if r.FormValue("publicar") == "on" {
 		query := `UPDATE publicaciones SET fecha_publicacion=NOW() WHERE id=?`
 		if _, err := tx.Exec(query, publicacion_id); err != nil {
-			return &appError{Error: err, Message: "error saving new post data for " + publicacion_id,
-				Response: "Hubo un error guardando los cambios", Status: 500}
+			return &appError{err, "error saving new post data for " + publicacion_id, "Hubo un error guardando los cambios", 500}
 		}
 	}
 
@@ -166,7 +167,10 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 		}
 
 		if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.Serie_id, fi.Serie_posicion, publicacion_id); err != nil {
-			tx.Rollback()
+			e2 := tx.Rollback()
+			if e2 != nil {
+				return &appError{e2, "error rolling back. Original error " + err.Error() + " | ", "Hubo un error guardando los cambios", 500}
+			}
 			return &appError{Error: err, Message: "error adding series for " + publicacion_id,
 				Response: "Hubo un error guardando los cambios", Status: 500}
 		}

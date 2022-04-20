@@ -52,7 +52,7 @@ func main() {
 
 	// Automatically revoke sessions every 6 hours
 	s := gocron.NewScheduler(time.Local)
-	s.Every(5).Minutes().Do(func() {
+	_, err := s.Every(5).Minutes().Do(func() {
 		res, err := db.DB.Exec(`UPDATE sesiones SET revocada = 0 WHERE iniciada < DATE_SUB(NOW(), INTERVAL 6 HOUR);`)
 		if err != nil {
 			logger.Critical("error cleaning old sessions: %s", err.Error())
@@ -66,12 +66,15 @@ func main() {
 			logger.Information("automatically revoked %d session(s)", ra)
 		}
 	})
+	if err != nil {
+		logger.Critical("error running session deleter: %s", err.Error())
+	}
 	s.StartAsync()
 
 	http.Handle("/admin/", mw(admin.InitRouter()))
 	http.Handle("/", mw(public.InitRouter()))
 
-	err := http.ListenAndServe(PORT, nil)
+	err = http.ListenAndServe(PORT, nil)
 	if err != nil {
 		logger.Critical("error with HTTP server: %s", err.Error())
 	}

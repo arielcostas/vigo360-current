@@ -39,7 +39,10 @@ func (s *PublicacionStore) Listar() (Publicaciones, error) {
 			rawTagNombres string
 		)
 
-		rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Titulo, &np.Resumen, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
+		err = rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Titulo, &np.Resumen, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
+		if err != nil {
+			return Publicaciones{}, err
+		}
 
 		var (
 			tags            = make([]Tag, 0)
