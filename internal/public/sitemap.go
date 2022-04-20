@@ -6,33 +6,35 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
+	"encoding/xml"
 	"errors"
 	"net/http"
 
+	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 )
 
 type SitemapQuery struct {
-	Uri                 string
-	Fecha_actualizacion string
-	Changefreq          string
-	Priority            string
+	Uri                 string `xml:"loc"`
+	Fecha_actualizacion string `xml:"lastmod"`
+	Changefreq          string `xml:"changefreq"`
+	Priority            string `xml:"priority"`
 }
 
 type SitemapPage struct {
-	Urls []SitemapQuery
+	XMLName xml.Name       `xml:"urlset"`
+	Data    []SitemapQuery `xml:"url"`
 }
 
 func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
 	pages := []SitemapQuery{}
 	query := `SELECT * FROM sitemap;`
 
+	db := database.GetDB()
 	err := db.Select(&pages, query)
-	if !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		logger.Error("[sitemap]: unable to fetch rows: %s", err.Error())
-		InternalServerErrorHandler(w, r)
 		return
 	}
 
@@ -40,14 +42,8 @@ func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
 	pages = append(pages, SitemapQuery{Uri: "/contacto", Changefreq: "yearly", Priority: "0.3"})
 	pages = append(pages, SitemapQuery{Uri: "/siguenos", Changefreq: "yearly", Priority: "0.3"})
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "sitemap.xml", SitemapPage{
-		Urls: pages,
-	})
-	if err != nil {
-		logger.Error("[sitemap] error rendering template: %s", err.Error())
-		InternalServerErrorHandler(w, r)
-		return
-	}
-	w.Write(output.Bytes())
+	output, err := xml.MarshalIndent(SitemapPage{Data: pages}, "", "\t")
+	w.Header().Add("Content-Type", "application/xml")
+	w.Write([]byte(xml.Header))
+	w.Write(output)
 }
