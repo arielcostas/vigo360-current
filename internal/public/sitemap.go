@@ -12,7 +12,6 @@ import (
 	"net/http"
 
 	"vigo360.es/new/internal/database"
-	"vigo360.es/new/internal/logger"
 )
 
 type SitemapQuery struct {
@@ -27,15 +26,14 @@ type SitemapPage struct {
 	Data    []SitemapQuery `xml:"url"`
 }
 
-func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
+func GenerateSitemap(w http.ResponseWriter, r *http.Request) *appError {
 	pages := []SitemapQuery{}
 	query := `SELECT * FROM sitemap;`
 
 	db := database.GetDB()
 	err := db.Select(&pages, query)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		logger.Error("[sitemap]: unable to fetch rows: %s", err.Error())
-		return
+		return &appError{err, "error fetching rows", "Error obteniendo datos", 500}
 	}
 
 	pages = append(pages, SitemapQuery{Uri: "/licencias", Changefreq: "yearly", Priority: "0.3"})
@@ -43,7 +41,11 @@ func GenerateSitemap(w http.ResponseWriter, r *http.Request) {
 	pages = append(pages, SitemapQuery{Uri: "/siguenos", Changefreq: "yearly", Priority: "0.3"})
 
 	output, err := xml.MarshalIndent(SitemapPage{Data: pages}, "", "\t")
+	if err != nil {
+		return &appError{err, "error marshalling xml", "Error produciendo página", 500}
+	}
 	w.Header().Add("Content-Type", "application/xml")
 	w.Write([]byte(xml.Header))
 	w.Write(output)
+	return nil
 }

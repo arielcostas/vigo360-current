@@ -82,7 +82,7 @@ func InitRouter() *mux.Router {
 	router.Handle(`/legal`, appHandler(NoDbPage)).Methods("GET")
 	router.Handle(`/contacto`, appHandler(NoDbPage)).Methods("GET")
 
-	router.HandleFunc(`/sitemap.xml`, GenerateSitemap).Methods("GET")
+	router.Handle(`/sitemap.xml`, appHandler(GenerateSitemap)).Methods("GET")
 	router.Handle(`/atom.xml`, appHandler(PostsAtomFeed)).Methods("GET")
 	router.Handle(`/tags/{tagid:[0-9]+}/atom.xml`, appHandler(TagsAtomFeed)).Methods("GET")
 	router.Handle(`/autores/{autorid}/atom.xml`, appHandler(AutorAtomFeed)).Methods("GET")
