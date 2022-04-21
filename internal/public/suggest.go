@@ -60,6 +60,10 @@ func generateSuggestions(original_id string) ([]Sugerencia, error) {
 
 	var pointedOptions []Sugerencia
 	for _, rp := range options {
+		if rp.Id == original.Id {
+			continue
+		}
+
 		var np = Sugerencia{Publicacion: rp}
 		var points = 10
 
@@ -84,8 +88,8 @@ func generateSuggestions(original_id string) ([]Sugerencia, error) {
 		pointedOptions = append(pointedOptions, np)
 	}
 
-	if len(options) < 2 {
-		return []Sugerencia{}, errors.New("insufficient posts to recommend")
+	if len(pointedOptions) < 3 {
+		return resultado, errors.New("insufficient posts to recommend")
 	}
 
 	resultado[0] = pointedOptions[0]
