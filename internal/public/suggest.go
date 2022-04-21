@@ -105,9 +105,27 @@ func generateSuggestions(original_id string) ([]Sugerencia, error) {
 		}
 	}
 
-	// Random suggestion
-	var posicionAlAzar = rand.Intn(len(pointedOptions))
-	resultado[2] = pointedOptions[posicionAlAzar]
+	// Sugerencia al azar
+	var posicionAlAzar = func() int { return rand.Intn(len(pointedOptions)) }
+	resultado[2] = pointedOptions[posicionAlAzar()]
+
+	// Comprobar que no haya ninguna duplicada
+	var ids = map[string]bool{}
+	for i, r := range resultado {
+		var duplicado = false
+		if _, ok := ids[r.Id]; ok { // Duplicado
+			duplicado = true
+		}
+
+		for duplicado {
+			resultado[i] = pointedOptions[posicionAlAzar()]
+			if _, ok := ids[resultado[i].Id]; !ok {
+				duplicado = false
+			}
+		}
+
+		ids[r.Id] = true
+	}
 
 	return resultado, nil
 }
