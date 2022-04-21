@@ -30,7 +30,7 @@ func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	posts := []DashboardPost{}
-	err = db.Select(&posts, "SELECT publicaciones.id, titulo, DATE_FORMAT(fecha_publicacion, '%d %b.') as fecha_publicacion, resumen, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id ORDER BY publicaciones.fecha_publicacion DESC LIMIT 5;")
+	err = db.Select(&posts, "SELECT publicaciones.id, titulo, DATE_FORMAT(fecha_publicacion, '%d %b.') as fecha_publicacion, resumen, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones.fecha_publicacion IS NOT NULL ORDER BY publicaciones.fecha_publicacion DESC LIMIT 5;")
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return newDatabaseReadAppError(err, "posts")
