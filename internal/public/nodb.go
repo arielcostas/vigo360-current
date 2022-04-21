@@ -12,6 +12,7 @@ import (
 )
 
 var ErrNotFound = errors.New("page not found")
+var ErrInvalidInput = errors.New("invalid input")
 
 func nodbPageError(err error) *appError {
 	return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}

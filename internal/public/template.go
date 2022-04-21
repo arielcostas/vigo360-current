@@ -59,6 +59,13 @@ var t = func() *template.Template {
 		"split": func(text string, separator string) []string {
 			return strings.Split(text, separator)
 		},
+		"iterateInt": func(num int) []int {
+			var result []int
+			for i := 1; i <= num; i++ {
+				result = append(result, i)
+			}
+			return result
+		},
 	}
 
 	entries, _ := rawtemplates.ReadDir("html")

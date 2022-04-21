@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+@use "public/_pager.scss";
+
 #section-title {
 	font-size: 2.25rem;
 	font-weight: bolder;
@@ -280,12 +282,12 @@ main#authors #user-info #section-title {
 	color: var(--theme);
 }
 
-#frontpage-articles :nth-child(1) {
+#frontpage-articles .primero {
 	grid-column: 1/4;
 	flex-direction: row;
 }
 
-#frontpage-articles :nth-child(1) img {
+#frontpage-articles .primero img {
 	flex: 0 0 65%;
 }
 
@@ -300,7 +302,7 @@ main#authors #user-info #section-title {
 	padding: 1rem;
 }
 
-#frontpage-articles :nth-child(1) .article-info {
+#frontpage-articles .primero .article-info {
 	padding: 1.5rem 2rem;
 }
 
@@ -308,7 +310,7 @@ main#authors #user-info #section-title {
 	font-size: 1.35rem;
 }
 
-#frontpage-articles :nth-child(1) .article-title {
+#frontpage-articles .primero .article-title {
 	margin-top: 0.5rem;
 	font-size: 2.25rem;
 	line-height: 1.15;
@@ -318,7 +320,7 @@ main#authors #user-info #section-title {
 	display: none;
 }
 
-#frontpage-articles :nth-child(1) .article-summary {
+#frontpage-articles .primero .article-summary {
 	margin-top: 1rem;
 	display: block;
 	font-size: 1.125rem;

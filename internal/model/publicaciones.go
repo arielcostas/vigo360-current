@@ -5,15 +5,17 @@
  */
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type Publicaciones []Publicacion
 
 // Devuelve un slice con solo las publicaciones públicas
-func (ps *Publicaciones) FiltrarPublicas() Publicaciones {
+func (ps Publicaciones) FiltrarPublicas() Publicaciones {
 	var nps Publicaciones
 
-	for _, p := range *ps {
+	for _, p := range ps {
 		if p.Fecha_publicacion == "" {
 			continue
 		}
@@ -31,9 +33,9 @@ func (ps *Publicaciones) FiltrarPublicas() Publicaciones {
 }
 
 // Devuelve la fecha de la actualización más reciente de una publicación del slice
-func (ps *Publicaciones) ObtenerUltimaActualizacion() (time.Time, error) {
+func (ps Publicaciones) ObtenerUltimaActualizacion() (time.Time, error) {
 	var lastUpdate time.Time
-	for _, pub := range *ps {
+	for _, pub := range ps {
 		var ut, err = time.Parse("2006-01-02 15:04:05", pub.Fecha_actualizacion)
 		if err != nil {
 			return time.Time{}, err
