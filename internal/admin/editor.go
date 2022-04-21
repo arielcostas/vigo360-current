@@ -14,6 +14,8 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/database"
+	"vigo360.es/new/internal/model"
 )
 
 func postEditor(w http.ResponseWriter, r *http.Request) *appError {
@@ -27,7 +29,6 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	}
 	post_id := mux.Vars(r)["id"]
 
-	// TODO: Check author is same as session
 	post := PostEditar{}
 
 	err = db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
@@ -95,10 +96,14 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 
 	publicacion_id := mux.Vars(r)["id"]
 
-	// TODO: Check post exists before parsing form
+	var ps = model.NewPublicacionStore(database.GetDB())
+	_, err = ps.ObtenerPorId(publicacion_id, false)
+	if err != nil {
+		return &appError{err, "post trying to edit not found", "La publicación que se intenta modificar no existe", 404}
+	}
+
 	if err := r.ParseMultipartForm(26214400); err != nil {
-		return &appError{Error: err, Message: "error parsing multipart form",
-			Response: "Hubo un error recibiendo los datos del formulario", Status: 500}
+		return &appError{err, "error parsing multipart form", "Hubo un error recibiendo los datos del formulario", 500}
 	}
 
 	fi := EditPostActionFormInput{
