@@ -115,7 +115,7 @@ func (s *PublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error
 
 func (s *PublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicacion, error) {
 	var post Publicacion
-	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), GROUP_CONCAT(tags.nombre) as tags
+	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), COALESCE(GROUP_CONCAT(tags.nombre), "") as tags
 	FROM publicaciones
 	LEFT JOIN autores on publicaciones.autor_id = autores.id
 	LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id
