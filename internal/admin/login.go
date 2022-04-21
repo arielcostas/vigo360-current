@@ -10,6 +10,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"net/url"
 
 	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/logger"
@@ -137,7 +138,15 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 		Secure:   true,
 	})
 
+	var next = "/admin/dashboard"
+	if n := r.URL.Query().Get("next"); n != "" {
+		unescapedNext, err := url.QueryUnescape(n)
+		if err == nil {
+			next = unescapedNext
+		}
+	}
+
 	defer w.WriteHeader(303)
-	defer w.Header().Add("Location", "/admin/dashboard")
+	defer w.Header().Add("Location", next)
 	return nil
 }
