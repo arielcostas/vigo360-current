@@ -10,21 +10,16 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
-
-	"vigo360.es/new/internal/logger"
 )
 
 func viewDashboard(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	sess, err := getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 
 	avisos := []Aviso{}

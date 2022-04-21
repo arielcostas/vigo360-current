@@ -13,20 +13,16 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"vigo360.es/new/internal/logger"
 )
 
 func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	sess, err := getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 
 	series := []Serie{}
@@ -58,14 +54,11 @@ type CreateSeriesFormInput struct {
 func createSeries(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	_, err = getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 
 	if err := r.ParseForm(); err != nil {

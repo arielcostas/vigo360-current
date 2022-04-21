@@ -12,6 +12,8 @@ var ErrExpiredSession = errors.New("session was older than 6 hours and was revok
 var ErrInvalidSession = errors.New("session token is not valid")
 var ErrUnablePermissions = errors.New("unable to get permissions for session")
 
+var LoginRequiredAppError = &appError{nil, "login required", "Es necesario iniciar sesión para acceder a esta página", 401}
+
 // Creates an error related with template rendering
 func newTemplateRenderingAppError(err error) *appError {
 	return &appError{Error: err, Message: "error rendering template",

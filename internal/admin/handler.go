@@ -8,6 +8,7 @@ package admin
 import (
 	"html/template"
 	"net/http"
+	"net/url"
 
 	"vigo360.es/new/internal/logger"
 )
@@ -33,22 +34,29 @@ var statusToType map[int]string = map[int]string{
 type appHandler func(http.ResponseWriter, *http.Request) *appError
 
 func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if err := fn(w, r); err != nil {
+	if ae := fn(w, r); ae != nil {
 		var rid = r.Context().Value("rid").(string)
-		logger.Error("[%s] `%s` %s: %s", rid, r.URL.Path, err.Message, err.Error.Error())
+		if ae == LoginRequiredAppError && ae.Error == nil {
+			logger.Error("[%s] `%s` %s", rid, r.URL.Path, ae.Message)
+			w.Header().Add("Location", "/admin/login?next="+url.QueryEscape(r.URL.Path))
+			w.WriteHeader(http.StatusSeeOther)
+			return
+		}
+
+		logger.Error("[%s] `%s` %s: %s", rid, r.URL.Path, ae.Message, ae.Error.Error())
 
 		w.Header().Add("Vigo360-RID", rid)
-		w.WriteHeader(err.Status)
+		w.WriteHeader(ae.Status)
 
 		var tipo string
-		if t, ok := statusToType[err.Status]; ok {
+		if t, ok := statusToType[ae.Status]; ok {
 			tipo = t
 		}
 
 		errorDocument.Execute(w, errorDocumentParams{
 			Tipo:        tipo,
-			Codigo:      err.Status,
-			Explicacion: err.Response,
+			Codigo:      ae.Status,
+			Explicacion: ae.Response,
 			Rid:         rid,
 		})
 

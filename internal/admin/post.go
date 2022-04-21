@@ -15,7 +15,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
-	"vigo360.es/new/internal/logger"
 )
 
 type ResumenPost struct {
@@ -37,14 +36,11 @@ var defaultImageWebp []byte
 func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	sess, err := getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 
 	posts := []ResumenPost{}
@@ -75,14 +71,11 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 func createPost(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	sess, err := getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 
 	var art_autor = sess.Autor_id
@@ -166,14 +159,11 @@ func createPost(w http.ResponseWriter, r *http.Request) *appError {
 func deletePost(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	sess, err := getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	if !sess.Permisos["publicaciones_delete"] {
 		return &appError{Error: ErrUnablePermissions, Message: "user doesn't have permission to delete posts", Response: "No tienes permiso para realizar esta acción", Status: 403}

@@ -14,20 +14,16 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
-	"vigo360.es/new/internal/logger"
 )
 
 func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	sess, err := getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	post_id := mux.Vars(r)["id"]
 
@@ -90,14 +86,11 @@ type EditPostActionFormInput struct {
 func editPost(w http.ResponseWriter, r *http.Request) *appError {
 	var sc, err = r.Cookie("sess")
 	if err != nil {
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 	_, err = getSession(sc.Value)
 	if err != nil {
-		logger.Notice("unauthenticated user tried to access this page")
-		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-		return nil
+		return LoginRequiredAppError
 	}
 
 	publicacion_id := mux.Vars(r)["id"]
