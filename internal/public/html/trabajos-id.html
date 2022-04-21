@@ -17,30 +17,31 @@
 	{{ template "_header.html" }}
 	<main>
 		<div id="post-main">
-			<figure id="post-thumbnail">
-				<img width="1024" height="576" src="/static/images/{{ .Trabajo.Id}}.webp"
-					alt="{{ .Trabajo.Alt_portada }}">
-				<figcaption>{{ .Trabajo.Alt_portada }}</figcaption>
-			</figure>
-
-			<h2 id="post-title">{{ .Trabajo.Titulo }}</h2>
-
-			<div id="post-info">
-				<a href="/autores/{{ .Trabajo.Autor.Id }}">{{ .Trabajo.Autor.Nombre }}</a>
-				<time>{{ dateDayMonth .Trabajo.Fecha_publicacion }} {{ if ne (dateDayMonth .Trabajo.Fecha_actualizacion)
-					(dateDayMonth .Trabajo.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Trabajo.Fecha_actualizacion }}){{end}}</time>
-			</div>
-
-			<article id="post-inner">
-				{{ .Trabajo.Contenido | markdown }}
-				{{ if ne (len .Adjuntos) 0 }}
-				<h2>Descargas</h2>
-				<ul>
-					{{ range .Adjuntos }}
-					<li><a href="/static/papers/{{ .Nombre_archivo }}">{{ .Titulo }}</a></li>
+			<article>
+				<figure id="post-thumbnail">
+					<img width="1024" height="576" src="/static/images/{{ .Trabajo.Id}}.webp"
+						alt="{{ .Trabajo.Alt_portada }}">
+					<figcaption>{{ .Trabajo.Alt_portada }}</figcaption>
+				</figure>
+				<h2 id="post-title">{{ .Trabajo.Titulo }}</h2>
+				<p id="post-info">
+					<a href="/autores/{{ .Trabajo.Autor.Id }}">{{ .Trabajo.Autor.Nombre }}</a>
+					{{ dateDayMonth .Trabajo.Fecha_publicacion }} {{ if ne (dateDayMonth .Trabajo.Fecha_actualizacion)
+					(dateDayMonth .Trabajo.Fecha_publicacion) }}(actualizado {{ dateDayMonth
+					.Trabajo.Fecha_actualizacion
+					}}){{end}}
+				</p>
+				<div id="post-inner">
+					{{ .Trabajo.Contenido | markdown }}
+					{{ if ne (len .Adjuntos) 0 }}
+					<h2>Descargas</h2>
+					<ul>
+						{{ range .Adjuntos }}
+						<li><a href="/static/papers/{{ .Nombre_archivo }}">{{ .Titulo }}</a></li>
+						{{ end }}
+					</ul>
 					{{ end }}
-				</ul>
-				{{ end }}
+				</div>
 			</article>
 
 			<div id="post-author-container">
