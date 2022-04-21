@@ -6,19 +6,15 @@
 package public
 
 import (
-	"database/sql"
 	"errors"
 	"math/rand"
-	"strings"
+
+	"vigo360.es/new/internal/database"
+	"vigo360.es/new/internal/model"
 )
 
-/*
- Generates three suggested posts based on certain criteria, like matching author, same tags...
- For more details, check https://gitlab.com/vigo360/new.vigo360.es/-/issues/2
-*/
-type PostRecommendation struct {
-	ResumenPost
-	Tags   sql.NullString
+type Sugerencia struct {
+	model.Publicacion
 	Points int
 }
 
@@ -42,67 +38,58 @@ func FindMatchingTags(tags1, tags2 []string) int {
 	return matches
 }
 
-func generateSuggestions(original_id string) ([]PostRecommendation, error) {
-	var resultado = make([]PostRecommendation, 3)
+func generateSuggestions(original_id string) ([]Sugerencia, error) {
+	var resultado = make([]Sugerencia, 3)
+	var ps = model.NewPublicacionStore(database.GetDB())
 
-	// Two by points
-	var original PostRecommendation
-	err := db.QueryRowx(`SELECT pp.id, fecha_publicacion, titulo, autores.id as autor_id, GROUP_CONCAT(tag_id) as tags FROM PublicacionesPublicas pp LEFT JOIN autores ON pp.autor_id = autores.id LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id WHERE pp.id = ? GROUP BY publicacion_id;`, original_id).StructScan(&original)
-	var original_tags = strings.Split(original.Tags.String, ",")
+	original, err := ps.ObtenerPorId(original_id, true)
 	if err != nil {
-		return []PostRecommendation{}, err
+		return resultado, err
 	}
 
-	// Rest
-	var options []PostRecommendation
-	err = db.Select(&options, `SELECT pp.id, DATE_FORMAT(fecha_publicacion, '%d %b.') as fecha_publicacion, titulo, autores.id as autor_id, resumen, alt_portada, autores.nombre, GROUP_CONCAT(tag_id) as tags FROM PublicacionesPublicas pp LEFT JOIN autores ON pp.autor_id = autores.id LEFT JOIN publicaciones_tags ON pp.id = publicaciones_tags.publicacion_id WHERE pp.id != ? GROUP BY pp.id;`, original_id)
+	options, err := ps.Listar()
 	if err != nil {
-		return []PostRecommendation{}, err
+		return resultado, err
+	}
+	options = options.FiltrarPublicas()
+
+	var originalTags []string
+	for _, t2 := range original.Tags {
+		originalTags = append(originalTags, t2.Id)
 	}
 
-	var tags int
-	err = db.QueryRow(`SELECT COUNT(*) FROM tags`).Scan(&tags)
-
-	if err != nil {
-		return []PostRecommendation{}, err
-	}
-
-	for i, rp := range options {
+	var pointedOptions []Sugerencia
+	for _, rp := range options {
+		var np = Sugerencia{Publicacion: rp}
 		var points = 10
 
-		/*	Same author => +12 points
-			Different => 0 */
-		if original.Autor_id == rp.Autor_id {
+		if original.Autor.Id == rp.Autor.Id {
 			points += 12
 		}
 
-		/*	If all tags match, give 3 times as many points tags are
-		 *	Also, for each that matches give 2 points
-		 *	3 tags all match => +9 points
-		 *	2 match => +4 points
-		 */
-		matches := FindMatchingTags(original_tags, strings.Split(rp.Tags.String, ","))
-		if len(original_tags) == matches {
-			points += len(original_tags) * 4
+		var tags []string
+		for _, t2 := range rp.Tags {
+			tags = append(tags, t2.Id)
+		}
+		matches := FindMatchingTags(tags, originalTags)
+		if len(originalTags) == matches {
+			points += len(originalTags) * 4
 		}
 
 		points += matches * 3
 
-		/*	Some random points to not make them the same all the time
-			Adds or deduces up to 8 points, randomly */
 		points += rand.Intn(12) - 6
 
-		// Persist it
-		rp.Points = points
-		options[i] = rp
+		np.Points = points
+		pointedOptions = append(pointedOptions, np)
 	}
 
 	if len(options) < 2 {
-		return []PostRecommendation{}, errors.New("insufficient posts to recommend")
+		return []Sugerencia{}, errors.New("insufficient posts to recommend")
 	}
 
-	resultado[0] = options[0]
-	for _, rp := range options[1:] {
+	resultado[0] = pointedOptions[0]
+	for _, rp := range pointedOptions[1:] {
 		if resultado[0].Points < rp.Points {
 			resultado[1] = resultado[0]
 			resultado[0] = rp
@@ -115,9 +102,8 @@ func generateSuggestions(original_id string) ([]PostRecommendation, error) {
 	}
 
 	// Random suggestion
-	err = db.QueryRowx(`SELECT pp.id, DATE_FORMAT(fecha_publicacion, '%d %b.') as fecha_publicacion, alt_portada, titulo, resumen, nombre FROM PublicacionesPublicas pp  LEFT JOIN autores ON pp.autor_id = autores.id WHERE pp.id != ? ORDER BY RAND() LIMIT 1;`, original_id).StructScan(&resultado[2])
-	if err != nil {
-		return []PostRecommendation{}, err
-	}
+	var posicionAlAzar = rand.Intn(len(pointedOptions))
+	resultado[2] = pointedOptions[posicionAlAzar]
+
 	return resultado, nil
 }

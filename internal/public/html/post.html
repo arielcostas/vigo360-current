@@ -29,7 +29,8 @@
 			<div id="post-info">
 				<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
 				<time>{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
-					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion }}){{end}}</time>
+					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
+					}}){{end}}</time>
 			</div>
 
 			<article id="post-inner">
@@ -76,8 +77,8 @@
 					<a href="/post/{{ .Id }}">
 						<img width="300" height="170" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}">
 						<p class="article-author">
-							{{ .Autor_nombre}}
-							- {{ .Fecha_publicacion }}
+							{{ .Autor.Nombre}}
+							- {{ dateDayMonth .Fecha_publicacion }}
 						</p>
 						<h4 class="article-title">{{ .Titulo }}</h4>
 						<div class="related-article-summary">

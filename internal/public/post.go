@@ -42,10 +42,10 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		}
 	}
 
-	var recommendations []PostRecommendation
+	var recommendations []Sugerencia
 	if nr, err := generateSuggestions(post.Id); err != nil {
 		logger.Error("[%s] error fetching recommendations: %s", r.Context().Value("rid"), err.Error())
-		recommendations = make([]PostRecommendation, 0)
+		recommendations = make([]Sugerencia, 0)
 	} else {
 		recommendations = nr
 	}
@@ -58,7 +58,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 	var output bytes.Buffer
 	var err = t.ExecuteTemplate(&output, "post.html", struct {
 		Post            model.Publicacion
-		Recommendations []PostRecommendation
+		Recommendations []Sugerencia
 		Meta            PageMeta
 	}{
 		Post:            post,
