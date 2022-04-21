@@ -19,39 +19,42 @@
 	{{ template "_header.html" }}
 	<main>
 		<div id="post-main">
-			<figure id="post-thumbnail">
-				<img width="1024" height="576" src="/static/images/{{ .Post.Id}}.webp" alt="{{ .Post.Alt_portada }}" />
-				<figcaption>{{ .Post.Alt_portada }}</figcaption>
-			</figure>
+			<article>
+				<figure id="post-thumbnail">
+					<img width="1024" height="576" src="/static/images/{{ .Post.Id}}.webp"
+						alt="{{ .Post.Alt_portada }}" />
+					<figcaption>{{ .Post.Alt_portada }}</figcaption>
+				</figure>
 
-			<h2 id="post-title">{{ .Post.Titulo }}</h2>
+				<h2 id="post-title">{{ .Post.Titulo }}</h2>
 
-			<div id="post-info">
-				<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
-				<time>{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
+				<p id="post-info">
+					<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
+					{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
 					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
-					}}){{end}}</time>
-			</div>
+					}}){{end}}
+				</p>
 
-			<article id="post-inner">
-				{{ if ne .Post.Serie.Id "" }}
-				<aside class="post-series">
-					<h4>{{ .Post.Serie.Titulo }}</h4>
-					<ul>
-						{{ $postid := .Post.Id }}
-						{{ range .Serie.Articulos }}
-						<li>
-							{{ if eq .Id $postid}}
-							<b>{{ .Titulo }}</b>
-							{{ else }}
-							<a href="/post/{{.Id}}">{{ .Titulo }}</a>
-							{{end}}
-						</li>
-						{{ end }}
-					</ul>
-				</aside>
-				{{ end }}
-				{{ .Post.Contenido | markdown }}
+				<div id="post-inner">
+					{{ if ne .Post.Serie.Id "" }}
+					<aside class="post-series">
+						<h4>{{ .Post.Serie.Titulo }}</h4>
+						<ul>
+							{{ $postid := .Post.Id }}
+							{{ range .Serie.Articulos }}
+							<li>
+								{{ if eq .Id $postid}}
+								<b>{{ .Titulo }}</b>
+								{{ else }}
+								<a href="/post/{{.Id}}">{{ .Titulo }}</a>
+								{{end}}
+							</li>
+							{{ end }}
+						</ul>
+					</aside>
+					{{ end }}
+					{{ .Post.Contenido | markdown }}
+				</div>
 			</article>
 
 			<div id="post-author-container">
