@@ -1,0 +1,52 @@
+@media print {
+	:root {
+		font-family: Georgia, 'Times New Roman', Times, serif;
+	}
+
+	header,
+	footer {
+		display: none;
+	}
+
+	a, #post-inner p a {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	#post-main,
+	main#authors > div {
+		max-width: 100%;
+		margin: 0;
+		box-shadow: none;
+	}
+
+	#post-inner {
+		max-width: 150ch;
+	}
+
+	main {
+		padding: 1rem 0;
+	}
+
+	#post-inner img {
+		width: 60%;
+		text-align: center;
+	}
+
+	#post-author-container,
+	h2#related-articles-header,
+	div#post-related-articles,
+	#descargas-title,
+	#descargas-list {
+		display:none;
+	}
+
+	// No mostrar miniaturas por problemas con la relación de aspecto
+	.user-article-thumbnail {
+		display: none;
+	}
+
+	#section-articles img {
+		display: none;
+	}
+}
