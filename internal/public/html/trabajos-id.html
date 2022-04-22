@@ -11,6 +11,30 @@
 	<meta property="og:url" content="{{ .Meta.Canonica }}" />
 	<meta property="og:locale" content="es_ES">
 	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
+
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Article",
+			"wordCount": {{ wordCount .Trabajo.Contenido }},
+			"author": {
+				"@type": "Person",
+				"name": "{{ .Trabajo.Autor.Nombre }}",
+				"url": "/autores/{{ .Trabajo.Autor.Id }}"
+			},
+			"dateModified": "{{ date3339 .Trabajo.Fecha_actualizacion }}",
+			"datePublished": "{{ date3339 .Trabajo.Fecha_publicacion }}",
+			"headline": "{{ .Trabajo.Titulo }}",
+			"image": {
+				"@type": "ImageObject",
+				"caption": "{{ .Trabajo.Alt_portada }}",
+				"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+				"acquireLicensePage": "/legal",
+				"contentUrl": "/static/images/{{ .Trabajo.Id}}.webp"
+			},
+			"license": "https://creativecommons.org/licenses/by-sa/4.0/"
+		}
+	</script>
 </head>
 
 <body>

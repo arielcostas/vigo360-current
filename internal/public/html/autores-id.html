@@ -4,6 +4,17 @@
 <head>
 	{{- template "_head.html" . }}
 	<link rel="alternate" href="/autores/{{.Autor.Id}}/atom.xml" type="application/atom+xml" />
+
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"email": "mailto:{{ .Autor.Email }}",
+			"name": "{{ .Autor.Nombre }}",
+			"jobTitle": "{{ .Autor.Rol }}",
+			"image": "/static/profile/{{ .Autor.Id }}.jpg"
+		}
+	</script>
 </head>
 
 <body>
@@ -13,7 +24,7 @@
 			<div id="user-info">
 				<div>
 					<h2 id="section-title">{{ .Autor.Nombre }}</h2>
-					<span id="user-role">{{ .Autor.Rol}}
+					<span id="user-role">{{ .Autor.Rol }}
 						{{ if .Autor.Web_url}} &mdash;
 						<a href="{{.Autor.Web_url}}">
 							{{ with .Autor.Web_titulo }}

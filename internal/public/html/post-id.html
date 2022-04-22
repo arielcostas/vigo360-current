@@ -32,7 +32,13 @@
 			"dateModified": "{{ date3339 .Post.Fecha_actualizacion }}",
 			"datePublished": "{{ date3339 .Post.Fecha_publicacion }}",
 			"headline": "{{ .Post.Titulo }}",
-			"image": "/static/images/{{ .Post.Id}}.webp",
+			"image": {
+				"@type": "ImageObject",
+				"caption": "{{ .Post.Alt_portada }}",
+				"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+				"acquireLicensePage": "/legal",
+				"contentUrl": "/static/images/{{ .Post.Id}}.webp"
+			},
 			"license": "https://creativecommons.org/licenses/by-sa/4.0/"
 		}
 	</script>
