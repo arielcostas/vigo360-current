@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+
+	<meta property="og:title" content="{{ .Meta.Titulo }}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Vigo360" />
+	<meta property="og:image" content="{{ .Meta.Miniatura }}" />
+	<meta property="og:url" content="{{ .Meta.Canonica }}" />
+	<meta property="og:locale" content="es_ES">
+	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main>
+		<div id="post-main">
+			<article>
+				<figure id="post-thumbnail">
+					<img width="1024" height="576" src="/static/images/{{ .Trabajo.Id}}.webp"
+						alt="{{ .Trabajo.Alt_portada }}">
+					<figcaption>{{ .Trabajo.Alt_portada }}</figcaption>
+				</figure>
+				<h2 id="post-title">{{ .Trabajo.Titulo }}</h2>
+				<p id="post-info">
+					<a href="/autores/{{ .Trabajo.Autor.Id }}">{{ .Trabajo.Autor.Nombre }}</a>
+					{{ dateDayMonth .Trabajo.Fecha_publicacion }} {{ if ne (dateDayMonth .Trabajo.Fecha_actualizacion)
+					(dateDayMonth .Trabajo.Fecha_publicacion) }}(actualizado {{ dateDayMonth
+					.Trabajo.Fecha_actualizacion
+					}}){{end}}
+				</p>
+				<div id="post-inner">
+					{{ .Trabajo.Contenido | markdown }}
+					{{ if ne (len .Adjuntos) 0 }}
+					<h2>Descargas</h2>
+					<ul>
+						{{ range .Adjuntos }}
+						<li><a href="/static/papers/{{ .Nombre_archivo }}">{{ .Titulo }}</a></li>
+						{{ end }}
+					</ul>
+					{{ end }}
+				</div>
+			</article>
+
+			<div id="post-author-container">
+				<a href="/autores/{{ .Trabajo.Autor.Id }}">
+					<div id="post-author-card">
+						<img width="180" height="180" class="post-author-photo"
+							src="/static/profile/{{ .Trabajo.Autor.Id }}.jpg"
+							alt="Fotografía de perfil de {{ .Trabajo.Autor.Nombre }}" loading="lazy" />
+						<div class="post-author-info">
+							<h3>{{ .Trabajo.Autor.Nombre }}</h3>
+							<span>{{ .Trabajo.Autor.Rol}}</span>
+							<p>{{ .Trabajo.Autor.Biografia }}</p>
+						</div>
+					</div>
+				</a>
+			</div>
+
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>

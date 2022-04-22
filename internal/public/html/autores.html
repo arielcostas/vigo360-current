@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="authors">
+		<div>
+			<h2 id="section-title">Quiénes somos</h2>
+			{{ if eq (len .Autores) 0 }}
+			<span>No hay ningún autor que mostrar</span>
+			{{ else }}
+			<div id="authors-grid">
+				{{ range .Autores }}
+				<a href="/autores/{{ .Id }}">
+					<div>
+						<img width="200" height="200" src="/static/profile/{{ .Id }}.jpg"
+							alt="Foto de perfil de {{ .Nombre }}" />
+						<span class="authors-name">{{ .Nombre }}</span><br />
+						<span class="authors-role">{{ .Rol }}</span>
+						<p>{{ .Biografia }}</p>
+					</div>
+				</a>
+				{{ end }}
+			</div>
+		</div>
+		{{ end }}
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>

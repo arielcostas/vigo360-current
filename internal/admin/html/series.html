@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<title>Series - Admin Vigo360</title>
+	{{ template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" . }}
+	<main id="series-list">
+		<h2>Gestor de series</h2>
+		<p>Las series permiten mostrar gráficamente que dos artículos están relacionados más allá de una etiqueta. Por
+			ejemplo, uno puede ser una continuación de otro, o ambos estar relacionados con el mismo tema concreto...
+		</p>
+		<div>
+			<ul>
+				{{ if ne (len .Series) 0 }}
+				{{ range .Series }}
+				<li>{{ .Titulo }} ({{ .Articulos }} artículos)</li>
+				{{ end }}
+				{{ else }}
+				<span>No hay ninguna serie</span>
+				{{ end }}
+			</ul>
+			<form action="/admin/series" method="POST">
+				<h3>Crear nueva serie</h3>
+				<label for="titulo">Título</label>
+				<input type="text" name="titulo" id="titulo" placeholder="Mi serie sobre...">
+				<button type="submit" class="btn-theme">Crear serie</button>
+			</form>
+		</div>
+	</main>
+	{{ template "_footer.html" . }}
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="sections">
+		<h2 id="section-title">Secciones</h2>
+		{{ if eq (len .Tags) 0 }}
+		<span>No hay secciones</span>
+		{{ else }}
+		<!-- TODO: Refactor class names-->
+		<ul id="section-articles">
+			{{ range .Tags }}
+			<li>
+				<a href="/tags/{{ .Id }}">
+					<img src="/static/images/{{ .Ultima }}.webp" alt="Portada de {{ .Nombre }}">
+					<div>
+						<span class="article-author">{{ .Publicaciones }} artículos</span>
+						<h3 class="article-title">{{ .Nombre }}</h3>
+					</div>
+				</a>
+			</li>
+			{{ end }}
+		</ul>
+		{{ end }}
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>

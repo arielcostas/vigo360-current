@@ -1,0 +1,214 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+@import url("fira-sans.css");
+@import url("open-sans.css");
+
+:root {
+	--gray: #f8f8f8;
+
+	--accent: var(--gray);
+	--background: unset;
+	--text: rgb(18, 20, 24);
+	--theme: #236535;
+
+	--correct: #16a34a;
+	--alternate: #0284c7;
+	--incorrect: #dc2626;
+
+	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
+
+	--sans-fonts: "Fira Sans", Cantarell, sans-serif;
+	--mono-fonts: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+	font-family: var(--sans-fonts);
+	font-kerning: normal;
+	font-weight: 400;
+	font-size: 16px;
+
+	scroll-behavior: smooth;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0 auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 100vh;
+	background-color: #f2f2f6;
+}
+
+a {
+	text-decoration: none;
+	color: var(--theme);
+	transition: color 300ms, opacity 300ms, background-color 300ms;
+}
+
+p {
+	font-family: var(--sans-fonts);
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	width: 100%;
+	letter-spacing: 1px;
+
+	background: #fff;
+	border-top: 5px solid var(--theme);
+}
+
+header > * {
+	margin: 0 10%;
+}
+
+#header-brand {
+	font-size: 2em;
+	padding-top: 0;
+	padding-bottom: 0;
+	display: flex;
+	align-items: center;
+	color: var(--color);
+}
+
+#header-brand img {
+	width: 1.5em;
+	height: 1.5em;
+	margin: 0;
+}
+
+h1 {
+	margin-left: 1rem;
+	font-size: 24px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+#header-brand:hover {
+	text-decoration: none;
+}
+
+.nav-link {
+	font-size: 1rem;
+	text-decoration: none;
+	color: var(--theme);
+	padding: 1rem 1.5rem;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.nav-link:hover {
+	color: #fff;
+	background: var(--theme);
+	text-decoration: none;
+}
+
+header nav {
+	display: flex;
+}
+
+header .mobile {
+	display: none;
+}
+
+footer {
+	padding: 0;
+	color: var(--text);
+	font-size: 1.05rem;
+
+	display: flex;
+	justify-content: space-between;
+
+	padding: 1.5rem;
+	opacity: 0.8;
+
+	width: 1280px;
+	margin: 0 auto;
+}
+
+footer div :not(:last-child) {
+	margin-right: 1rem;
+}
+
+form hr {
+	margin: 1rem 0;
+}
+
+@media screen and (max-width: 1366px) {
+	header {
+		padding: 0 2.5rem;
+	}
+
+	header > * {
+		margin: 0;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	header {
+		flex-direction: column;
+	}
+
+	#header-brand {
+		margin-bottom: 1rem;
+		margin-top: 1rem;
+	}
+
+	header .desktop {
+		display: none;
+	}
+
+	header .mobile {
+		display: block;
+	}
+
+	details#nav {
+		width: 100%;
+		margin: auto;
+		display: flex;
+		text-align: center;
+		font-size: 1.125rem;
+		flex-direction: column;
+	}
+
+	.nav-link {
+		padding: 0.25rem;
+		margin-left: 1rem;
+	}
+
+	footer {
+		width: 95vw;
+	}
+}
+
+@media screen and (max-width: 640px) {
+	header {
+		max-width: 100%;
+	}
+
+	details#nav summary {
+		font-size: 1.25rem;
+	}
+
+	details#nav *:not(summary) {
+		margin-left: 1rem;
+	}
+
+	footer {
+		flex-direction: column;
+	}
+}

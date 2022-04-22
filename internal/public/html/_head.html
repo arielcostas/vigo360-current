@@ -1,0 +1,19 @@
+<title>{{ .Meta.Titulo }} - Vigo360</title>
+
+<meta name="description" content="{{ .Meta.Descripcion }}" />
+{{- with .Meta.Keywords }}
+<meta name="keywords" content="{{ . }}" />
+{{- end }}
+<link rel="canonical" href="{{ .Meta.Canonica }}" />
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<link rel="icon" href="/static/logo.png" />
+<link rel="stylesheet" href="/static/main.css" media="screen" />
+
+<link rel="preload" as="style" href="/static/fira-sans.css" />
+<link rel="preload" as="style" href="/static/open-sans.css" />
+
+<meta name="theme-color" content="#236535" />

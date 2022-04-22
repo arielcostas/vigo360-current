@@ -1,0 +1,88 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+package admin
+
+import (
+	"bytes"
+	"database/sql"
+	"errors"
+	"net/http"
+	"strings"
+
+	"github.com/go-playground/validator/v10"
+)
+
+func listSeries(w http.ResponseWriter, r *http.Request) *appError {
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		return LoginRequiredAppError
+	}
+	sess, err := getSession(sc.Value)
+	if err != nil {
+		return LoginRequiredAppError
+	}
+
+	series := []Serie{}
+	err = db.Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return newDatabaseReadAppError(err, "series")
+	}
+
+	var output bytes.Buffer
+	err = t.ExecuteTemplate(&output, "series.html", struct {
+		Series  []Serie
+		Session Session
+	}{
+		Series:  series,
+		Session: sess,
+	})
+	if err != nil {
+		return &appError{Error: err, Message: "error rendering page",
+			Response: "Hubo un error mostrando esta página.", Status: 500}
+	}
+	w.Write(output.Bytes())
+	return nil
+}
+
+type CreateSeriesFormInput struct {
+	Titulo string `validate:"required,min=1,max=40"`
+}
+
+func createSeries(w http.ResponseWriter, r *http.Request) *appError {
+	var sc, err = r.Cookie("sess")
+	if err != nil {
+		return LoginRequiredAppError
+	}
+	_, err = getSession(sc.Value)
+	if err != nil {
+		return LoginRequiredAppError
+	}
+
+	if err := r.ParseForm(); err != nil {
+		return &appError{Error: err, Message: "error parsing form",
+			Response: "Error recibiendo los datos. Inténtalo de nuevo más tarde.", Status: 500}
+	}
+
+	fi := CreateSeriesFormInput{}
+	fi.Titulo = r.FormValue("titulo")
+
+	if err := validator.New().Struct(fi); err != nil {
+		return &appError{Error: err, Message: "error validating form",
+			Response: "Alguno de los datos introducidos no es válido.", Status: 400}
+	}
+
+	id := strings.ToLower(strings.TrimSpace(fi.Titulo))
+	id = strings.ReplaceAll(id, " ", "-")
+
+	if _, err := db.Exec(`INSERT INTO series VALUES (?, ?)`, id, fi.Titulo); err != nil {
+		return &appError{Error: err, Message: "error persisting to database",
+			Response: "Hubo un error guardando datos.", Status: 500}
+	}
+
+	w.Header().Add("Location", "/admin/series")
+	w.WriteHeader(303)
+	return nil
+}

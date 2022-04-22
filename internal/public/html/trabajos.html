@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="papers">
+		<h2 id="section-title">Trabajos originales Vigo360</h2>
+		<div id="papers-list">
+			{{ if eq (len .Trabajos ) 0 }}
+			<p>No hay trabajos para mostrar</p>
+			{{ else }}
+			{{ range .Trabajos }}
+			<article>
+				<a href="/trabajos/{{.Id}}">
+					<img width="620" height="345" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}"
+						title="{{ .Titulo }}" />
+					<div>
+						<p class="article-author">{{ .Autor_nombre }}</p>
+						<h3 class="article-title">{{ .Titulo }}</h3>
+					</div>
+				</a>
+			</article>
+			{{ end }}
+			{{ end }}
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>

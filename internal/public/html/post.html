@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+
+	<meta property="og:title" content="{{ .Meta.Titulo }}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Vigo360" />
+	<meta property="og:image" content="{{ .Meta.Miniatura }}" />
+	<meta property="og:url" content="{{ .Meta.Canonica }}" />
+	<meta property="og:locale" content="es_ES" />
+	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
+
+	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main>
+		<div id="post-main">
+			<article>
+				<figure id="post-thumbnail">
+					<img width="1024" height="576" src="/static/images/{{ .Post.Id}}.webp"
+						alt="{{ .Post.Alt_portada }}" />
+					<figcaption>{{ .Post.Alt_portada }}</figcaption>
+				</figure>
+
+				<h2 id="post-title">{{ .Post.Titulo }}</h2>
+
+				<p id="post-info">
+					<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
+					{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
+					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
+					}}){{end}}
+				</p>
+
+				<div id="post-inner">
+					{{ if ne .Post.Serie.Id "" }}
+					<aside class="post-series">
+						<h4>{{ .Post.Serie.Titulo }}</h4>
+						<ul>
+							{{ $postid := .Post.Id }}
+							{{ range .Serie.Articulos }}
+							<li>
+								{{ if eq .Id $postid}}
+								<b>{{ .Titulo }}</b>
+								{{ else }}
+								<a href="/post/{{.Id}}">{{ .Titulo }}</a>
+								{{end}}
+							</li>
+							{{ end }}
+						</ul>
+					</aside>
+					{{ end }}
+					{{ .Post.Contenido | markdown }}
+				</div>
+			</article>
+
+			<div id="post-author-container">
+				<a href="/autores/{{ .Post.Autor.Id }}">
+					<div id="post-author-card">
+						<img width="180" height="180" class="post-author-photo"
+							src="/static/profile/{{ .Post.Autor.Id }}.jpg"
+							alt="Fotografía de perfil de {{ .Post.Autor.Nombre }}" />
+						<div class="post-author-info">
+							<h3>{{ .Post.Autor.Nombre }}</h3>
+							<span>{{ .Post.Autor.Rol}}</span>
+							<p>{{ .Post.Autor.Biografia }}</p>
+						</div>
+					</div>
+				</a>
+			</div>
+
+			{{ if ne (len .Recommendations) 0}}
+			<h2 id="related-articles-header">Artículos recomendados</h2>
+			<div id="post-related-articles">
+				{{ range .Recommendations }}
+				<div class="post-related-article">
+					<a href="/post/{{ .Id }}">
+						<img width="300" height="170" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}">
+						<p class="article-author">
+							{{ .Autor.Nombre}}
+							- {{ dateDayMonth .Fecha_publicacion }}
+						</p>
+						<h4 class="article-title">{{ .Titulo }}</h4>
+						<div class="related-article-summary">
+							{{ .Resumen | markdown }}
+						</div>
+					</a>
+				</div>
+				{{ end }}
+			</div>
+			{{ end }}
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>
