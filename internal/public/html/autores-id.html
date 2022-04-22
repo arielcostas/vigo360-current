@@ -6,14 +6,36 @@
 	<link rel="alternate" href="/autores/{{.Autor.Id}}/atom.xml" type="application/atom+xml" />
 
 	<script type="application/ld+json">
-		{
+		[{
 			"@context": "https://schema.org",
 			"@type": "Person",
 			"email": "mailto:{{ .Autor.Email }}",
 			"name": "{{ .Autor.Nombre }}",
 			"jobTitle": "{{ .Autor.Rol }}",
 			"image": "/static/profile/{{ .Autor.Id }}.jpg"
-		}
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"item": {
+						"@id": "/autores",
+						"name": "Autores"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"item": {
+						"@id": "/autores/{{ .Autor.Id }}",
+						"name": "{{ .Autor.Nombre }}"
+					}
+				}
+			]
+		}]
 	</script>
 </head>
 

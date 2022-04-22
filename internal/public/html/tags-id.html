@@ -4,6 +4,31 @@
 <head>
 	{{- template "_head.html" . }}
 	<link rel="alternate" href="/tags/{{.Tag.Id}}/atom.xml" type="application/atom+xml" />
+
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"item": {
+						"@id": "/tags",
+						"name": "Secciones"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"item": {
+						"@id": "/tags/{{ .Tag.Id }}",
+						"name": "{{ .Tag.Nombre }}"
+					}
+				}
+			]
+		}
+		</script>
 </head>
 
 <body>

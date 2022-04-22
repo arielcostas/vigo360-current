@@ -13,7 +13,7 @@
 	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
 
 	<script type="application/ld+json">
-		{
+		[{
 			"@context": "https://schema.org",
 			"@type": "Article",
 			"wordCount": {{ wordCount .Trabajo.Contenido }},
@@ -30,10 +30,34 @@
 				"caption": "{{ .Trabajo.Alt_portada }}",
 				"license": "https://creativecommons.org/licenses/by-sa/4.0/",
 				"acquireLicensePage": "/legal",
+				"url": "/static/images/{{ .Trabajo.Id}}.webp",
 				"contentUrl": "/static/images/{{ .Trabajo.Id}}.webp"
 			},
 			"license": "https://creativecommons.org/licenses/by-sa/4.0/"
-		}
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"item": {
+						"@id": "/trabajos",
+						"name": "Trabajos"
+					}
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"item": {
+						"@id": "/trabajos/{{ .Trabajo.Id }}",
+						"name": "{{ .Trabajo.Titulo }}"
+					}
+				}
+			]
+		}]
+
 	</script>
 </head>
 
