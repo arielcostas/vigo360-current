@@ -66,6 +66,9 @@ var t = func() *template.Template {
 			}
 			return result
 		},
+		"wordCount": func(text string) int {
+			return len(strings.Split(text, " "))
+		},
 	}
 
 	entries, _ := rawtemplates.ReadDir("html")

@@ -13,6 +13,29 @@
 	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
 
 	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Article",
+			"articleSection": [
+				{{- range .Post.Tags}}
+				"{{ .Nombre }}"
+				{{- end }}
+			],
+			"wordCount": {{ wordCount .Post.Contenido }},
+			"author": {
+				"@type": "Person",
+				"name": "{{ .Post.Autor.Nombre }}",
+				"url": "/autores/{{ .Post.Autor.Id }}"
+			},
+			"dateModified": "{{ date3339 .Post.Fecha_actualizacion }}",
+			"datePublished": "{{ date3339 .Post.Fecha_publicacion }}",
+			"headline": "{{ .Post.Titulo }}",
+			"image": "/static/images/{{ .Post.Id}}.webp",
+			"license": "https://creativecommons.org/licenses/by-sa/4.0/"
+		}
+	</script>
 </head>
 
 <body>
