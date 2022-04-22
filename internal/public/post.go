@@ -56,7 +56,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	var output bytes.Buffer
-	var err = t.ExecuteTemplate(&output, "post.html", struct {
+	var err = t.ExecuteTemplate(&output, "post-id.html", struct {
 		Post            model.Publicacion
 		Recommendations []Sugerencia
 		Meta            PageMeta
