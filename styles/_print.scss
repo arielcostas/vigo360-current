@@ -3,7 +3,8 @@
 		font-family: Georgia, 'Times New Roman', Times, serif;
 	}
 
-	header {
+	header,
+	footer {
 		display: none;
 	}
 
@@ -12,7 +13,8 @@
 		color: inherit;
 	}
 
-	#post-main {
+	#post-main,
+	main#authors > div {
 		max-width: 100%;
 		margin: 0;
 		box-shadow: none;
@@ -31,7 +33,20 @@
 		text-align: center;
 	}
 
-	#post-author-container {
+	#post-author-container,
+	h2#related-articles-header,
+	div#post-related-articles,
+	#descargas-title,
+	#descargas-list {
 		display:none;
+	}
+
+	// No mostrar miniaturas por problemas con la relación de aspecto
+	.user-article-thumbnail {
+		display: none;
+	}
+
+	#section-articles img {
+		display: none;
 	}
 }
