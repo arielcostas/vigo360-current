@@ -3,6 +3,7 @@ package public
 import (
 	"bytes"
 	"net/http"
+	"strings"
 
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/model"
@@ -15,8 +16,12 @@ func realizarBusqueda(w http.ResponseWriter, r *http.Request) *appError {
 	)
 
 	var termino = r.URL.Query().Get("termino")
-	// TODO Gestionar-impedir esto
+	termino = strings.TrimSpace(termino)
+	// TODO Gestionar-impedir términos vacíos
 	if termino == "" {
+		w.Header().Add("Location", "/")
+		w.WriteHeader(302)
+		return nil
 	}
 
 	resultados, err := ps.Buscar(termino)
