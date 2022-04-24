@@ -144,3 +144,43 @@ func (s *PublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicac
 
 	return post, nil
 }
+
+func (s *PublicacionStore) Buscar(termino string) (Publicaciones, error) {
+	var query = `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id WHERE MATCH(titulo, resumen, contenido) AGAINST(? WITH QUERY EXPANSION) GROUP BY id ORDER BY fecha_publicacion DESC`
+
+	rows, err := s.db.Query(query, termino)
+	if err != nil {
+		return Publicaciones{}, err
+	}
+
+	var publicaciones = make(Publicaciones, 0)
+	for rows.Next() {
+		var (
+			np            Publicacion
+			rawTagIds     string
+			rawTagNombres string
+		)
+
+		err = rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Titulo, &np.Resumen, &np.Alt_portada, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
+		if err != nil {
+			return Publicaciones{}, err
+		}
+
+		var (
+			tags            = make([]Tag, 0)
+			splitTagIds     = strings.Split(rawTagIds, ",")
+			splitTagNombres = strings.Split(rawTagNombres, ",")
+		)
+		for i := 0; i < len(splitTagIds); i++ {
+			tags = append(tags, Tag{
+				Id:     splitTagIds[i],
+				Nombre: splitTagNombres[i],
+			})
+		}
+
+		np.Tags = tags
+		publicaciones = append(publicaciones, np)
+	}
+
+	return publicaciones, nil
+}

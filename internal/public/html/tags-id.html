@@ -35,7 +35,7 @@
 	{{ template "_header.html" }}
 	<main id="sections">
 		<div class="title-atom">
-			<h2>{{ .Tag.Nombre }}</h2>
+			<h2 id="section-title">{{ .Tag.Nombre }}</h2>
 			<a href="/tags/{{ .Tag.Id }}/atom.xml" title="Suscripción via Atom">
 				<img src="/static/rss-icon.svg" />
 			</a>

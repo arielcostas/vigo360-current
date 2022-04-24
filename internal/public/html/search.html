@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	{{- template "_head.html" . }}
+</head>
+
+<body>
+	{{ template "_header.html" }}
+	<main id="busqueda">
+		<h2 id="section-title">Resultados de la búsqueda para {{ .Termino }}</h2>
+		<div id="frontpage-articles">
+			{{ $postLen := len .Publicaciones }}
+			{{- range $i, $post := .Publicaciones }}
+			<a href="/post/{{ $post.Id }}" {{ if eq $i 0 }}class="primero" {{ end }}>
+				<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}"
+					title="{{ $post.Alt_portada }}" {{ if gt $i 3 }} loading="lazy" {{ end }} />
+				<div class="article-info">
+					<p class="article-author">
+						{{ $post.Autor.Nombre }} - {{ dateDayMonth $post.Fecha_publicacion }}
+					</p>
+					<h3 class="article-title">{{ $post.Titulo }}</h3>
+					<p class="article-summary">
+						{{ $post.Resumen }}
+					</p>
+				</div>
+			</a>
+			{{- end }}
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>

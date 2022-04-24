@@ -47,6 +47,8 @@ func InitRouter() *mux.Router {
 	router.Handle(`/tags/{tagid:[0-9]+}/atom.xml`, appHandler(TagsAtomFeed)).Methods("GET")
 	router.Handle(`/autores/{autorid}/atom.xml`, appHandler(AutorAtomFeed)).Methods("GET")
 
+	router.Handle("/buscar", appHandler(realizarBusqueda)).Methods("GET")
+
 	router.Handle("/", appHandler(indexPage)).Methods("GET")
 
 	return router
