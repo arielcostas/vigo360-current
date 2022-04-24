@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package public
 
 import (
@@ -9,10 +14,19 @@ import (
 	"vigo360.es/new/internal/model"
 )
 
+type ResultadoBusqueda struct {
+	Id      string
+	Titulo  string
+	Resumen string
+	Uri     string
+}
+
 func realizarBusqueda(w http.ResponseWriter, r *http.Request) *appError {
 	var (
-		db = database.GetDB()
-		ps = model.NewPublicacionStore(db)
+		db         = database.GetDB()
+		ps         = model.NewPublicacionStore(db)
+		as         = model.NewAutorStore(db)
+		resultados = make([]ResultadoBusqueda, 0)
 	)
 
 	var termino = r.URL.Query().Get("termino")
@@ -24,20 +38,43 @@ func realizarBusqueda(w http.ResponseWriter, r *http.Request) *appError {
 		return nil
 	}
 
-	resultados, err := ps.Buscar(termino)
-	resultados = resultados.FiltrarPublicas()
+	autores, err := as.Buscar(termino)
 	if err != nil {
-		return &appError{err, "error searching", "Hubo un error realizando la búsqueda", 500}
+		return &appError{err, "error searching authors", "Hubo un error realizando la búsqueda", 500}
+	}
+
+	for _, autor := range autores {
+		resultados = append(resultados, ResultadoBusqueda{
+			Id:      autor.Id,
+			Titulo:  autor.Nombre,
+			Resumen: autor.Biografia,
+			Uri:     "/autores/" + autor.Id,
+		})
+	}
+
+	publicaciones, err := ps.Buscar(termino)
+	publicaciones = publicaciones.FiltrarPublicas()
+	if err != nil {
+		return &appError{err, "error searching posts", "Hubo un error realizando la búsqueda", 500}
+	}
+
+	for _, pub := range publicaciones {
+		resultados = append(resultados, ResultadoBusqueda{
+			Id:      pub.Id,
+			Titulo:  pub.Titulo,
+			Resumen: pub.Resumen,
+			Uri:     "/post/" + pub.Id,
+		})
 	}
 
 	var output bytes.Buffer
 	err = t.ExecuteTemplate(&output, "search.html", struct {
-		Publicaciones model.Publicaciones
-		Termino       string
-		Meta          PageMeta
+		Resultados []ResultadoBusqueda
+		Termino    string
+		Meta       PageMeta
 	}{
-		Publicaciones: resultados,
-		Termino:       termino,
+		Resultados: resultados,
+		Termino:    termino,
 		Meta: PageMeta{
 			Titulo:   "Resultados para " + termino,
 			Canonica: FullCanonica("/buscar?termino=" + termino),

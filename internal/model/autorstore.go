@@ -49,3 +49,24 @@ func (s *AutorStore) ObtenerBasico(autor_id string) (Autor, error) {
 
 	return autor, nil
 }
+
+func (s *AutorStore) Buscar(termino string) ([]Autor, error) {
+	var autores []Autor
+
+	var query = `SELECT id, nombre, email, rol, biografia FROM autores WHERE CONCAT(nombre, email, rol, biografia) LIKE ?`
+	var rows, err = s.db.Query(query, "%"+termino+"%")
+	if err != nil {
+		return []Autor{}, err
+	}
+
+	for rows.Next() {
+		var na Autor
+		err = rows.Scan(&na.Id, &na.Nombre, &na.Email, &na.Rol, &na.Biografia)
+		if err != nil {
+			return []Autor{}, err
+		}
+		autores = append(autores, na)
+	}
+
+	return autores, nil
+}
