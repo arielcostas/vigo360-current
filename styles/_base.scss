@@ -72,7 +72,9 @@ header {
 	border-top: 5px solid var(--theme);
 }
 
-header > * {
+#header-brand,
+.desktop,
+.mobile {
 	margin: 0 10%;
 }
 
@@ -145,6 +147,15 @@ footer div :not(:last-child) {
 
 form hr {
 	margin: 1rem 0;
+}
+
+button,
+input,
+textarea,
+select {
+	border: 1px solid black;
+	border-radius: 4px;
+	padding: 0.5rem 1rem;
 }
 
 @media (max-width: 1366px) {
