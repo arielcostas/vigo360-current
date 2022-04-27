@@ -1,10 +1,12 @@
-<title>{{ .Meta.Titulo }} - Vigo360</title>
+{{ with .Meta}}
+{{ with .Titulo }}<title>{{ . }} - Vigo360</title>{{end }}
 
-<meta name="description" content="{{ .Meta.Descripcion }}" />
-{{- with .Meta.Keywords }}
+{{ with .Descripcion }}<meta name="description" content="{{ . }}" />{{ end }}
+{{- with .Keywords }}
 <meta name="keywords" content="{{ . }}" />
 {{- end }}
-<link rel="canonical" href="{{ .Meta.Canonica }}" />
+{{ with .Canonica }}<link rel="canonical" href="{{ . }}" />{{ end }}
+{{ end }}
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,8 +14,5 @@
 
 <link rel="icon" href="/static/logo.png" />
 <link rel="stylesheet" href="/static/main.css" />
-
-<link rel="preload" as="style" href="/static/fira-sans.css" />
-<link rel="preload" as="style" href="/static/open-sans.css" />
 
 <meta name="theme-color" content="#236535" />
