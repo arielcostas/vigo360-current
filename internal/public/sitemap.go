@@ -8,6 +8,7 @@ package public
 import (
 	"encoding/xml"
 	"net/http"
+	"os"
 
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/model"
@@ -21,7 +22,7 @@ type SitemapQuery struct {
 }
 
 type SitemapPage struct {
-	XMLName xml.Name       `xml:"urlset"`
+	XMLName xml.Name       `xml:"http://www.sitemaps.org/schemas/sitemap/0.9 urlset"`
 	Data    []SitemapQuery `xml:"url"`
 }
 
@@ -79,6 +80,13 @@ func GenerateSitemap(w http.ResponseWriter, r *http.Request) *appError {
 	for _, post := range publicaciones {
 		pages = append(pages, SitemapQuery{Uri: "/post/" + post.Id, Changefreq: "monthly", Priority: "0.3"})
 	}
+
+	var domain = os.Getenv("DOMAIN")
+	for i, p := range pages {
+		p.Uri = domain + p.Uri
+		pages[i] = p
+	}
+
 	for _, v := range nodbPageMeta {
 		pages = append(pages, SitemapQuery{Uri: v.Canonica, Changefreq: "yearly", Priority: "0.3"})
 	}
