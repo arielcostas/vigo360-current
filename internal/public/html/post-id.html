@@ -19,8 +19,10 @@
 			"@context": "https://schema.org",
 			"@type": "Article",
 			"articleSection": [
-				{{- range .Post.Tags}}
-				"{{ .Nombre }}"
+				{{- $len := len .Post.Tags }}
+				{{- range $i, $t := .Post.Tags}}
+				{{- if $i}},{{ end }}
+				"{{- $t.Nombre }}"
 				{{- end }}
 			],
 			"wordCount": {{ wordCount .Post.Contenido }},
