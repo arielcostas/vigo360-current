@@ -32,5 +32,16 @@ func (s *SerieStore) Obtener(serie_id string) (Serie, error) {
 		return Serie{}, err
 	}
 
+	filas, err := s.db.Query(`SELECT id, titulo, fecha_publicacion FROM publicaciones WHERE serie_id=?`, serie_id)
+	if err != nil {
+		return Serie{}, err
+	}
+
+	for filas.Next() {
+		na := Publicacion{}
+		filas.Scan(&na.Id, &na.Titulo, &na.Fecha_publicacion)
+		serie.Publicaciones = append(serie.Publicaciones, na)
+	}
+
 	return serie, nil
 }

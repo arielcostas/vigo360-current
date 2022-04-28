@@ -72,7 +72,7 @@
 						<h4>{{ .Post.Serie.Titulo }}</h4>
 						<ul>
 							{{ $postid := .Post.Id }}
-							{{ range .Serie.Articulos }}
+							{{ range .Post.Serie.Publicaciones }}
 							<li>
 								{{ if eq .Id $postid}}
 								<b>{{ .Titulo }}</b>

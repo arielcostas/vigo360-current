@@ -6,7 +6,7 @@
 package model
 
 type Serie struct {
-	Id        string
-	Titulo    string
-	Articulos []Publicacion
+	Id            string
+	Titulo        string
+	Publicaciones Publicaciones
 }

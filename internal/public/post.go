@@ -55,6 +55,8 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		keywords += t.Nombre + ","
 	}
 
+	post.Serie.Publicaciones = post.Serie.Publicaciones.FiltrarPublicas()
+
 	var output bytes.Buffer
 	var err = t.ExecuteTemplate(&output, "post-id.html", struct {
 		Post            model.Publicacion
