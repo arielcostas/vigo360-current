@@ -6,7 +6,6 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
 	"math/rand"
@@ -22,6 +21,12 @@ import (
 type listTagsParams struct {
 	Tags []model.Tag
 	Meta PageMeta
+}
+
+type viewTagParams struct {
+	Tag   model.Tag
+	Posts model.Publicaciones
+	Meta  PageMeta
 }
 
 func listTags(w http.ResponseWriter, r *http.Request) *appError {
@@ -82,10 +87,14 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 }
 
 func viewTag(w http.ResponseWriter, r *http.Request) *appError {
+	var (
+		db = database.GetDB()
+		ps = model.NewPublicacionStore(db)
+		ts = model.NewTagStore(db)
+	)
 	req_tagid := mux.Vars(r)["tagid"]
 
-	tag := Tag{}
-	err := db.QueryRowx("SELECT id,nombre FROM tags WHERE id=?;", req_tagid).StructScan(&tag)
+	tag, err := ts.Obtener(req_tagid)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &appError{Error: err, Message: "tag not found", Response: "La página buscada no se pudo encontrar", Status: 404}
@@ -93,21 +102,15 @@ func viewTag(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "unexpected error fetching tag", Response: "Error recuperando datos", Status: 500}
 	}
 
-	posts := []ResumenPost{}
-	err = db.Select(&posts, `SELECT pp.id, DATE_FORMAT(pp.fecha_publicacion, '%d %b. %Y') as fecha_publicacion, pp.alt_portada, pp.titulo, autores.nombre FROM publicaciones_tags RIGHT JOIN PublicacionesPublicas pp ON publicaciones_tags.publicacion_id = pp.id LEFT JOIN autores ON pp.autor_id = autores.id WHERE tag_id = ? ORDER BY pp.fecha_publicacion DESC;`, req_tagid)
+	publicaciones, err := ps.ListarPorTag(req_tagid)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return &appError{Error: err, Message: "error fetching posts for tag", Response: "Error recuperando datos", Status: 500}
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "tags-id.html", struct {
-		Tag   Tag
-		Posts []ResumenPost
-		Meta  PageMeta
-	}{
+	err = templates.Render(w, "tags-id.html", viewTagParams{
 		Tag:   tag,
-		Posts: posts,
+		Posts: publicaciones.FiltrarPublicas(),
 		Meta: PageMeta{
 			Titulo:      tag.Nombre,
 			Keywords:    tag.Nombre,
@@ -120,6 +123,5 @@ func viewTag(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página.", Status: 500}
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }

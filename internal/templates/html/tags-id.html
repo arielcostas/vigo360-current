@@ -51,8 +51,8 @@
 						title="{{ $post.Titulo }}" {{ if gt $i 3 }} loading="lazy" {{ end }} />
 					<div>
 						<span class="article-author">
-							{{ .Autor_nombre }} /
-							{{ .Fecha_publicacion }}
+							{{ .Autor.Nombre }} /
+							{{ dateDayMonth .Fecha_publicacion }}
 						</span>
 						<h3 class="article-title">{{ .Titulo }}</h3>
 					</div>
