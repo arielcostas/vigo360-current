@@ -11,8 +11,10 @@ var ErrInvalidFormInput = errors.New("provided data is not valid")
 var ErrExpiredSession = errors.New("session was older than 6 hours and was revoked automatically")
 var ErrInvalidSession = errors.New("session token is not valid")
 var ErrUnablePermissions = errors.New("unable to get permissions for session")
+var ErrLoginRequired = errors.New("login is required to load this page")
+var ErrBadParam = errors.New("param not provided or not valid")
 
-var LoginRequiredAppError = &appError{nil, "login required", "Es necesario iniciar sesión para acceder a esta página", 401}
+var LoginRequiredAppError = &appError{ErrLoginRequired, "login token not provided or not valid", "Es necesario iniciar sesión para acceder a esta página", 401}
 
 // Creates an error related with template rendering
 func newTemplateRenderingAppError(err error) *appError {

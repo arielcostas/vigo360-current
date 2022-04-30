@@ -37,5 +37,9 @@ func InitRouter() *mux.Router {
 
 	router.Handle("/admin/sesiones", appHandler(listSessions)).Methods("GET")
 
+	router.Handle("/admin/async/fotosExtra", jsonHandler(listarFotosExtra)).Methods("GET")
+	router.Handle("/admin/async/fotosExtra", jsonHandler(eliminarFotoExtra)).Methods("DELETE")
+	router.Handle("/admin/async/fotosExtra", jsonHandler(subirFotoExtra)).Methods("POST")
+
 	return router
 }

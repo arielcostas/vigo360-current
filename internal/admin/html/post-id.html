@@ -23,8 +23,6 @@
 					<label for="art-contenido">Contenido del artículo</label>
 					<textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo"
 						required>{{ .Post.Contenido }}</textarea>
-					<p>Actualmente no hay una forma de subir imágenes adicionales para incluir en el artículo. Envía al
-						administrador un ZIP con las imágenes a incluir NUMERADAS, y el artículo al que se asocian.</p>
 				</div>
 				<div class="form-row">
 					<h3>Series (opcional)</h3>
@@ -74,6 +72,23 @@
 
 			<button type="submit" class="btn-theme">Guardar artículo</button>
 		</form>
+		<hr />
+		<div id="image-manager">
+			<h2>Gestionar imágenes extra</h2>
+			<p>
+				Aquí se pueden gestionar las imágenes adicionales para este artículo. Para copiar el código markdown para una imágen, clica encima de esta. Solo se admiten imágenes JPG, PNG y Webp, y serán convertidas a JPG en el servidor.
+			</p>
+			<noscript>Para gestionar imágenes es necesario tener JavaScript habilitado.</noscript>
+			<span id="image-status"></span>
+			<div id="image-list">
+				<div id="editor-image-grid"></div>
+				<form id="extra-image-upload">
+					<h3>Subir imágen</h3>
+					<input type="file" name="archivo" id="archivo" accept="image/png, image/jpeg, image/webp">
+					<button class="btn-theme">Subir</button>
+				</form>
+			</div>
+		</div>
 	</main>
 	{{ template "_footer.html" . }}
 	<script>
@@ -86,6 +101,7 @@
 			seriesNum.disabled = seriesSelect.value == ""
 		})
 	</script>
+	<script src="/static/editor-imagenes.js"></script>
 </body>
 
 </html>

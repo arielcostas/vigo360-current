@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+@use "admin/editor-imagenes.scss";
+
 body {
 	display: flex;
 	flex-direction: column;
@@ -47,6 +49,16 @@ button.btn-theme {
 	background-color: var(--correct);
 	border-color: var(--theme);
 	color: white;
+}
+
+button.btn-error {
+	background-color: var(--incorrect);
+	border-color: darkred;
+	color: white;
+}
+
+button.btn-large {
+	width: 100%;
 }
 
 .dialog-error {
