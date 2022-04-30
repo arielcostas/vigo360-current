@@ -1,0 +1,18 @@
+{{ with .Meta}}
+{{ with .Titulo }}<title>{{ . }} - Vigo360</title>{{end }}
+
+{{ with .Descripcion }}<meta name="description" content="{{ . }}" />{{ end }}
+{{- with .Keywords }}
+<meta name="keywords" content="{{ . }}" />
+{{- end }}
+{{ with .Canonica }}<link rel="canonical" href="{{ . }}" />{{ end }}
+{{ end }}
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<link rel="icon" href="/static/logo.png" />
+<link rel="stylesheet" href="/static/main.css" />
+
+<meta name="theme-color" content="#236535" />

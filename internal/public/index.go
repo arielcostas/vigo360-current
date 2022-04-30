@@ -6,7 +6,6 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -14,13 +13,14 @@ import (
 
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/templates"
 )
 
-func getMinimo(x int, y int) int {
-	if x < y {
-		return x
-	}
-	return y
+type indexParams struct {
+	CurrentPage int
+	PageCount   int
+	Posts       model.Publicaciones
+	Meta        PageMeta
 }
 
 func indexPage(w http.ResponseWriter, r *http.Request) *appError {
@@ -63,14 +63,7 @@ func indexPage(w http.ResponseWriter, r *http.Request) *appError {
 		limite++
 	}
 
-	/* Salida */
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "index.html", struct {
-		CurrentPage int
-		PageCount   int
-		Posts       model.Publicaciones
-		Meta        PageMeta
-	}{
+	err = templates.Render(w, "index.html", indexParams{
 		CurrentPage: pagina,
 		PageCount:   (len(posts) / 9) + 1,
 		Posts:       posts[inicio:limite],
@@ -80,11 +73,10 @@ func indexPage(w http.ResponseWriter, r *http.Request) *appError {
 			Canonica:    FullCanonica("/"),
 		},
 	})
-
 	if err != nil {
-		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
+		// TODO estandarizar esto
+		return &appError{err, "error rendering template", "Error mostrando la página", 500}
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }
