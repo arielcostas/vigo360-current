@@ -186,6 +186,7 @@ func editPost(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	// Image uploaded
+	// TODO: Revisar esto
 	if !errors.Is(err, http.ErrMissingFile) {
 		uppath := os.Getenv("UPLOAD_PATH")
 		if uppath == "" {

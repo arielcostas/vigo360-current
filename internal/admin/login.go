@@ -105,7 +105,7 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 			Response: "Hubo un error inesperado.", Status: 500}
 	}
 
-	pass := ValidatePassword(param_password, row.Contraseña)
+	pass := ComprobarContraseña(param_password, row.Contraseña)
 
 	if !pass {
 		var output bytes.Buffer
