@@ -11,15 +11,33 @@ import (
 	"errors"
 	"math/rand"
 	"net/http"
+	"sort"
 
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/database"
+	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/templates"
 )
 
+type listTagsParams struct {
+	Tags []model.Tag
+	Meta PageMeta
+}
+
 func listTags(w http.ResponseWriter, r *http.Request) *appError {
-	var tags = make([]Tag, 0)
-	if err := db.Select(&tags, `SELECT *, (SELECT COUNT(publicacion_id) FROM publicaciones_tags LEFT JOIN publicaciones p2 ON publicaciones_tags.publicacion_id = p2.id WHERE tag_id = tags.id AND p2.fecha_publicacion < NOW()) as publicaciones FROM tags HAVING publicaciones > 0 ORDER BY nombre ASC;`); err != nil {
+	var (
+		db = database.GetDB()
+		ts = model.NewTagStore(db)
+	)
+
+	var tags, err = ts.Listar()
+	if err != nil {
 		return &appError{err, "error fetching tags", "Hubo un error obteniendo datos.", 500}
 	}
+
+	sort.Slice(tags, func(p, q int) bool {
+		return tags[p].Nombre < tags[q].Nombre
+	})
 
 	/* Obtener última publicación para cada tag evitando duplicaciones */
 	var publicacionesUsadas = make(map[string]bool, 0)
@@ -47,11 +65,7 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 		tags[i] = nt
 	}
 
-	var output bytes.Buffer
-	err := t.ExecuteTemplate(&output, "tags.html", struct {
-		Tags []Tag
-		Meta PageMeta
-	}{
+	err = templates.Render(w, "tags.html", listTagsParams{
 		Tags: tags,
 		Meta: PageMeta{
 			Titulo:      "Tags",
@@ -61,10 +75,9 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	})
 
 	if err != nil {
-		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando esta página.", Status: 500}
+		return &appError{err, "error rendering template", "Hubo un error mostrando esta página.", 500}
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }
 
