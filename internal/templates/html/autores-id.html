@@ -47,12 +47,12 @@
 				<div>
 					<h2 id="section-title">{{ .Autor.Nombre }}</h2>
 					<span id="user-role">{{ .Autor.Rol }}
-						{{ if .Autor.Web_url}} &mdash;
-						<a href="{{.Autor.Web_url}}">
-							{{ with .Autor.Web_titulo }}
-							{{ . }}
+						{{ if .Autor.Web.Url}} &mdash;
+						<a href="{{.Autor.Web.Url}}">
+							{{ if ne .Autor.Web.Titulo "" }}
+							{{ .Autor.Web.Titulo }}
 							{{ else }}
-							{{ .Autor.Web_url }}
+							{{ .Autor.Web.Url }}
 							{{end}}
 						</a>
 						{{end}}

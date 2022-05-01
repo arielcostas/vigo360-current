@@ -122,7 +122,7 @@ func AutorAtomFeed(w http.ResponseWriter, r *http.Request) *appError {
 	)
 
 	autorid := mux.Vars(r)["autorid"]
-	var autor, err = as.ObtenerBasico(autorid)
+	var autor, err = as.Obtener(autorid)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return &appError{Error: err, Message: "tried generating feed for nonexistent author", Response: "Autor no encontrado", Status: 404}

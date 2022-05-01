@@ -7,6 +7,7 @@ package model
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -44,7 +45,20 @@ func (s *TrabajoStore) Listar() (Trabajos, error) {
 }
 
 func (s *TrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
-	panic("por implementar")
+	var resultado = make(Trabajos, 0)
+	trabajos, err := s.Listar()
+	if err != nil {
+		return Trabajos{}, err
+	}
+
+	for _, tr := range trabajos {
+		fmt.Printf("%v\n", tr.Autor)
+		if tr.Autor.Id == autor_id {
+			resultado = append(resultado, tr)
+		}
+	}
+
+	return resultado, nil
 }
 
 func (s *TrabajoStore) ObtenerPorId(id string, requirePublic bool) (Trabajo, error) {

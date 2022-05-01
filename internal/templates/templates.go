@@ -34,6 +34,10 @@ var t = func() *template.Template {
 	return t
 }()
 
+/*
+	Render ejecuta una plantilla con los datos proveídos, llamando por debajo a ExecuteTemplate.
+	Si hay un error al ejecutar la plantilla, no escribe nada al io.Writer y devuelve el error, con lo que es seguro no tener una página escrita a medias.
+*/
 func Render(w io.Writer, name string, data any) error {
 	var output bytes.Buffer
 	err := t.ExecuteTemplate(&output, name, data)
