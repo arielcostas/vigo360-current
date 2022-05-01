@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var functions = template.FuncMap{
+var Functions = template.FuncMap{
 	"safeHTML": func(text string) template.HTML {
 		return template.HTML(text)
 	},

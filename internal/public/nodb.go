@@ -6,9 +6,10 @@
 package public
 
 import (
-	"bytes"
 	"errors"
 	"net/http"
+
+	"vigo360.es/new/internal/templates"
 )
 
 var ErrNotFound = errors.New("page not found")
@@ -38,9 +39,8 @@ var nodbPageMeta = map[string]PageMeta{
 
 func NoDbPage(w http.ResponseWriter, r *http.Request) *appError {
 	var (
-		page   = r.URL.Path[1:]
-		meta   PageMeta
-		output bytes.Buffer
+		page = r.URL.Path[1:]
+		meta PageMeta
 	)
 
 	if pm, ok := nodbPageMeta[page]; ok {
@@ -49,13 +49,12 @@ func NoDbPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: ErrNotFound, Message: "page not found", Response: "La página solicitada no se ha encontrado.", Status: 404}
 	}
 
-	err := t.ExecuteTemplate(&output, page+".html", NoPageData{
+	err := templates.Render(w, page+".html", NoPageData{
 		Meta: meta,
 	})
 	if err != nil {
 		return nodbPageError(err)
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }

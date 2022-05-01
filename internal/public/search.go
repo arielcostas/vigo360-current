@@ -6,13 +6,18 @@
 package public
 
 import (
-	"bytes"
 	"net/http"
 	"strings"
 
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/model"
 )
+
+type searchPageParams struct {
+	Resultados []ResultadoBusqueda
+	Termino    string
+	Meta       PageMeta
+}
 
 type ResultadoBusqueda struct {
 	Id      string
@@ -67,12 +72,7 @@ func realizarBusqueda(w http.ResponseWriter, r *http.Request) *appError {
 		})
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "search.html", struct {
-		Resultados []ResultadoBusqueda
-		Termino    string
-		Meta       PageMeta
-	}{
+	err = t.ExecuteTemplate(w, "search.html", searchPageParams{
 		Resultados: resultados,
 		Termino:    termino,
 		Meta: PageMeta{
@@ -83,6 +83,5 @@ func realizarBusqueda(w http.ResponseWriter, r *http.Request) *appError {
 	if err != nil {
 		return &appError{err, "error rendering template", "Hubo un error mostrando la página solicitada", 500}
 	}
-	w.Write(output.Bytes())
 	return nil
 }

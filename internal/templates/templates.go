@@ -25,7 +25,7 @@ var t = func() *template.Template {
 		filename := de.Name()
 		contents, _ := rawtemplates.ReadFile("html/" + filename)
 
-		_, err := t.New(filename).Funcs(functions).Parse(string(contents))
+		_, err := t.New(filename).Funcs(Functions).Parse(string(contents))
 		if err != nil {
 			logger.Critical("[public-main] error parsing template: %s", err.Error())
 		}
