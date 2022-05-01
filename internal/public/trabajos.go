@@ -6,13 +6,13 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/templates"
 )
 
 type Adjunto struct {
@@ -28,8 +28,7 @@ func listTrabajos(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error listing trabajos", Response: "Error recuperando datos", Status: 500}
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "trabajos.html", struct {
+	err = templates.Render(w, "trabajos.html", struct {
 		Trabajos []ResumenPost
 		Meta     PageMeta
 	}{
@@ -45,7 +44,6 @@ func listTrabajos(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando la página", Status: 500}
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }
 
@@ -71,8 +69,7 @@ func viewTrabajo(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error fetching attachments", Response: "Error recuperando datos", Status: 500}
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "trabajos-id.html", struct {
+	err = templates.Render(w, "trabajos-id.html", struct {
 		Trabajo  model.Trabajo
 		Adjuntos []Adjunto
 		Meta     PageMeta
@@ -91,6 +88,5 @@ func viewTrabajo(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Error mostrando la página", Status: 500}
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }

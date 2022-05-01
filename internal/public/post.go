@@ -6,7 +6,6 @@
 package public
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/templates"
 )
 
 func PostPage(w http.ResponseWriter, r *http.Request) *appError {
@@ -57,8 +57,7 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 
 	post.Serie.Publicaciones = post.Serie.Publicaciones.FiltrarPublicas()
 
-	var output bytes.Buffer
-	var err = t.ExecuteTemplate(&output, "post-id.html", struct {
+	var err = templates.Render(w, "post-id.html", struct {
 		Post            model.Publicacion
 		Recommendations []Sugerencia
 		Meta            PageMeta
@@ -77,6 +76,5 @@ func PostPage(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering template", Response: "Hubo un error mostrando la página solicitada.", Status: 500}
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }
