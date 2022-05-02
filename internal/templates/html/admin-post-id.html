@@ -93,16 +93,7 @@
 		</div>
 	</main>
 	{{ template "_admin-footer.html" . }}
-	<script>
-		let seriesSelect = document.getElementById("series-select")
-		let seriesNum = document.getElementById("serie-num")
-
-		seriesNum.disabled = seriesSelect.value == ""
-
-		seriesSelect.addEventListener("change", () => {
-			seriesNum.disabled = seriesSelect.value == ""
-		})
-	</script>
+	<script src="/static/editor-series.js"></script>
 	<script src="/static/editor-imagenes.js"></script>
 </body>
 
