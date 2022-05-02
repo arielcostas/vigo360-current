@@ -11,6 +11,7 @@ import (
 
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/templates"
 )
 
 type searchPageParams struct {
@@ -72,7 +73,7 @@ func realizarBusqueda(w http.ResponseWriter, r *http.Request) *appError {
 		})
 	}
 
-	err = t.ExecuteTemplate(w, "search.html", searchPageParams{
+	err = templates.Render(w, "search.html", searchPageParams{
 		Resultados: resultados,
 		Termino:    termino,
 		Meta: PageMeta{

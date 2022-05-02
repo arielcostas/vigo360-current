@@ -6,7 +6,6 @@
 package admin
 
 import (
-	"bytes"
 	"database/sql"
 	_ "embed"
 	"errors"
@@ -15,6 +14,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"vigo360.es/new/internal/templates"
 )
 
 type ResumenPost struct {
@@ -51,8 +51,7 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 		return newDatabaseReadAppError(err, "posts")
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "post.html", struct {
+	err = templates.Render(w, "admin-post.html", struct {
 		Posts   []ResumenPost
 		Session Session
 	}{
@@ -64,7 +63,6 @@ func listPosts(w http.ResponseWriter, r *http.Request) *appError {
 		return newTemplateRenderingAppError(err)
 	}
 
-	w.Write(output.Bytes())
 	return nil
 }
 

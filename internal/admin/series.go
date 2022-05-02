@@ -6,16 +6,21 @@
 package admin
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"vigo360.es/new/internal/templates"
 )
 
 func listSeries(w http.ResponseWriter, r *http.Request) *appError {
+	type returnParams struct {
+		Series  []Serie
+		Session Session
+	}
+
 	var sc, err = r.Cookie("sess")
 	if err != nil {
 		return LoginRequiredAppError
@@ -31,11 +36,7 @@ func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 		return newDatabaseReadAppError(err, "series")
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "series.html", struct {
-		Series  []Serie
-		Session Session
-	}{
+	err = templates.Render(w, "admin-series.html", returnParams{
 		Series:  series,
 		Session: sess,
 	})
@@ -43,7 +44,6 @@ func listSeries(w http.ResponseWriter, r *http.Request) *appError {
 		return &appError{Error: err, Message: "error rendering page",
 			Response: "Hubo un error mostrando esta página.", Status: 500}
 	}
-	w.Write(output.Bytes())
 	return nil
 }
 

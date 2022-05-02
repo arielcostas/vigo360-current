@@ -6,7 +6,6 @@
 package admin
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
 	"net/http"
@@ -14,6 +13,7 @@ import (
 
 	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/templates"
 )
 
 type AdminLoginParams struct {
@@ -39,12 +39,10 @@ func viewLogin(w http.ResponseWriter, r *http.Request) *appError {
 		}
 	}
 
-	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{})
+	err = templates.Render(w, "admin-login.html", &AdminLoginParams{})
 	if err != nil {
 		return newTemplateRenderingAppError(err)
 	}
-	w.Write(output.Bytes())
 	return nil
 }
 
@@ -71,8 +69,7 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 	row := LoginRow{}
 
 	if param_userid == "" || param_password == "" {
-		var output bytes.Buffer
-		err := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
+		err := templates.Render(w, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
@@ -80,7 +77,6 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 			return &appError{Error: err, Message: "error rendering template",
 				Response: "Alguno de los datos introducidos no son correctos.", Status: 400}
 		}
-		w.Write(output.Bytes())
 		return nil
 	}
 
@@ -89,8 +85,7 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			var output bytes.Buffer
-			e2 := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
+			e2 := templates.Render(w, "admin-login.html", &AdminLoginParams{
 				PrefillName: param_userid,
 				LoginError:  true,
 			})
@@ -98,7 +93,6 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 				return &appError{Error: e2, Message: "error rendering template",
 					Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
 			}
-			w.Write(output.Bytes())
 			return nil
 		}
 		return &appError{Error: err, Message: "error fetching user",
@@ -108,8 +102,7 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 	pass := ComprobarContraseña(param_password, row.Contraseña)
 
 	if !pass {
-		var output bytes.Buffer
-		e2 := t.ExecuteTemplate(&output, "admin-login.html", &AdminLoginParams{
+		e2 := templates.Render(w, "admin-login.html", &AdminLoginParams{
 			PrefillName: param_userid,
 			LoginError:  true,
 		})
@@ -117,7 +110,6 @@ func doLogin(w http.ResponseWriter, r *http.Request) *appError {
 			return &appError{Error: e2, Message: "error rendering template",
 				Response: "Alguno de los datos introducidos no es correcto.", Status: 400}
 		}
-		w.Write(output.Bytes())
 		return nil
 	}
 

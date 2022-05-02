@@ -16,9 +16,17 @@ import (
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/templates"
 )
 
 func postEditor(w http.ResponseWriter, r *http.Request) *appError {
+	type returnParams struct {
+		Post    PostEditar
+		Series  []Serie
+		Tags    []Tag
+		Session Session
+	}
+
 	var sc, err = r.Cookie("sess")
 	if err != nil {
 		return LoginRequiredAppError
@@ -56,12 +64,7 @@ func postEditor(w http.ResponseWriter, r *http.Request) *appError {
 	}
 
 	var output bytes.Buffer
-	err = t.ExecuteTemplate(&output, "post-id.html", struct {
-		Post    PostEditar
-		Series  []Serie
-		Tags    []Tag
-		Session Session
-	}{
+	err = templates.Render(&output, "admin-post-id.html", returnParams{
 		Post:    post,
 		Series:  series,
 		Tags:    tags,

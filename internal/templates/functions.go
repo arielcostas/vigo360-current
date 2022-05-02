@@ -52,4 +52,7 @@ var Functions = template.FuncMap{
 	"wordCount": func(text string) int {
 		return len(strings.Split(text, " "))
 	},
+	"sum": func(a int, b int) int {
+		return a + b
+	},
 }
