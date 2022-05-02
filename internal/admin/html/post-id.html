@@ -3,11 +3,11 @@
 
 <head>
 	<title>{{ .Post.Titulo }} - Admin Vigo360</title>
-	{{ template "_head.html" . }}
+	{{ template "_admin-head.html" . }}
 </head>
 
 <body>
-	{{ template "_header.html" . }}
+	{{ template "_admin-header.html" . }}
 	<main id="post-editor">
 		<h2>Editor de artículos</h2>
 		<form method="post" enctype="multipart/form-data">
@@ -76,7 +76,9 @@
 		<div id="image-manager">
 			<h2>Gestionar imágenes extra</h2>
 			<p>
-				Aquí se pueden gestionar las imágenes adicionales para este artículo. Para copiar el código markdown para una imágen, clica encima de esta. Solo se admiten imágenes JPG, PNG y Webp, y serán convertidas a JPG en el servidor.
+				Aquí se pueden gestionar las imágenes adicionales para este artículo. Para copiar el código markdown
+				para una imágen, clica encima de esta. Solo se admiten imágenes JPG, PNG y Webp, y serán convertidas a
+				JPG en el servidor.
 			</p>
 			<noscript>Para gestionar imágenes es necesario tener JavaScript habilitado.</noscript>
 			<span id="image-status"></span>
@@ -90,7 +92,7 @@
 			</div>
 		</div>
 	</main>
-	{{ template "_footer.html" . }}
+	{{ template "_admin-footer.html" . }}
 	<script>
 		let seriesSelect = document.getElementById("series-select")
 		let seriesNum = document.getElementById("serie-num")

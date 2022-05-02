@@ -3,18 +3,18 @@
 
 <head>
 	<title>Sesiones - Admin Vigo360</title>
-	{{ template "_head.html" . }}
+	{{ template "_admin-head.html" . }}
 </head>
 
 <body>
-	{{ template "_header.html" . }}
+	{{ template "_admin-header.html" . }}
 	<main id="post-editor">
 		<h2>Listado de sesiones</h2>
 		{{ range .Sesiones }}
 		{{ . }}
 		{{ end }}
 	</main>
-	{{ template "_footer.html" . }}
+	{{ template "_admin-footer.html" . }}
 </body>
 
 </html>
