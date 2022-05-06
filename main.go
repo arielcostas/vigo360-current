@@ -7,8 +7,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/go-co-op/gocron"
@@ -43,11 +45,57 @@ func mw(r *mux.Router) *mux.Router {
 }
 
 func main() {
+	if err := checkEnv(); err != nil {
+		logger.Critical("error validando entorno: %s\n", err.Error())
+	}
+
+	if err := run(); err != nil {
+		logger.Critical("%s\n", err)
+	}
+}
+
+func checkEnv() error {
+	if val, is := os.LookupEnv("PORT"); !is || val == "" {
+		return fmt.Errorf("es necesario especificar PORT")
+	} else {
+		i, e := strconv.Atoi(val)
+		if e != nil {
+			return fmt.Errorf("PORT tiene que ser un número")
+		}
+		if i < 0 || i > 65535 {
+			return fmt.Errorf("PORT debe ser un puerto TCP válido")
+		}
+	}
+
+	if val, is := os.LookupEnv("UPLOAD_PATH"); !is || val == "" {
+		return fmt.Errorf("es necesario especificar UPLOAD_PATH")
+	} else {
+		info, err := os.Stat(val)
+		if err != nil {
+			return fmt.Errorf("error comprobando validez de UPLOAD_PATH: %s", err.Error())
+		}
+		if !info.IsDir() {
+			return fmt.Errorf("UPLOAD_PATH tiene que ser un directorio: %s", err.Error())
+		}
+		err = os.WriteFile(val+"/.test", []byte{0x00}, os.ModePerm)
+		if err != nil {
+			return fmt.Errorf("no se puede escribir a UPLOAD_PATH: %s", err.Error())
+		}
+		os.Remove(val + "/.test")
+	}
+
+	if val, is := os.LookupEnv("DOMAIN"); !is || val == "" {
+		return fmt.Errorf("es necesario especificar DOMAIN")
+	}
+
+	return nil
+}
+
+func run() error {
 	logger.Information("starting Vigo360 version " + version)
 	var PORT string = ":" + os.Getenv("PORT")
 
 	logger.Information("starting web server on %s", PORT)
-
 	var db = database.GetDB()
 
 	// Automatically revoke sessions every 6 hours
@@ -67,7 +115,7 @@ func main() {
 		}
 	})
 	if err != nil {
-		logger.Critical("error running session deleter: %s", err.Error())
+		return fmt.Errorf("error running session deleter: %w", err)
 	}
 	s.StartAsync()
 
@@ -75,7 +123,5 @@ func main() {
 	http.Handle("/", mw(public.InitRouter()))
 
 	err = http.ListenAndServe(PORT, nil)
-	if err != nil {
-		logger.Critical("error with HTTP server: %s", err.Error())
-	}
+	return err
 }
