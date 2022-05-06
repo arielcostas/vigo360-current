@@ -65,7 +65,7 @@ func listarFotosExtra(w http.ResponseWriter, r *http.Request) *appError {
 
 	resbytes, err := json.MarshalIndent(result, "", "\t")
 	if err != nil {
-		panic(err)
+		return &appError{err, "error marhsalling response", "Error obteniendo datos", 500}
 	}
 	w.Write(resbytes)
 
@@ -95,30 +95,30 @@ func subirFotoExtra(w http.ResponseWriter, r *http.Request) *appError {
 
 	file, _, err := r.FormFile("foto")
 	if err != nil && !errors.Is(err, http.ErrMissingFile) {
-		return &appError{err, "error extracting image from form", "Hubo un error modificando la imagen. El resto de datos se han guardado.", 400}
+		return &appError{err, "error extracting image from form", "Hubo un error modificando la imagen.", 400}
 	}
 
 	photoBytes, err := io.ReadAll(file)
 	if err != nil {
-		panic(err)
+		return &appError{err, "error extracting image from form", "Hubo un error modificando la imagen.", 500}
 	}
 
 	image, err := imagenDesdeMime(photoBytes)
 	if err != nil {
-		panic(err)
+		return &appError{err, "error extracting image MIME", "Hubo un error modificando la imagen.", 500}
 	}
 
 	var fotoEscribir bytes.Buffer
 	err = jpeg.Encode(&fotoEscribir, image, &jpeg.Options{Quality: 95})
 	if err != nil {
-		panic(err)
+		return &appError{err, "error encoding image", "Hubo un error modificando la imagen.", 500}
 	}
 
 	var salt = randstr.String(5)
 	var imagePath = fmt.Sprintf("%s/extra/%s-%s.jpg", uploadPath, articuloId, salt)
 	err = os.WriteFile(imagePath, fotoEscribir.Bytes(), 0o644)
 	if err != nil {
-		panic(err)
+		return &appError{err, "error writing image", "Hubo un error modificando la imagen.", 500}
 	}
 
 	return nil
