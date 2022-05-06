@@ -63,9 +63,16 @@ func indexPage(w http.ResponseWriter, r *http.Request) *appError {
 		limite++
 	}
 
+	var restantes = len(posts) - 10
+	var cantidad = 1
+	for restantes > 0 {
+		cantidad++
+		restantes -= 9
+	}
+
 	err = templates.Render(w, "index.html", indexParams{
 		CurrentPage: pagina,
-		PageCount:   (len(posts) / 9) + 1,
+		PageCount:   cantidad,
 		Posts:       posts[inicio:limite],
 		Meta: PageMeta{
 			Titulo:      "Inicio",

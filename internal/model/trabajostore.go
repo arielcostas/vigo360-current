@@ -7,7 +7,6 @@ package model
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -52,7 +51,6 @@ func (s *TrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
 	}
 
 	for _, tr := range trabajos {
-		fmt.Printf("%v\n", tr.Autor)
 		if tr.Autor.Id == autor_id {
 			resultado = append(resultado, tr)
 		}
