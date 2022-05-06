@@ -8,7 +8,6 @@ package public
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"math/rand"
 	"net/http"
 	"sort"
@@ -34,6 +33,7 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	var (
 		db = database.GetDB()
 		ts = model.NewTagStore(db)
+		ps = model.NewPublicacionStore(db)
 	)
 
 	var tags, err = ts.Listar()
@@ -42,7 +42,7 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 			tags = append(tags[:i], tags[i+1:]...)
 		}
 	}
-	fmt.Printf("tags: %v\n", tags)
+
 	if err != nil {
 		return &appError{err, "error fetching tags", "Hubo un error obteniendo datos.", 500}
 	}
@@ -56,16 +56,19 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	for i, t := range tags {
 		nt := t
 		var publicacionesConTag []string
-		// TODO: Cambiar esto por una llamada al store
-		err := db.Select(&publicacionesConTag, `SELECT publicacion_id FROM publicaciones_tags WHERE tag_id=?`, t.Id)
+		pt, err := ps.ListarPorTag(t.Id)
+		for _, p := range pt {
+			publicacionesConTag = append(publicacionesConTag, p.Id)
+		}
 		if err != nil {
 			return &appError{err, "error fetching publicaciones with tag " + t.Id, "Hubo un error obteniendo datos.", 500}
 		}
 
 		for _, pub := range publicacionesConTag {
-			if r, ok := publicacionesUsadas[pub]; !ok || !r {
+			if _, ok := publicacionesUsadas[pub]; !ok {
 				publicacionesUsadas[pub] = true
 				nt.Ultima = pub
+				break
 			}
 		}
 
