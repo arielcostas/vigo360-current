@@ -8,6 +8,7 @@ package public
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"sort"
@@ -36,6 +37,12 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	)
 
 	var tags, err = ts.Listar()
+	for i, t := range tags {
+		if t.Publicaciones < 1 {
+			tags = append(tags[:i], tags[i+1:]...)
+		}
+	}
+	fmt.Printf("tags: %v\n", tags)
 	if err != nil {
 		return &appError{err, "error fetching tags", "Hubo un error obteniendo datos.", 500}
 	}
@@ -49,6 +56,7 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 	for i, t := range tags {
 		nt := t
 		var publicacionesConTag []string
+		// TODO: Cambiar esto por una llamada al store
 		err := db.Select(&publicacionesConTag, `SELECT publicacion_id FROM publicaciones_tags WHERE tag_id=?`, t.Id)
 		if err != nil {
 			return &appError{err, "error fetching publicaciones with tag " + t.Id, "Hubo un error obteniendo datos.", 500}
@@ -63,7 +71,11 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 
 		// Si se diera el caso de que todas están escogidas, poner una al azar
 		if nt.Ultima == "" {
-			aleatoria := rand.Intn(len(publicacionesConTag) - 1)
+			cant := len(publicacionesConTag) - 1
+			if cant <= 1 {
+				cant = 1
+			}
+			aleatoria := rand.Intn(cant)
 			nt.Ultima = publicacionesConTag[aleatoria]
 		}
 
