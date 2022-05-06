@@ -57,6 +57,7 @@ func listTags(w http.ResponseWriter, r *http.Request) *appError {
 		nt := t
 		var publicacionesConTag []string
 		pt, err := ps.ListarPorTag(t.Id)
+		pt.FiltrarPublicas()
 		for _, p := range pt {
 			publicacionesConTag = append(publicacionesConTag, p.Id)
 		}
