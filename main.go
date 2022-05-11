@@ -6,60 +6,42 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"strconv"
-	"time"
 
-	"github.com/gorilla/mux"
-	"github.com/thanhpk/randstr"
-	"vigo360.es/new/internal/admin"
-	"vigo360.es/new/internal/logger"
-	"vigo360.es/new/internal/public"
+	"vigo360.es/new/internal"
+	"vigo360.es/new/internal/database"
 )
 
 var (
 	version string
 )
 
-func mw(r *mux.Router) *mux.Router {
-	r.Use(func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
-			defer cancel()
-
-			// Generates a random RequestID to print in logs, errors and stuff
-			var rid = randstr.String(30)
-			ctx = context.WithValue(ctx, "rid", rid)
-			r = r.WithContext(ctx)
-
-			logger.Information("[%s] %s - %s %s", rid, r.Header["X-Forwarded-For"], r.Method, r.RequestURI)
-			next.ServeHTTP(w, r)
-		})
-	})
-	return r
-}
-
 func main() {
 	if err := checkEnv(); err != nil {
-		logger.Critical("error validando entorno: %s\n", err.Error())
+		fmt.Printf("<3>error validando entorno: %s\n", err.Error())
+		os.Exit(1)
 	}
 
 	if err := run(); err != nil {
-		logger.Critical("%s\n", err)
+		fmt.Printf("<3>%s\n", err)
+		os.Exit(1)
 	}
 }
 
 func run() error {
-	logger.Information("starting Vigo360 version " + version)
+	fmt.Printf("<6>iniciando vigo360 versión %s\n", version)
 	var PORT string = ":" + os.Getenv("PORT")
 
-	logger.Information("starting web server on %s", PORT)
+	var db = database.GetDB()
+	var container = internal.NewMysqlContainer(db)
 
-	http.Handle("/admin/", mw(admin.InitRouter()))
-	http.Handle("/", mw(public.InitRouter()))
+	var s = internal.NewServer(container)
+
+	fmt.Printf("<6>iniciando servidor web en %s\n", PORT)
+	http.Handle("/", s.Router)
 
 	var err = http.ListenAndServe(PORT, nil)
 	return err
