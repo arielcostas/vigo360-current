@@ -3,19 +3,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package model
+package models
 
-import (
-	"time"
-)
+import "time"
 
-type Publicaciones []Publicacion
+type Trabajos []Trabajo
 
-// Devuelve un slice con solo las publicaciones públicas
-func (ps Publicaciones) FiltrarPublicas() Publicaciones {
-	var nps Publicaciones
+// Devuelve un slice con solo los trabajos públicos
+func (ps *Trabajos) FiltrarPublicos() Trabajos {
+	var nps Trabajos
 
-	for _, p := range ps {
+	for _, p := range *ps {
 		if p.Fecha_publicacion == "" {
 			continue
 		}
@@ -33,9 +31,9 @@ func (ps Publicaciones) FiltrarPublicas() Publicaciones {
 }
 
 // Devuelve la fecha de la actualización más reciente de una publicación del slice
-func (ps Publicaciones) ObtenerUltimaActualizacion() (time.Time, error) {
+func (ps *Trabajos) ObtenerUltimaActualizacion() (time.Time, error) {
 	var lastUpdate time.Time
-	for _, pub := range ps {
+	for _, pub := range *ps {
 		var ut, err = time.Parse("2006-01-02 15:04:05", pub.Fecha_actualizacion)
 		if err != nil {
 			return time.Time{}, err

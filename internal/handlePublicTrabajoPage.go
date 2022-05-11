@@ -14,7 +14,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
@@ -29,7 +29,7 @@ func (s *Server) handlePublicTrabajoPage() http.HandlerFunc {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		trabajoid := mux.Vars(r)["trabajoid"]
 
-		var trabajo model.Trabajo
+		var trabajo models.Trabajo
 
 		if nt, err := s.store.trabajo.ObtenerPorId(trabajoid, true); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
@@ -54,7 +54,7 @@ func (s *Server) handlePublicTrabajoPage() http.HandlerFunc {
 		}
 
 		err = templates.Render(w, "trabajos-id.html", struct {
-			Trabajo  model.Trabajo
+			Trabajo  models.Trabajo
 			Adjuntos []Adjunto
 			Meta     PageMeta
 		}{

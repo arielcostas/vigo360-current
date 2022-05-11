@@ -3,11 +3,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package model
+package models
 
-type Tag struct {
+type Serie struct {
 	Id            string
-	Nombre        string
-	Publicaciones int
-	Ultima        string
+	Titulo        string
+	Publicaciones Publicaciones
 }

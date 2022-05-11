@@ -13,15 +13,15 @@ import (
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
 func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 	type Response struct {
-		Autor    model.Autor
-		Posts    model.Publicaciones
-		Trabajos model.Trabajos
+		Autor    models.Autor
+		Posts    models.Publicaciones
+		Trabajos models.Trabajos
 		Meta     PageMeta
 	}
 
@@ -29,7 +29,7 @@ func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		var req_autor = mux.Vars(r)["id"]
 
-		var autor model.Autor
+		var autor models.Autor
 		autor, err := s.store.autor.Obtener(req_autor)
 
 		if err != nil {

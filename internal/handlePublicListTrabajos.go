@@ -12,13 +12,13 @@ import (
 
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
 func (s *Server) handlePublicListTrabajos() http.HandlerFunc {
 	type Response struct {
-		Trabajos model.Trabajos
+		Trabajos models.Trabajos
 		Meta     PageMeta
 	}
 

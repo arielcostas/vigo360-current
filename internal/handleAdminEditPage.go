@@ -9,7 +9,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
@@ -18,12 +18,12 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 		Post    PostEditar
 		Series  []Serie
 		Tags    []Tag
-		Session model.Session
+		Session models.Session
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		sess := r.Context().Value(sessionContextKey("sess")).(model.Session)
+		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		post_id := mux.Vars(r)["id"]
 		post := PostEditar{}
 		db := database.GetDB()

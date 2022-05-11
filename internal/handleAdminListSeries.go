@@ -13,19 +13,19 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
 func (s *Server) handleAdminListSeries() http.HandlerFunc {
 	type response struct {
 		Series  []Serie
-		Session model.Session
+		Session models.Session
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		sess, _ := r.Context().Value(sessionContextKey("sess")).(model.Session)
+		sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
 
 		series := []Serie{}
 		err := database.GetDB().Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)

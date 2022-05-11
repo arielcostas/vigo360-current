@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
@@ -23,7 +23,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		req_post_id := mux.Vars(r)["postid"]
 		var e2 error
 
-		var post model.Publicacion
+		var post models.Publicacion
 		if np, err := s.store.publicacion.ObtenerPorId(req_post_id, true); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("no se encontró la publicación: %s", e2.Error())
@@ -61,7 +61,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		post.Serie.Publicaciones = post.Serie.Publicaciones.FiltrarPublicas()
 
 		var err = templates.Render(w, "post-id.html", struct {
-			Post            model.Publicacion
+			Post            models.Publicacion
 			Recommendations []Sugerencia
 			Meta            PageMeta
 		}{

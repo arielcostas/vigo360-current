@@ -13,14 +13,14 @@ import (
 
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
 type indexParams struct {
 	CurrentPage int
 	PageCount   int
-	Posts       model.Publicaciones
+	Posts       models.Publicaciones
 	Meta        PageMeta
 }
 

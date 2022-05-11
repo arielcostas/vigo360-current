@@ -12,7 +12,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 )
 
 func revokeSession(sessid string) error {
@@ -27,7 +27,7 @@ func revokeSession(sessid string) error {
 func (s *Server) handleAdminLogoutAction() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		sess, _ := r.Context().Value(sessionContextKey("sess")).(model.Session)
+		sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		if err := revokeSession(sess.Id); err != nil {
 			logger.Error("error revocando sesión: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)

@@ -14,7 +14,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 )
 
 type SitemapQuery struct {
@@ -35,10 +35,10 @@ func (s *Server) handlePublicSitemap() http.HandlerFunc {
 		var (
 			pages = []SitemapQuery{}
 			db    = database.GetDB()
-			as    = model.NewAutorStore(db)
-			tbs   = model.NewTrabajoStore(db)
-			tas   = model.NewTagStore(db)
-			ps    = model.NewPublicacionStore(db)
+			as    = models.NewAutorStore(db)
+			tbs   = models.NewTrabajoStore(db)
+			tas   = models.NewTagStore(db)
+			ps    = models.NewPublicacionStore(db)
 		)
 
 		autores, err := as.Listar()

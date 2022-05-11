@@ -12,13 +12,13 @@ import (
 
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
 func (s *Server) handlePublicListTags() http.HandlerFunc {
 	type response struct {
-		Tags []model.Tag
+		Tags []models.Tag
 		Meta PageMeta
 	}
 

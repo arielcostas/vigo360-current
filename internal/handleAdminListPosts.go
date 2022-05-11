@@ -13,7 +13,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
@@ -31,7 +31,7 @@ type ResumenPost struct {
 func (s *Server) handleAdminListPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		sess := r.Context().Value(sessionContextKey("sess")).(model.Session)
+		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		db := database.GetDB()
 		posts := []ResumenPost{}
 
@@ -45,7 +45,7 @@ func (s *Server) handleAdminListPost() http.HandlerFunc {
 
 		err = templates.Render(w, "admin-post.html", struct {
 			Posts   []ResumenPost
-			Session model.Session
+			Session models.Session
 		}{
 			Posts:   posts,
 			Session: sess,

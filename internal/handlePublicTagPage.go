@@ -8,14 +8,14 @@ import (
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/model"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/templates"
 )
 
 func (s *Server) handlePublicTagPage() http.HandlerFunc {
 	type response struct {
-		Tag   model.Tag
-		Posts model.Publicaciones
+		Tag   models.Tag
+		Posts models.Publicaciones
 		Meta  PageMeta
 	}
 
