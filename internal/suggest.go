@@ -40,7 +40,7 @@ func findMatchingTags(tags1, tags2 []string) int {
 
 func generateSuggestions(original_id string) ([]Sugerencia, error) {
 	var resultado = make([]Sugerencia, 3)
-	var ps = models.NewPublicacionStore(database.GetDB())
+	var ps = models.NewMysqlPublicacionStore(database.GetDB())
 
 	original, err := ps.ObtenerPorId(original_id, true)
 	if err != nil {

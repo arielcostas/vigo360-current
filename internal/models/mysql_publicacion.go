@@ -12,17 +12,17 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type PublicacionStore struct {
+type MysqlPublicacionStore struct {
 	db *sqlx.DB
 }
 
-func NewPublicacionStore(db *sqlx.DB) PublicacionStore {
-	return PublicacionStore{
+func NewMysqlPublicacionStore(db *sqlx.DB) *MysqlPublicacionStore {
+	return &MysqlPublicacionStore{
 		db: db,
 	}
 }
 
-func (s *PublicacionStore) Listar() (Publicaciones, error) {
+func (s *MysqlPublicacionStore) Listar() (Publicaciones, error) {
 	publicaciones := make(Publicaciones, 0)
 	query := `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id GROUP BY id ORDER BY fecha_publicacion DESC;`
 
@@ -62,7 +62,7 @@ func (s *PublicacionStore) Listar() (Publicaciones, error) {
 	return publicaciones, nil
 }
 
-func (s *PublicacionStore) ListarPorAutor(autor_id string) (Publicaciones, error) {
+func (s *MysqlPublicacionStore) ListarPorAutor(autor_id string) (Publicaciones, error) {
 	var resultado = make(Publicaciones, 0)
 	publicaciones, err := s.Listar()
 	if err != nil {
@@ -78,7 +78,7 @@ func (s *PublicacionStore) ListarPorAutor(autor_id string) (Publicaciones, error
 	return resultado, nil
 }
 
-func (s *PublicacionStore) ListarPorTag(tag_id string) (Publicaciones, error) {
+func (s *MysqlPublicacionStore) ListarPorTag(tag_id string) (Publicaciones, error) {
 	var resultado = make(Publicaciones, 0)
 	publicaciones, err := s.Listar()
 	if err != nil {
@@ -97,7 +97,7 @@ func (s *PublicacionStore) ListarPorTag(tag_id string) (Publicaciones, error) {
 	return resultado, nil
 }
 
-func (s *PublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error) {
+func (s *MysqlPublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error) {
 	var resultado = make(Publicaciones, 0)
 	publicaciones, err := s.Listar()
 	if err != nil {
@@ -113,7 +113,7 @@ func (s *PublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error
 	return resultado, nil
 }
 
-func (s *PublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicacion, error) {
+func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicacion, error) {
 	var post Publicacion
 	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), COALESCE(GROUP_CONCAT(tags.nombre), "") as tags
 	FROM publicaciones
@@ -145,7 +145,7 @@ func (s *PublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicac
 	return post, nil
 }
 
-func (s *PublicacionStore) Buscar(termino string) (Publicaciones, error) {
+func (s *MysqlPublicacionStore) Buscar(termino string) (Publicaciones, error) {
 	var query = `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id WHERE MATCH(titulo, resumen, contenido) AGAINST(? WITH QUERY EXPANSION) GROUP BY id ORDER BY fecha_publicacion DESC LIMIT 10`
 
 	rows, err := s.db.Query(query, termino)

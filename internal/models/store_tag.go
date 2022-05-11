@@ -9,17 +9,22 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type TagStore struct {
+type TagStore interface {
+	Listar() ([]Tag, error)
+	Obtener(string) (Tag, error)
+}
+
+type MysqlTagStore struct {
 	db *sqlx.DB
 }
 
-func NewTagStore(db *sqlx.DB) TagStore {
-	return TagStore{
+func NewMysqlTagStore(db *sqlx.DB) *MysqlTagStore {
+	return &MysqlTagStore{
 		db: db,
 	}
 }
 
-func (s *TagStore) Listar() ([]Tag, error) {
+func (s *MysqlTagStore) Listar() ([]Tag, error) {
 	var tags = make(map[string]Tag, 0)
 	var rows, err = s.db.Query(`SELECT id, nombre FROM tags`)
 	if err != nil {
@@ -56,7 +61,7 @@ func (s *TagStore) Listar() ([]Tag, error) {
 	return tagSlice, nil
 }
 
-func (s *TagStore) Obtener(tag_id string) (Tag, error) {
+func (s *MysqlTagStore) Obtener(tag_id string) (Tag, error) {
 	var tag Tag
 	var row = s.db.QueryRow(`SELECT id, nombre FROM tags WHERE id=?`, tag_id)
 	var err = row.Scan(&tag.Id, &tag.Nombre)

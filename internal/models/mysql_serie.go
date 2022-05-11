@@ -5,25 +5,23 @@
  */
 package models
 
-import (
-	"github.com/jmoiron/sqlx"
-)
+import "github.com/jmoiron/sqlx"
 
-type SerieStore struct {
+type MysqlSerieStore struct {
 	db *sqlx.DB
 }
 
-func NewSerieStore(db *sqlx.DB) SerieStore {
-	return SerieStore{
+func NewMysqlSerieStore(db *sqlx.DB) *MysqlSerieStore {
+	return &MysqlSerieStore{
 		db: db,
 	}
 }
 
-func (s *SerieStore) Listar() (Publicaciones, error) {
+func (s *MysqlSerieStore) Listar() (Publicaciones, error) {
 	panic("por implementar")
 }
 
-func (s *SerieStore) Obtener(serie_id string) (Serie, error) {
+func (s *MysqlSerieStore) Obtener(serie_id string) (Serie, error) {
 	var serie Serie
 	var row = s.db.QueryRow(`SELECT id, titulo FROM series WHERE id=?`, serie_id)
 	var err = row.Scan(&serie.Id, &serie.Titulo)

@@ -11,17 +11,14 @@ import (
 	"os"
 	"time"
 
-	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/models"
 )
 
 func (s *Server) handlePublicIndexAtom() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		ps := models.NewPublicacionStore(database.GetDB())
-		pp, err := ps.Listar()
+		pp, err := s.store.publicacion.Listar()
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)

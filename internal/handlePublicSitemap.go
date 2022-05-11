@@ -11,10 +11,8 @@ import (
 	"net/http"
 	"os"
 
-	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/models"
 )
 
 type SitemapQuery struct {
@@ -32,37 +30,30 @@ type SitemapPage struct {
 func (s *Server) handlePublicSitemap() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		var (
-			pages = []SitemapQuery{}
-			db    = database.GetDB()
-			as    = models.NewAutorStore(db)
-			tbs   = models.NewTrabajoStore(db)
-			tas   = models.NewTagStore(db)
-			ps    = models.NewPublicacionStore(db)
-		)
+		var pages = []SitemapQuery{}
 
-		autores, err := as.Listar()
+		autores, err := s.store.autor.Listar()
 		if err != nil {
 			logger.Error("error recuperando autores: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
 
-		trabajos, err := tbs.Listar()
+		trabajos, err := s.store.trabajo.Listar()
 		if err != nil {
 			logger.Error("error recuperando trabajos: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
 
-		tags, err := tas.Listar()
+		tags, err := s.store.tag.Listar()
 		if err != nil {
 			logger.Error("error recuperando tags: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
 
-		publicaciones, err := ps.Listar()
+		publicaciones, err := s.store.publicacion.Listar()
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)

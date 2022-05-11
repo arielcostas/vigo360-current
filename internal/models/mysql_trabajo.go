@@ -11,17 +11,13 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type TrabajoStore struct {
-	db *sqlx.DB
-}
-
-func NewTrabajoStore(db *sqlx.DB) TrabajoStore {
-	return TrabajoStore{
+func NewMysqlTrabajoStore(db *sqlx.DB) *MysqlTrabajoStore {
+	return &MysqlTrabajoStore{
 		db: db,
 	}
 }
 
-func (s *TrabajoStore) Listar() (Trabajos, error) {
+func (s *MysqlTrabajoStore) Listar() (Trabajos, error) {
 	trabajos := make(Trabajos, 0)
 	query := `SELECT t.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos t LEFT JOIN autores ON t.autor_id = autores.id ORDER BY fecha_publicacion;`
 	rows, err := s.db.Query(query)
@@ -43,7 +39,7 @@ func (s *TrabajoStore) Listar() (Trabajos, error) {
 	return trabajos, nil
 }
 
-func (s *TrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
+func (s *MysqlTrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
 	var resultado = make(Trabajos, 0)
 	trabajos, err := s.Listar()
 	if err != nil {
@@ -59,7 +55,7 @@ func (s *TrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
 	return resultado, nil
 }
 
-func (s *TrabajoStore) ObtenerPorId(id string, requirePublic bool) (Trabajo, error) {
+func (s *MysqlTrabajoStore) ObtenerPorId(id string, requirePublic bool) (Trabajo, error) {
 	var post Trabajo
 	var query = `SELECT trabajos.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
 	FROM trabajos
