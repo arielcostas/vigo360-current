@@ -16,6 +16,7 @@ import (
 var db *sqlx.DB
 
 func start() {
+	logger := logger.NewLogger("BBDD")
 	var dsn string = os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASS") + "@tcp(" + os.Getenv("DB_HOST") + ")/" + os.Getenv("DB_BASE")
 	var err error
 	conn, err := sqlx.Connect("mysql", dsn)

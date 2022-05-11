@@ -8,10 +8,10 @@ package templates
 import (
 	"bytes"
 	"embed"
+	"fmt"
 	"html/template"
 	"io"
-
-	"vigo360.es/new/internal/logger"
+	"os"
 )
 
 //go:embed html/*
@@ -27,7 +27,8 @@ var t = func() *template.Template {
 
 		_, err := t.New(filename).Funcs(Functions).Parse(string(contents))
 		if err != nil {
-			logger.Critical("[public-main] error parsing template: %s", err.Error())
+			fmt.Printf("error parsing template: %s", err.Error())
+			os.Exit(1)
 		}
 	}
 
