@@ -62,7 +62,6 @@ func (s *Server) Routes() {
 	s.Router.HandleFunc(`/autores/{id}`, s.handlePublicAutorPage()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/autores`, s.handlePublicListAutores()).Methods(http.MethodGet)
 
-	s.Router.HandleFunc(`/siguenos`, s.handlePublicNodbPage()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/legal`, s.handlePublicNodbPage()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/contacto`, s.handlePublicNodbPage()).Methods(http.MethodGet)
 

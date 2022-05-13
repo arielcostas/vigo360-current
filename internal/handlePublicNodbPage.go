@@ -15,11 +15,6 @@ import (
 
 func (s *Server) handlePublicNodbPage() http.HandlerFunc {
 	var nodbPageMeta = map[string]PageMeta{
-		"siguenos": {
-			Titulo:      "Síguenos",
-			Descripcion: "Información sobre cómo seguir a Vigo360, y enterarse de sus últimas publicaciones y novedades.",
-			Canonica:    fullCanonica("/siguenos"),
-		},
 		"legal": {
 			Titulo:      "Licencias",
 			Descripcion: "Información legal relativa a Vigo360, desde licencias de uso libre hasta la política de privacidad.",
