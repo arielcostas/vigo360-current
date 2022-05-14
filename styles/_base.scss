@@ -158,6 +158,17 @@ select {
 	padding: 0.5rem 1rem;
 }
 
+.preview-marca-agua {
+    position: fixed;
+    left: 50%;
+	transform: translateX(-50%);
+	top: 15%;
+	font-size: 1.2rem;
+	font-weight: 900;
+	background-color: rgba(255,255,100,0.7);
+	padding: 0.8rem;
+}
+
 @media (max-width: 1366px) {
 	header {
 		padding: 0 2.5rem;

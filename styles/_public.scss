@@ -469,6 +469,7 @@ article#post-inner p img {
 	justify-content: center;
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 }
 
 .post-author-info h3 {

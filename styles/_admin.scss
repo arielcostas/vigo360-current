@@ -46,6 +46,10 @@ textarea {
 	font-size: 14px;
 }
 
+button {
+	cursor: pointer;
+}
+
 button.btn-theme {
 	background-color: var(--correct);
 	border-color: var(--theme);
@@ -56,6 +60,12 @@ button.btn-outline-theme {
 	border: 1px solid var(--correct);
 	background: white;
 	color: var(--theme);
+}
+
+button.btn-empty-theme {
+	border: none;
+	color: var(--theme);
+	background: #ffffff00;
 }
 
 button.btn-error {

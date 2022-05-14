@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+	<title>Previsualización - Vigo360</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	
+	<link rel="icon" href="/static/logo.png" />
+	<link rel="stylesheet" href="/static/main.css" />
+	
+	<meta name="theme-color" content="#236535" />
+</head>
+
+<body>
+	{{ template "_admin-header.html" }}
+	<div class="preview-marca-agua">
+		<p>Esta página es una previsualización. Hay posibles datos sin guardar.</p>
+		<p>Fecha de generación: {{ .Ahora }}</p>
+	</div>
+	<main>
+		<div id="post-main">
+			<article>
+				<figure id="post-thumbnail">
+					<img width="1024" height="576" src="/static/images/{{ .Post.Id}}.webp" alt="{{ .Post.Alt_portada }}" />
+					<figcaption>{{ .Post.Alt_portada }}</figcaption>
+				</figure>
+
+				<h2 id="post-title">{{ .Post.Titulo }}</h2>
+
+				<div id="post-inner">
+					{{ .Post.Contenido | markdown }}
+				</div>
+			</article>
+		</div>
+	</main>
+	{{ template "_footer.html" }}
+</body>
+
+</html>
