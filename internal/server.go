@@ -50,6 +50,9 @@ func (s *Server) Routes() {
 	s.Router.HandleFunc("/admin/series", s.withAuth(s.handleAdminListSeries())).Methods(http.MethodGet)
 	s.Router.HandleFunc("/admin/series", s.withAuth(s.handleAdminCreateSeries())).Methods(http.MethodPost)
 
+	s.Router.HandleFunc("/admin/perfil", s.withAuth(s.handleAdminPerfilView())).Methods(http.MethodGet)
+	s.Router.HandleFunc("/admin/perfil", s.withAuth(s.handleAdminPerfilEdit())).Methods(http.MethodPost)
+
 	s.Router.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminListarFotoExtra())).Methods(http.MethodGet)
 	s.Router.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminCrearFotoExtra())).Methods(http.MethodPost)
 	s.Router.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminDeleteFotoExtra())).Methods(http.MethodDelete)

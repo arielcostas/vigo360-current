@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<title>Editor de perfil - Admin Vigo360</title>
+	{{ template "_admin-head.html" . }}
+</head>
+
+<body>
+	{{ template "_admin-header.html"}}
+	<main id="editor-perfil">
+		<h2>Editor de perfil</h2>
+		<form method="POST" enctype="multipart/form-data">
+			<h3>Datos básicos</h3>
+			<label for="nombre">Nombre</label>
+			<input id="nombre" name="nombre" placeholder="Pepito Pérez" maxlength="40" value="{{ .Autor.Nombre }}">
+			<label for="biografia">Biografía</label>
+			<textarea name="biografia" id="biografia" maxlength="2000">{{ .Autor.Biografia }}</textarea>
+			<h3>Sitio web</h3>
+			<label for="web-titulo">Titulo</label>
+			<input id="web-titulo" name="web-titulo" placeholder="Mi blog" maxlength="80" value="{{ .Autor.Web.Titulo }}" required>
+			<label for="web-url">Dirección URL</label>
+			<input id="web-url" name="web-url" placeholder="https://midominio.com" maxlength="80" value="{{ .Autor.Web.Url }}" required>
+			<h3>Imagen de perfil</h3>
+			<img src="/static/profile/{{ .Autor.Id }}.jpg" alt="Fotografía de perfil actual" title="Fotografía de perfil actual">
+			<input type="file" name="perfil" id="perfil" accept="image/png, image/jpeg, image/webp">
+			<button class="btn-theme" type="submit">Guardar cambios</button>
+		</form>
+	</main>
+	{{ template "_admin-footer.html" . }}
+</body>
+
+</html>
