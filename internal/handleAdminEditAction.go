@@ -161,7 +161,11 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 			}
 		}
 
-		w.Header().Add("Location", "/admin/post")
 		defer w.WriteHeader(303)
+		if r.FormValue("salir") == "true" {
+			w.Header().Add("Location", "/admin/post")
+		} else {
+			w.Header().Add("Location", r.URL.Path)
+		}
 	}
 }

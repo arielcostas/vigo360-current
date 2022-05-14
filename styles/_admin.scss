@@ -51,6 +51,12 @@ button.btn-theme {
 	color: white;
 }
 
+button.btn-outline-theme {
+	border: 1px solid var(--correct);
+	background: white;
+	color: var(--theme);
+}
+
 button.btn-error {
 	background-color: var(--incorrect);
 	border-color: darkred;
@@ -183,6 +189,17 @@ main h2 {
 
 #post-editor {
 	width: 100%;
+
+	hr {
+		margin: 1.5rem 0;
+	}
+
+	.submit-buttons {
+		display: flex;
+		align-items: center;
+		justify-content: end;
+		gap: 1rem;
+	}
 }
 
 #post-editor .form-column,
