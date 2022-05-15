@@ -7,6 +7,7 @@ prebuild() {
 	mkdir -p assets/{extra,images,papers,profile,thumb}
 	cp static/* assets/
 	sass --source-map --embed-source-map -s compressed styles/:assets/
+	tailwindcss -i styles/tailwind.css -o assets/tw.css -m
 	chmod -R a+r assets/
 }
 
