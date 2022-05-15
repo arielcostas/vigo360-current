@@ -21,15 +21,14 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		req_post_id := mux.Vars(r)["postid"]
-		var e2 error
 
 		var post models.Publicacion
 		if np, err := s.store.publicacion.ObtenerPorId(req_post_id, true); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
-				logger.Error("no se encontró la publicación: %s", e2.Error())
+				logger.Error("no se encontró la publicación: %s", err.Error())
 				s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
 			} else {
-				logger.Error("error recuperando la publicación: %s", e2.Error())
+				logger.Error("error recuperando la publicación: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 			}
 			return
@@ -38,9 +37,10 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		}
 
 		if post.Serie.Id != "" {
-			post.Serie, e2 = s.store.serie.Obtener(post.Serie.Id)
-			if e2 != nil {
-				logger.Error("error recuperando serie de la publicación: %s", e2.Error())
+			var err error
+			post.Serie, err = s.store.serie.Obtener(post.Serie.Id)
+			if err != nil {
+				logger.Error("error recuperando serie de la publicación: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorRender)
 			}
 		}
