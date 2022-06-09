@@ -49,6 +49,7 @@ cat _schema/* | mysql -D vigo360 -u vigo360 -p
 
 ```bash
 cp .env.example .env
+openssl rand -hex 20 # Clave para indexnow, copiar y pegar en .env
 nano .env # Modificar para que sea acorde a cada caso
 ```
 
