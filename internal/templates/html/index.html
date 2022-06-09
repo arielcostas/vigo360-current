@@ -5,6 +5,30 @@
 	{{- template "_head.html" . }}
 
 	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+
+	<script type="application/ld+json">
+		{
+			"@context": "http://schema.org",
+			"@type": "WebPage",
+			"publisher": {
+				"@type": "Organization",
+				"name": "Vigo360",
+				"url": "https://vigo360.es",
+				"email": "contacto@vigo360.es",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://vigo360.es/static/logo.webp",
+					"width": 400,
+					"height": 400
+				}
+			},
+			"headline": "HuffPost - Breaking News, U.S. and World News",
+			"description": "Read the latest headlines, news stories, and opinion from Politics, Entertainment, Life, Perspectives, and more.",
+			"inLanguage": "en-US",
+			"url": "https://www.huffpost.com/"
+		}
+		
+	</script>
 </head>
 
 <body>

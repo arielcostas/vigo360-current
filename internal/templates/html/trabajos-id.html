@@ -20,7 +20,28 @@
 			"author": {
 				"@type": "Person",
 				"name": "{{ .Trabajo.Autor.Nombre }}",
-				"url": "/autores/{{ .Trabajo.Autor.Id }}"
+				"url": "/autores/{{ .Trabajo.Autor.Id }}",
+				"jobTitle": "{{ .Trabajo.Autor.Rol }}",
+				"description": "{{ .Trabajo.Autor.Biografia }}"
+			},
+			"creator": {
+				"@type": "Person",
+				"name": "{{ .Trabajo.Autor.Nombre }}",
+				"url": "/autores/{{ .Trabajo.Autor.Id }}",
+				"jobTitle": "{{ .Trabajo.Autor.Rol }}",
+				"description": "{{ .Trabajo.Autor.Biografia }}"
+			},
+			"publisher": {
+				"@type": "Organization",
+				"name": "Vigo360",
+				"url": "https://vigo360.es",
+				"email": "contacto@vigo360.es",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://vigo360.es/static/logo.webp",
+					"width": 400,
+					"height": 400
+				}
 			},
 			"dateModified": "{{ date3339 .Trabajo.Fecha_actualizacion }}",
 			"datePublished": "{{ date3339 .Trabajo.Fecha_publicacion }}",
@@ -33,7 +54,8 @@
 				"url": "/static/images/{{ .Trabajo.Id}}.webp",
 				"contentUrl": "/static/images/{{ .Trabajo.Id}}.webp"
 			},
-			"license": "https://creativecommons.org/licenses/by-sa/4.0/"
+			"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+			"inLanguage": "es-ES"
 		},
 		{
 			"@context": "https://schema.org",

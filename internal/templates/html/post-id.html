@@ -32,7 +32,13 @@
 				"@type": "Organization",
 				"name": "Vigo360",
 				"url": "https://vigo360.es",
-				"email": "contacto@vigo360.es"
+				"email": "contacto@vigo360.es",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://vigo360.es/static/logo.webp",
+					"width": 400,
+					"height": 400
+				}
 			},
 			"wordCount": {{ wordCount .Post.Contenido }},
 			"author": {
@@ -61,7 +67,8 @@
 				"acquireLicensePage": "/legal",
 				"contentUrl": "/static/images/{{ .Post.Id}}.webp"
 			},
-			"license": "https://creativecommons.org/licenses/by-sa/4.0/"
+			"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+			"inLanguage": "es-ES"
 		}
 	</script>
 </head>
