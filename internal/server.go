@@ -6,7 +6,9 @@
 package internal
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -76,6 +78,9 @@ func (s *Server) Routes() {
 
 	s.Router.HandleFunc(`/sitemap.xml`, s.handlePublicSitemap()).Methods(http.MethodGet)
 	s.Router.HandleFunc("/buscar", s.handlePublicBusqueda()).Methods(http.MethodGet)
+
+	var indexnowkeyurl = fmt.Sprintf("/%s.txt", os.Getenv("INDEXNOW_KEY"))
+	s.Router.HandleFunc(indexnowkeyurl, s.handlePublicIndexnowKey()).Methods(http.MethodGet)
 
 	s.Router.HandleFunc("/", s.handlePublicIndex()).Methods(http.MethodGet)
 }

@@ -12,6 +12,7 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
+	"vigo360.es/new/internal/seo"
 )
 
 func (s *Server) handleAdminEditAction() http.HandlerFunc {
@@ -100,6 +101,21 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 				logger.Error("error actualizando fecha de publicación: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 				return
+			}
+
+			var DOMAIN = os.Getenv("DOMAIN")
+			var indexnowurls = []string{
+				DOMAIN + "/",
+				DOMAIN + "/post/" + publicacion_id,
+			}
+
+			for _, t := range tags {
+				indexnowurls = append(indexnowurls, DOMAIN+"/tags/"+t+"/")
+			}
+
+			err = seo.BingIndexnowRequest(indexnowurls)
+			if err != nil {
+				logger.Error("error llamando a indexnow: %s", err.Error())
 			}
 		}
 
