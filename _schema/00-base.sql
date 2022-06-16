@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS publicaciones_tags (
 
 -- autor
 ALTER TABLE publicaciones ADD FOREIGN KEY publicaciones_autor(autor_id) REFERENCES autores(id);
-ALTER TABLE trabajos ADD FOREIGN KEY trabajos_autor(autor_id) REFERENCES autor(id);
+ALTER TABLE trabajos ADD FOREIGN KEY trabajos_autor(autor_id) REFERENCES autores(id);
 
 -- trabajo contiene adjuntos
 ALTER TABLE adjuntos ADD FOREIGN KEY adjuntos_trabajo(trabajo_id) REFERENCES trabajos(id);
