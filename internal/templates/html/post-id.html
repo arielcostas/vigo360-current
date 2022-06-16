@@ -148,6 +148,12 @@
 				</div>
 				{{ end }}
 			</div>
+			<h2>Comentarios</h2>
+			<ul>
+				{{ range .Post.Comentarios }}
+				<li>{{ . }}</li>
+				{{ end }}
+			</ul>
 			{{ end }}
 		</div>
 	</main>

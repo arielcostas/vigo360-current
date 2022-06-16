@@ -13,6 +13,7 @@ type Publicacion struct {
 	Titulo              string
 	Resumen             string
 	Contenido           string
+	Comentarios         []Comentario
 
 	Serie Serie
 	Autor Autor

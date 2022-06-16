@@ -41,7 +41,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			post.Serie, err = s.store.serie.Obtener(post.Serie.Id)
 			if err != nil {
 				logger.Error("error recuperando serie de la publicación: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorRender)
+				s.handleError(w, 500, messages.ErrorDatos)
 			}
 		}
 
@@ -59,6 +59,13 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		}
 
 		post.Serie.Publicaciones = post.Serie.Publicaciones.FiltrarPublicas()
+
+		if nc, err := s.store.comentario.ListarPublicos(post.Id); err != nil {
+			logger.Error("error recuperando comentarios para %s: %s", post.Id, err.Error())
+			s.handleError(w, 500, messages.ErrorDatos)
+		} else {
+			post.Comentarios = nc
+		}
 
 		var err = templates.Render(w, "post-id.html", struct {
 			Post            models.Publicacion

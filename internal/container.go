@@ -17,6 +17,7 @@ type Container struct {
 	serie       models.SerieStore
 	tag         models.TagStore
 	trabajo     models.TrabajoStore
+	comentario  models.ComentarioStore
 }
 
 func NewMysqlContainer(db *sqlx.DB) *Container {
@@ -26,5 +27,6 @@ func NewMysqlContainer(db *sqlx.DB) *Container {
 		serie:       models.NewMysqlSerieStore(db),
 		tag:         models.NewMysqlTagStore(db),
 		trabajo:     models.NewMysqlTrabajoStore(db),
+		comentario:  models.NewMysqlComentarioStore(db),
 	}
 }

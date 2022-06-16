@@ -3,7 +3,7 @@ USE vigo360;
 CREATE TABLE comentarios(
 	id varchar(13) NOT NULL,
     publicacion_id varchar(40) NOT NULL,
-    padre_id varchar(13) NOT NULL,
+    padre_id varchar(13),
     
     nombre varchar(40) NOT NULL,
     email_hash char(65) NOT NULL, -- SHA256 del correo electrónico usado
