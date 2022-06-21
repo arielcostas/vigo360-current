@@ -42,7 +42,7 @@ func (s *Server) handleAdminPreviewPage() http.HandlerFunc {
 			Titulo:              r.FormValue("art-titulo"),
 			Resumen:             r.FormValue("art-resumen"),
 			Contenido:           r.FormValue("art-contenido"),
-			Alt_portada:         r.FormValue("alt_portada"),
+			Alt_portada:         r.FormValue("alt-portada"),
 			Fecha_actualizacion: time.Now().Format("2006-01-02 15:04:05"),
 			Fecha_publicacion:   time.Now().Format("2006-01-02 15:04:05"),
 			Autor:               autor,
