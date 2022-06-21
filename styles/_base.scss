@@ -123,12 +123,15 @@ header nav {
 	display: flex;
 }
 
+nav.desktop {
+	flex-shrink: 0;
+}
+
 header .mobile {
 	display: none;
 }
 
 footer {
-	padding: 0;
 	color: var(--text);
 	font-size: 1.05rem;
 
