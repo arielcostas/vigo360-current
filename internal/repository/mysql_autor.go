@@ -54,7 +54,7 @@ func (s *MysqlAutorStore) Obtener(autor_id string) (models.Autor, error) {
 func (s *MysqlAutorStore) Buscar(termino string) ([]models.Autor, error) {
 	var autores []models.Autor
 
-	var query = `SELECT id, nombre, email, rol, biografia FROM autores WHERE CONCAT(nombre, email, rol, biografia) LIKE ?`
+	var query = `SELECT id, nombre, email, rol, biografia FROM autores WHERE CONCAT_WS(" ", nombre, email, rol, biografia) LIKE ?`
 	var rows, err = s.db.Query(query, "%"+termino+"%")
 	if err != nil {
 		return []models.Autor{}, err
