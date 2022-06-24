@@ -3,12 +3,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package models
+package repository
 
 import (
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/models"
 )
 
 func NewMysqlTrabajoStore(db *sqlx.DB) *MysqlTrabajoStore {
@@ -17,8 +18,8 @@ func NewMysqlTrabajoStore(db *sqlx.DB) *MysqlTrabajoStore {
 	}
 }
 
-func (s *MysqlTrabajoStore) Listar() (Trabajos, error) {
-	trabajos := make(Trabajos, 0)
+func (s *MysqlTrabajoStore) Listar() (models.Trabajos, error) {
+	trabajos := make(models.Trabajos, 0)
 	query := `SELECT t.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, autor_id, autores.nombre as autor_nombre, autores.email as autor_email FROM trabajos t LEFT JOIN autores ON t.autor_id = autores.id ORDER BY fecha_publicacion;`
 	rows, err := s.db.Query(query)
 
@@ -27,11 +28,11 @@ func (s *MysqlTrabajoStore) Listar() (Trabajos, error) {
 	}
 
 	for rows.Next() {
-		var nt Trabajo
+		var nt models.Trabajo
 
 		err = rows.Scan(&nt.Id, &nt.Fecha_publicacion, &nt.Fecha_actualizacion, &nt.Titulo, &nt.Resumen, &nt.Autor.Id, &nt.Autor.Nombre, &nt.Autor.Email)
 		if err != nil {
-			return Trabajos{}, err
+			return models.Trabajos{}, err
 		}
 
 		trabajos = append(trabajos, nt)
@@ -39,11 +40,11 @@ func (s *MysqlTrabajoStore) Listar() (Trabajos, error) {
 	return trabajos, nil
 }
 
-func (s *MysqlTrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
-	var resultado = make(Trabajos, 0)
+func (s *MysqlTrabajoStore) ListarPorAutor(autor_id string) (models.Trabajos, error) {
+	var resultado = make(models.Trabajos, 0)
 	trabajos, err := s.Listar()
 	if err != nil {
-		return Trabajos{}, err
+		return models.Trabajos{}, err
 	}
 
 	for _, tr := range trabajos {
@@ -55,8 +56,8 @@ func (s *MysqlTrabajoStore) ListarPorAutor(autor_id string) (Trabajos, error) {
 	return resultado, nil
 }
 
-func (s *MysqlTrabajoStore) ObtenerPorId(id string, requirePublic bool) (Trabajo, error) {
-	var post Trabajo
+func (s *MysqlTrabajoStore) ObtenerPorId(id string, requirePublic bool) (models.Trabajo, error) {
+	var post models.Trabajo
 	var query = `SELECT trabajos.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol
 	FROM trabajos
 	LEFT JOIN autores on trabajos.autor_id = autores.id
@@ -67,11 +68,11 @@ func (s *MysqlTrabajoStore) ObtenerPorId(id string, requirePublic bool) (Trabajo
 	var err = s.db.QueryRow(query, id).Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Autor.Id, &post.Autor.Nombre, &post.Autor.Biografia, &post.Autor.Rol)
 
 	if err != nil {
-		return Trabajo{}, err
+		return models.Trabajo{}, err
 	}
 
 	if requirePublic && post.Fecha_publicacion == "" {
-		return Trabajo{}, sql.ErrNoRows
+		return models.Trabajo{}, sql.ErrNoRows
 	}
 
 	return post, nil

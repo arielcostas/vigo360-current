@@ -9,8 +9,8 @@ import (
 	"errors"
 	"math/rand"
 
-	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/models"
+	"vigo360.es/new/internal/repository"
 )
 
 type Sugerencia struct {
@@ -38,9 +38,8 @@ func findMatchingTags(tags1, tags2 []string) int {
 	return matches
 }
 
-func generateSuggestions(original_id string) ([]Sugerencia, error) {
+func generateSuggestions(original_id string, ps repository.PublicacionStore) ([]Sugerencia, error) {
 	var resultado = make([]Sugerencia, 3)
-	var ps = models.NewMysqlPublicacionStore(database.GetDB())
 
 	original, err := ps.ObtenerPorId(original_id, true)
 	if err != nil {

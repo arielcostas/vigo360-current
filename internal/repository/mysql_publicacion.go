@@ -3,13 +3,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package models
+package repository
 
 import (
 	"database/sql"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/models"
 )
 
 type MysqlPublicacionStore struct {
@@ -22,8 +23,8 @@ func NewMysqlPublicacionStore(db *sqlx.DB) *MysqlPublicacionStore {
 	}
 }
 
-func (s *MysqlPublicacionStore) Listar() (Publicaciones, error) {
-	publicaciones := make(Publicaciones, 0)
+func (s *MysqlPublicacionStore) Listar() (models.Publicaciones, error) {
+	publicaciones := make(models.Publicaciones, 0)
 	query := `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id GROUP BY id ORDER BY fecha_publicacion DESC;`
 
 	rows, err := s.db.Query(query)
@@ -34,23 +35,23 @@ func (s *MysqlPublicacionStore) Listar() (Publicaciones, error) {
 
 	for rows.Next() {
 		var (
-			np            Publicacion
+			np            models.Publicacion
 			rawTagIds     string
 			rawTagNombres string
 		)
 
 		err = rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Titulo, &np.Resumen, &np.Alt_portada, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
 		if err != nil {
-			return Publicaciones{}, err
+			return models.Publicaciones{}, err
 		}
 
 		var (
-			tags            = make([]Tag, 0)
+			tags            = make([]models.Tag, 0)
 			splitTagIds     = strings.Split(rawTagIds, ",")
 			splitTagNombres = strings.Split(rawTagNombres, ",")
 		)
 		for i := 0; i < len(splitTagIds); i++ {
-			tags = append(tags, Tag{
+			tags = append(tags, models.Tag{
 				Id:     splitTagIds[i],
 				Nombre: splitTagNombres[i],
 			})
@@ -62,11 +63,11 @@ func (s *MysqlPublicacionStore) Listar() (Publicaciones, error) {
 	return publicaciones, nil
 }
 
-func (s *MysqlPublicacionStore) ListarPorAutor(autor_id string) (Publicaciones, error) {
-	var resultado = make(Publicaciones, 0)
+func (s *MysqlPublicacionStore) ListarPorAutor(autor_id string) (models.Publicaciones, error) {
+	var resultado = make(models.Publicaciones, 0)
 	publicaciones, err := s.Listar()
 	if err != nil {
-		return Publicaciones{}, err
+		return models.Publicaciones{}, err
 	}
 
 	for _, pub := range publicaciones {
@@ -78,11 +79,11 @@ func (s *MysqlPublicacionStore) ListarPorAutor(autor_id string) (Publicaciones, 
 	return resultado, nil
 }
 
-func (s *MysqlPublicacionStore) ListarPorTag(tag_id string) (Publicaciones, error) {
-	var resultado = make(Publicaciones, 0)
+func (s *MysqlPublicacionStore) ListarPorTag(tag_id string) (models.Publicaciones, error) {
+	var resultado = make(models.Publicaciones, 0)
 	publicaciones, err := s.Listar()
 	if err != nil {
-		return Publicaciones{}, err
+		return models.Publicaciones{}, err
 	}
 
 	for _, pub := range publicaciones {
@@ -97,11 +98,11 @@ func (s *MysqlPublicacionStore) ListarPorTag(tag_id string) (Publicaciones, erro
 	return resultado, nil
 }
 
-func (s *MysqlPublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, error) {
-	var resultado = make(Publicaciones, 0)
+func (s *MysqlPublicacionStore) ListarPorSerie(serie_id string) (models.Publicaciones, error) {
+	var resultado = make(models.Publicaciones, 0)
 	publicaciones, err := s.Listar()
 	if err != nil {
-		return Publicaciones{}, err
+		return models.Publicaciones{}, err
 	}
 
 	for _, pub := range publicaciones {
@@ -113,8 +114,8 @@ func (s *MysqlPublicacionStore) ListarPorSerie(serie_id string) (Publicaciones, 
 	return resultado, nil
 }
 
-func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (Publicacion, error) {
-	var post Publicacion
+func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (models.Publicacion, error) {
+	var post models.Publicacion
 	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), COALESCE(GROUP_CONCAT(tags.nombre), "") as tags
 	FROM publicaciones
 	LEFT JOIN autores on publicaciones.autor_id = autores.id
@@ -131,50 +132,50 @@ func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (Pub
 	var err = s.db.QueryRow(query, id).Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Autor.Id, &post.Autor.Nombre, &post.Autor.Biografia, &post.Autor.Rol, &post.Serie.Id, &rawTagNombres)
 
 	if err != nil {
-		return Publicacion{}, err
+		return models.Publicacion{}, err
 	}
 
 	if requirePublic && post.Fecha_publicacion == "" {
-		return Publicacion{}, sql.ErrNoRows
+		return models.Publicacion{}, sql.ErrNoRows
 	}
 
 	for _, tag := range strings.Split(rawTagNombres, ",") {
-		post.Tags = append(post.Tags, Tag{Nombre: tag})
+		post.Tags = append(post.Tags, models.Tag{Nombre: tag})
 	}
 
 	return post, nil
 }
 
-func (s *MysqlPublicacionStore) Buscar(termino string) (Publicaciones, error) {
+func (s *MysqlPublicacionStore) Buscar(termino string) (models.Publicaciones, error) {
 	var query = `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id WHERE LOWER(CONCAT_WS(" ", titulo, resumen, contenido)) LIKE LOWER(?) GROUP BY id LIMIT 10`
 
 	strings.Join(strings.Split(termino, " "), "* ")
 
 	rows, err := s.db.Query(query, "%"+termino+"%")
 	if err != nil {
-		return Publicaciones{}, err
+		return models.Publicaciones{}, err
 	}
 
-	var publicaciones = make(Publicaciones, 0)
+	var publicaciones = make(models.Publicaciones, 0)
 	for rows.Next() {
 		var (
-			np            Publicacion
+			np            models.Publicacion
 			rawTagIds     string
 			rawTagNombres string
 		)
 
 		err = rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Titulo, &np.Resumen, &np.Alt_portada, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
 		if err != nil {
-			return Publicaciones{}, err
+			return models.Publicaciones{}, err
 		}
 
 		var (
-			tags            = make([]Tag, 0)
+			tags            = make([]models.Tag, 0)
 			splitTagIds     = strings.Split(rawTagIds, ",")
 			splitTagNombres = strings.Split(rawTagNombres, ",")
 		)
 		for i := 0; i < len(splitTagIds); i++ {
-			tags = append(tags, Tag{
+			tags = append(tags, models.Tag{
 				Id:     splitTagIds[i],
 				Nombre: splitTagNombres[i],
 			})

@@ -3,9 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package models
+package repository
 
-type SerieStore interface {
-	Listar() (Publicaciones, error)
-	Obtener(string) (Serie, error)
+import "vigo360.es/new/internal/models"
+
+type AutorStore interface {
+	Listar() ([]models.Autor, error)
+	Obtener(string) (models.Autor, error)
+	Buscar(string) ([]models.Autor, error)
 }

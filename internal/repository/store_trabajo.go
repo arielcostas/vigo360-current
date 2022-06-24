@@ -3,16 +3,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package models
+package repository
 
 import (
 	"github.com/jmoiron/sqlx"
+	"vigo360.es/new/internal/models"
 )
 
 type TrabajoStore interface {
-	Listar() (Trabajos, error)
-	ListarPorAutor(string) (Trabajos, error)
-	ObtenerPorId(string, bool) (Trabajo, error)
+	Listar() (models.Trabajos, error)
+	ListarPorAutor(string) (models.Trabajos, error)
+	ObtenerPorId(string, bool) (models.Trabajo, error)
 }
 
 type MysqlTrabajoStore struct {

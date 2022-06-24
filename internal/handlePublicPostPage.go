@@ -46,7 +46,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		}
 
 		var recommendations []Sugerencia
-		if nr, err := generateSuggestions(post.Id); err != nil {
+		if nr, err := generateSuggestions(post.Id, s.store.publicacion); err != nil {
 			logger.Error("error recuperando sugerencias: %s", err.Error())
 			recommendations = make([]Sugerencia, 0)
 		} else {

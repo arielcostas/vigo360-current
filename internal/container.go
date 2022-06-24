@@ -7,26 +7,26 @@ package internal
 
 import (
 	"github.com/jmoiron/sqlx"
-	"vigo360.es/new/internal/models"
+	"vigo360.es/new/internal/repository"
 )
 
 // Un container incluye los repositorios para todos los tipos a los que va a acceder el servidor
 type Container struct {
-	autor       models.AutorStore
-	publicacion models.PublicacionStore
-	serie       models.SerieStore
-	tag         models.TagStore
-	trabajo     models.TrabajoStore
-	comentario  models.ComentarioStore
+	autor       repository.AutorStore
+	publicacion repository.PublicacionStore
+	serie       repository.SerieStore
+	tag         repository.TagStore
+	trabajo     repository.TrabajoStore
+	comentario  repository.ComentarioStore
 }
 
 func NewMysqlContainer(db *sqlx.DB) *Container {
 	return &Container{
-		autor:       models.NewMysqlAutorStore(db),
-		publicacion: models.NewMysqlPublicacionStore(db),
-		serie:       models.NewMysqlSerieStore(db),
-		tag:         models.NewMysqlTagStore(db),
-		trabajo:     models.NewMysqlTrabajoStore(db),
-		comentario:  models.NewMysqlComentarioStore(db),
+		autor:       repository.NewMysqlAutorStore(db),
+		publicacion: repository.NewMysqlPublicacionStore(db),
+		serie:       repository.NewMysqlSerieStore(db),
+		tag:         repository.NewMysqlTagStore(db),
+		trabajo:     repository.NewMysqlTrabajoStore(db),
+		comentario:  repository.NewMysqlComentarioStore(db),
 	}
 }
