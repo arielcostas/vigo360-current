@@ -37,16 +37,20 @@ func (s *MysqlComentarioStore) ListarPorEstado(estado EstadoComentario) ([]Comen
 	return comentarios, nil
 }
 
-func (s *MysqlComentarioStore) GuardarComentario(_ Comentario) error {
-	panic("not implemented") // TODO: Implement
+func (s *MysqlComentarioStore) GuardarComentario(c Comentario) error {
+	const query = `INSERT INTO comentarios VALUES(?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)`
+	_, err := s.db.Exec(query, c.Id, c.Publicacion_id, c.Padre_id, c.Nombre, c.Email_hash, c.Es_autor, c.Autor_original, c.Contenido, c.Fecha_creacion, c.Fecha_moderacion, c.Estado, c.Moderador)
+	return err
 }
 
 // Cambia el estado de PENDIENTE a APROBADO
 func (s *MysqlComentarioStore) Aprobar(comentario_id string) error {
-	panic("not implemented") // TODO: Implement
+	_, err := s.db.Exec(`UPDATE comentarios SET estado=1 WHERE comentario_id=?`, comentario_id)
+	return err
 }
 
 // Cambia el estado de PENDIENTE a RECHAZADO
 func (s *MysqlComentarioStore) Rechazar(comentario_id string) error {
-	panic("not implemented") // TODO: Implement
+	_, err := s.db.Exec(`UPDATE comentarios SET estado=2 WHERE comentario_id=?`, comentario_id)
+	return err
 }

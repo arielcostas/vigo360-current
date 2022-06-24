@@ -10,7 +10,7 @@ type ComentarioStore interface {
 	ListarPublicos(publicacion_id string) ([]Comentario, error)
 	// Lista los comentarios con un estado específico
 	ListarPorEstado(EstadoComentario) ([]Comentario, error)
-
+	// Guarda un nuevo comentario a la base de datos
 	GuardarComentario(Comentario) error
 	// Cambia el estado de PENDIENTE a APROBADO
 	Aprobar(comentario_id string) error
