@@ -26,7 +26,7 @@ func (s *Server) handleAdminDeleteFotoExtra() http.HandlerFunc {
 		fotoId := r.URL.Query().Get("foto")
 		if fotoId == "" {
 			logger.Error("falta el parámetro foto en la URL")
-			s.handleError(w, 500, messages.ErrorFormulario)
+			s.handleJsonError(w, 500, messages.ErrorFormulario)
 			return
 		}
 
@@ -36,7 +36,7 @@ func (s *Server) handleAdminDeleteFotoExtra() http.HandlerFunc {
 		row, err := database.GetDB().Query(`SELECT COALESCE(fecha_publicacion, ""), autor_id FROM publicaciones WHERE id = ?`)
 		if err != nil {
 			logger.Error("error recuperando publicación cuya foto se va a borrar: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleJsonError(w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -45,14 +45,14 @@ func (s *Server) handleAdminDeleteFotoExtra() http.HandlerFunc {
 
 		if dbFechaPub != "" {
 			logger.Error("la publicación ya es pública, impidiendo borrado")
-			s.handleError(w, 400, "No se puede eliminar fotografías de una publicación pública")
+			s.handleJsonError(w, 400, "No se puede eliminar fotografías de una publicación pública")
 			return
 		}
 
 		// TODO: Crear permiso para saltarse esta limitación
 		if sess.Autor_id != dbAutorId {
 			logger.Error("el usuario no es el autor, impidiendo borrado")
-			s.handleError(w, 400, messages.ErrorSinPermiso)
+			s.handleJsonError(w, 400, messages.ErrorSinPermiso)
 			return
 		}
 
@@ -63,16 +63,16 @@ func (s *Server) handleAdminDeleteFotoExtra() http.HandlerFunc {
 			e2 := os.Remove(uploadPath + "/extra/" + f.Name())
 			if e2 != nil {
 				logger.Error("error borrando fotografía: %s", err.Error())
-				s.handleError(w, 500, "Error borrando fotografía")
+				s.handleJsonError(w, 500, "Error borrando fotografía")
 				return
 			}
 			w.Write([]byte("{ \"error\": false }"))
 		} else if errors.Is(err, os.ErrNotExist) {
 			logger.Error("la fotografía no existe: %s", err.Error())
-			s.handleError(w, 404, messages.ErrorNoResultados)
+			s.handleJsonError(w, 404, messages.ErrorNoResultados)
 		} else {
 			logger.Error("error encontrando archivo a borrar: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorNoResultados)
+			s.handleJsonError(w, 500, messages.ErrorNoResultados)
 		}
 	}
 }
