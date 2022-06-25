@@ -36,10 +36,10 @@
 							<img width="20" height="20" src="/static/user-icon.svg" />
 							{{ .Autor_nombre }}
 						</span>
-						{{ if .Fecha_publicacion.Valid }}
+						{{ if ne .Fecha_publicacion "01/01/0001" }}
 						<span>
 							<img width="20" height="20" src="/static/clock-icon.svg" />
-							{{ .Fecha_publicacion.Value }}
+							{{ .Fecha_publicacion }}
 						</span>
 						{{ end }}
 						{{- $postid := .Id }}
