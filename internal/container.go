@@ -13,6 +13,7 @@ import (
 // Un container incluye los repositorios para todos los tipos a los que va a acceder el servidor
 type Container struct {
 	autor       repository.AutorStore
+	aviso       repository.AvisoStore
 	publicacion repository.PublicacionStore
 	serie       repository.SerieStore
 	tag         repository.TagStore
@@ -23,6 +24,7 @@ type Container struct {
 func NewMysqlContainer(db *sqlx.DB) *Container {
 	return &Container{
 		autor:       repository.NewMysqlAutorStore(db),
+		aviso:       repository.NewMysqlAvisoStore(db),
 		publicacion: repository.NewMysqlPublicacionStore(db),
 		serie:       repository.NewMysqlSerieStore(db),
 		tag:         repository.NewMysqlTagStore(db),

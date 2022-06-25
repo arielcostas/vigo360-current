@@ -3,6 +3,7 @@ package internal
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -57,6 +58,8 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
+
+		fmt.Printf("%v\n", publicacion.Tags)
 
 		var tags []tag
 		err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags ORDER BY nombre ASC`, post_id)

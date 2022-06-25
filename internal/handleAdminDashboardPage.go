@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
 	"vigo360.es/new/internal/models"
@@ -23,11 +22,9 @@ func (s *Server) handleAdminDashboardPage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
-		db := database.GetDB()
 
 		// TODO: Convertir esto en llamada a repositorio
-		avisos := []models.Aviso{}
-		err := db.Select(&avisos, "SELECT fecha_creacion, titulo, contenido FROM avisos ORDER BY fecha_creacion DESC LIMIT 5")
+		avisos, err := s.store.aviso.ListarRecientes()
 
 		for i, a := range avisos {
 			tiempo, _ := time.Parse("2006-01-02 15:04:05", a.Fecha_creacion)
