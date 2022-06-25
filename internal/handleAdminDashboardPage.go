@@ -15,7 +15,7 @@ import (
 
 func (s *Server) handleAdminDashboardPage() http.HandlerFunc {
 	type response struct {
-		Avisos  []Aviso
+		Avisos  []models.Aviso
 		Posts   []DashboardPost
 		Session models.Session
 	}
@@ -25,7 +25,8 @@ func (s *Server) handleAdminDashboardPage() http.HandlerFunc {
 		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		db := database.GetDB()
 
-		avisos := []Aviso{}
+		// TODO: Convertir esto en llamada a repositorio
+		avisos := []models.Aviso{}
 		err := db.Select(&avisos, "SELECT fecha_creacion, titulo, contenido FROM avisos ORDER BY fecha_creacion DESC LIMIT 5")
 
 		for i, a := range avisos {

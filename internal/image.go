@@ -30,7 +30,6 @@ func imagenDesdeMime(archivo []byte) (image.Image, error) {
 		return webp.Decode(bytes.NewReader(archivo))
 	default:
 		return nil, ErrImageFormatError
-
 	}
 
 }

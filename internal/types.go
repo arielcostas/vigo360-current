@@ -10,12 +10,6 @@ import (
 	"errors"
 )
 
-type Aviso struct {
-	Fecha_creacion string
-	Titulo         string
-	Contenido      string
-}
-
 type DashboardPost struct {
 	Id                string
 	Titulo            string
@@ -41,11 +35,4 @@ type Serie struct {
 	Articulos int
 }
 
-type Tag struct {
-	Id           string
-	Nombre       string
-	Seleccionada bool
-}
-
 var ErrImageFormatError error = errors.New("invalid image MIME type")
-var ErrNotAuthorized error = errors.New("user not authorized to see this page")
