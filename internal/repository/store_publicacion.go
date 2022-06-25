@@ -9,9 +9,9 @@ import "vigo360.es/new/internal/models"
 
 type PublicacionStore interface {
 	Listar() (models.Publicaciones, error)
-	ListarPorAutor(string) (models.Publicaciones, error)
-	ListarPorTag(string) (models.Publicaciones, error)
-	ListarPorSerie(string) (models.Publicaciones, error)
-	ObtenerPorId(string, bool) (models.Publicacion, error)
-	Buscar(string) (models.Publicaciones, error)
+	ListarPorAutor(autor_id string) (models.Publicaciones, error)
+	ListarPorTag(tag_id string) (models.Publicaciones, error)
+	ListarPorSerie(serie_id string) (models.Publicaciones, error)
+	ObtenerPorId(id string, requirePublic bool) (models.Publicacion, error)
+	Buscar(query string) (models.Publicaciones, error)
 }

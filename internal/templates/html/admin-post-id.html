@@ -29,13 +29,13 @@
 					<label for="series-select">Selecciona serie</label>
 					<select name="serie-id" id="series-select">
 						<option value="">-- Ninguna serie --</option>
-						{{ $serieId := .Post.Serie_id.Value }}
+						{{ $serieId := .Post.Serie.Id }}
 						{{ range .Series }}
 						<option value="{{ .Id }}" {{ if eq .Id $serieId}}selected{{end}}>{{ .Titulo }}</option>
 						{{ end }}
 					</select>
 					<label for="serie-num">Posición en serie</label>
-					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion.Value }}"
+					<input type="number" name="serie-num" id="serie-num" value="{{ .Post.Serie_posicion }}"
 						min="0" max="20">
 					<hr>
 					<h3>Etiquetas</h3>
@@ -60,7 +60,7 @@
 					<label for="alt-portada">Texto alternativo de portada</label>
 					<input type="text" id="alt_portada" name="alt-portada" maxlength="300" required
 						value="{{ .Post.Alt_portada }}">
-					{{ if ne .Post.Publicado true }}
+					{{ if eq .Post.Fecha_publicacion "" }}
 					<hr>
 					<div>
 						<input type="checkbox" name="publicar" id="publicar">

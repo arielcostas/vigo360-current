@@ -7,6 +7,7 @@ package internal
 
 import (
 	"bytes"
+	"errors"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -16,6 +17,9 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/nfnt/resize"
 )
+
+// Error que indica que el tipo MIME no es válido
+var ErrImageFormatError error = errors.New("invalid image MIME type")
 
 // Recibe una imagen como bytes, detecta el tipo y convierte a image.Image con el decodificador adecuado
 func imagenDesdeMime(archivo []byte) (image.Image, error) {

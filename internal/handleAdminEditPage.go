@@ -20,7 +20,7 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 	}
 
 	type returnParams struct {
-		Post    PostEditar
+		Post    models.Publicacion
 		Series  []models.Serie
 		Tags    []tag
 		Session models.Session
@@ -30,10 +30,12 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		post_id := mux.Vars(r)["id"]
-		post := PostEditar{}
+
 		db := database.GetDB()
 
-		err := db.QueryRowx(`SELECT id, titulo, resumen, contenido, alt_portada, (fecha_publicacion is not null && fecha_publicacion < NOW()) as publicado, serie_id, serie_posicion FROM publicaciones WHERE id = ?;`, post_id).StructScan(&post)
+		var publicacion models.Publicacion
+
+		publicacion, err := s.store.publicacion.ObtenerPorId(post_id, false)
 
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
@@ -64,7 +66,7 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 		}
 
 		err = templates.Render(w, "admin-post-id.html", returnParams{
-			Post:    post,
+			Post:    publicacion,
 			Series:  series,
 			Tags:    tags,
 			Session: sess,
