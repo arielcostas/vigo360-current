@@ -10,7 +10,6 @@ import (
 	"errors"
 	"net/http"
 
-	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
 	"vigo360.es/new/internal/models"
@@ -19,7 +18,7 @@ import (
 
 func (s *Server) handleAdminListSeries() http.HandlerFunc {
 	type response struct {
-		Series  []Serie
+		Series  []models.Serie
 		Session models.Session
 	}
 
@@ -27,8 +26,9 @@ func (s *Server) handleAdminListSeries() http.HandlerFunc {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
 
-		series := []Serie{}
-		err := database.GetDB().Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)
+		var series []models.Serie
+		series, err := s.store.serie.Listar()
+		// err := database.GetDB().Select(&series, `SELECT series.*, COUNT(publicaciones.id) as articulos FROM series LEFT JOIN publicaciones ON series.id = publicaciones.serie_id GROUP BY series.id;`)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			logger.Error("error recuperando series: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)

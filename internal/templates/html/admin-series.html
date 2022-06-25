@@ -17,7 +17,7 @@
 			<ul>
 				{{ if ne (len .Series) 0 }}
 				{{ range .Series }}
-				<li>{{ .Titulo }} ({{ .Articulos }} artículos)</li>
+				<li>{{ .Titulo }} ({{ len .Publicaciones }} artículos)</li>
 				{{ end }}
 				{{ else }}
 				<span>No hay ninguna serie</span>

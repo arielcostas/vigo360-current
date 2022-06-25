@@ -44,7 +44,7 @@
 					{{ range .Posts }}
 					<li class="resumen-post">
 						<h3>{{ .Fecha_publicacion }} - {{ .Titulo }}</h3>
-						<p><i>{{ .Autor_nombre }}</i> - {{ .Resumen }}</p>
+						<p><i>{{ .Autor.Nombre }}</i> - {{ .Resumen }}</p>
 					</li>
 					{{ end }}
 					{{ end }}

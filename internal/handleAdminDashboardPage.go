@@ -16,7 +16,7 @@ import (
 func (s *Server) handleAdminDashboardPage() http.HandlerFunc {
 	type response struct {
 		Avisos  []models.Aviso
-		Posts   []DashboardPost
+		Posts   []models.Publicacion
 		Session models.Session
 	}
 
@@ -40,18 +40,20 @@ func (s *Server) handleAdminDashboardPage() http.HandlerFunc {
 			s.handleError(w, 500, messages.ErrorDatos)
 		}
 
-		posts := []DashboardPost{}
-		err = db.Select(&posts, `SELECT publicaciones.id, titulo, fecha_publicacion, resumen, autores.nombre as autor_nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE publicaciones.fecha_publicacion IS NOT NULL ORDER BY fecha_publicacion DESC LIMIT 5;`)
+		var posts models.Publicaciones
+		posts, err = s.store.publicacion.Listar()
+
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			logger.Error("error recuperando últimas publicaciones: %s", err.Error())
+			s.handleError(w, 500, messages.ErrorDatos)
+		}
+
+		posts = posts.FiltrarPublicas()[0:4]
 
 		for i, p := range posts {
 			tiempo, _ := time.Parse("2006-01-02 15:04:05", p.Fecha_publicacion)
 			p.Fecha_publicacion = tiempo.Format("02/01")
 			posts[i] = p
-		}
-
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			logger.Error("error recuperando últimas publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
 		}
 
 		err = templates.Render(w, "admin-dashboard.html", response{

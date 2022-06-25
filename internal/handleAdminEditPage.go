@@ -21,7 +21,7 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 
 	type returnParams struct {
 		Post    PostEditar
-		Series  []Serie
+		Series  []models.Serie
 		Tags    []tag
 		Session models.Session
 	}
@@ -47,8 +47,8 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 			return
 		}
 
-		series := []Serie{}
-		err = db.Select(&series, `SELECT * FROM series;`)
+		var series []models.Serie
+		series, err = s.store.serie.Listar()
 
 		if err != nil {
 			logger.Error("error recuperando series: %s", err.Error())

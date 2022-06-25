@@ -10,14 +10,6 @@ import (
 	"errors"
 )
 
-type DashboardPost struct {
-	Id                string
-	Titulo            string
-	Resumen           string
-	Fecha_publicacion string
-	Autor_nombre      string
-}
-
 type PostEditar struct {
 	Id             string
 	Titulo         string
@@ -27,12 +19,6 @@ type PostEditar struct {
 	Publicado      bool
 	Serie_id       sql.NullString
 	Serie_posicion sql.NullInt16
-}
-
-type Serie struct {
-	Id        string
-	Titulo    string
-	Articulos int
 }
 
 var ErrImageFormatError error = errors.New("invalid image MIME type")

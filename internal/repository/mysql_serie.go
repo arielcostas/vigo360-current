@@ -20,8 +20,38 @@ func NewMysqlSerieStore(db *sqlx.DB) *MysqlSerieStore {
 	}
 }
 
-func (s *MysqlSerieStore) Listar() (models.Publicaciones, error) {
-	panic("por implementar")
+func (s *MysqlSerieStore) Listar() ([]models.Serie, error) {
+	var series []models.Serie
+	var rows, err = s.db.Query(`SELECT id, titulo FROM series`)
+
+	if err != nil {
+		return []models.Serie{}, err
+	}
+
+	for rows.Next() {
+		var s models.Serie
+		err = rows.Scan(&s.Id, &s.Titulo)
+		if err != nil {
+			return []models.Serie{}, err
+		}
+		series = append(series, s)
+	}
+
+	// TODO: Eliminar esto, que la carga de artículos (o cuenta) dependa de mysql_publicacion
+	for i, serie := range series {
+		filas, err := s.db.Query(`SELECT id, titulo, fecha_publicacion FROM publicaciones WHERE serie_id=?`, serie.Id)
+		if err != nil {
+			return []models.Serie{}, err
+		}
+
+		for filas.Next() {
+			na := models.Publicacion{}
+			filas.Scan(&na.Id, &na.Titulo, &na.Fecha_publicacion)
+			serie.Publicaciones = append(serie.Publicaciones, na)
+		}
+		series[i] = serie
+	}
+	return series, nil
 }
 
 func (s *MysqlSerieStore) Obtener(serie_id string) (models.Serie, error) {
