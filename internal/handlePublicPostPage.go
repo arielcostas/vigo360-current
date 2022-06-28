@@ -8,7 +8,6 @@ package internal
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -75,8 +74,6 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		if e2 != nil {
 			panic(e2)
 		}
-
-		fmt.Printf("ct: %v\n", ct)
 
 		var err = templates.Render(w, "post-id.html", struct {
 			Post            models.Publicacion

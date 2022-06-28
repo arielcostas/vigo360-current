@@ -54,6 +54,7 @@ func (s *Server) handleAdminPreviewPage() http.HandlerFunc {
 		})
 
 		if err != nil {
+			// TODO: Remplazar esto
 			fmt.Printf("%s\n", err.Error())
 			s.handleError(w, 500, messages.ErrorRender)
 			return
