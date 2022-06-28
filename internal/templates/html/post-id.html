@@ -149,11 +149,11 @@
 				{{ end }}
 			</div>
 			<h2>Comentarios</h2>
-			<ul>
-				{{ range .Post.Comentarios }}
-				<li>{{ . }}</li>
+			<section id="comment_container">
+				{{ range .Comentarios }}
+				{{ template "comentario" . }}
 				{{ end }}
-			</ul>
+			</section>
 			{{ end }}
 		</div>
 	</main>
@@ -161,3 +161,24 @@
 </body>
 
 </html>
+
+{{ define "comentario" }}
+<div class="post_comment">
+	<p>
+		<strong>
+			{{ .Nombre }}
+			{{ if .Es_autor}} (Autor Vigo360){{end}}
+			{{ if .Autor_original}} (Autor del artículo){{end}}
+		</strong>
+		- publicado {{ .Fecha_moderacion }}
+	</p>
+	<p>
+		{{ .Contenido }}
+	</p>
+	<div class="post_comment_replies">
+		{{ range .Children }}
+		{{ template "comentario" . }}
+		{{ end }}
+	</div>
+</div>
+{{ end }}
