@@ -8,16 +8,20 @@ package internal
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
 	"vigo360.es/new/internal/models"
+	"vigo360.es/new/internal/service"
 	"vigo360.es/new/internal/templates"
 )
 
 func (s *Server) handlePublicPostPage() http.HandlerFunc {
+	var cs = service.NewComentarioService(s.store.comentario)
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		req_post_id := mux.Vars(r)["postid"]
@@ -67,13 +71,22 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			post.Comentarios = nc
 		}
 
+		ct, e2 := cs.ListarPublicos(post.Id)
+		if e2 != nil {
+			panic(e2)
+		}
+
+		fmt.Printf("ct: %v\n", ct)
+
 		var err = templates.Render(w, "post-id.html", struct {
 			Post            models.Publicacion
+			Comentarios     []service.ComentarioTree
 			Recommendations []Sugerencia
 			Meta            PageMeta
 		}{
 			Post:            post,
 			Recommendations: recommendations,
+			Comentarios:     ct,
 			Meta: PageMeta{
 				Titulo:      post.Titulo,
 				Descripcion: post.Resumen,
