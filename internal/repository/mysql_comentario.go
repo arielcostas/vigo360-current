@@ -23,7 +23,7 @@ func NewMysqlComentarioStore(db *sqlx.DB) *MysqlComentarioStore {
 // Lista los comentarios públicos para un artículo en forma de lista
 func (s *MysqlComentarioStore) ListarPublicos(publicacion_id string) ([]models.Comentario, error) {
 	var comentarios []models.Comentario
-	var err = s.db.Select(&comentarios, `SELECT id, COALESCE(padre_id, "") as padre_id, nombre, es_autor, autor_original, contenido, fecha_moderacion FROM comentarios WHERE estado=? AND publicacion_id=?`, models.ESTADO_APROBADO, publicacion_id)
+	var err = s.db.Select(&comentarios, `SELECT id, COALESCE(padre_id, "") as padre_id, nombre, es_autor, autor_original, contenido, fecha_moderacion FROM comentarios WHERE estado="aprobado" AND publicacion_id=?`, publicacion_id)
 	if err != nil {
 		return []models.Comentario{}, err
 	}
