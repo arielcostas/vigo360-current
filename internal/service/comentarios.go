@@ -3,9 +3,10 @@ package service
 import "vigo360.es/new/internal/repository"
 
 type Comentario struct {
-	store repository.ComentarioStore
+	cstore repository.ComentarioStore
+	pstore repository.PublicacionStore
 }
 
-func NewComentarioService(store repository.ComentarioStore) Comentario {
-	return Comentario{store: store}
+func NewComentarioService(cstore repository.ComentarioStore, pstore repository.PublicacionStore) Comentario {
+	return Comentario{cstore: cstore, pstore: pstore}
 }

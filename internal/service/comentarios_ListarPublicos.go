@@ -11,7 +11,7 @@ type ComentarioTree struct {
 
 func (se *Comentario) ListarPublicos(articulo_id string) ([]ComentarioTree, error) {
 	// Obtiene de la base de datos
-	comentariosLinear, err := se.store.ListarPublicos(articulo_id)
+	comentariosLinear, err := se.cstore.ListarPublicos(articulo_id)
 	if err != nil {
 		return nil, err
 	}
