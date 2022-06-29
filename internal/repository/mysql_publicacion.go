@@ -114,6 +114,17 @@ func (s *MysqlPublicacionStore) ListarPorSerie(serie_id string) (models.Publicac
 	return resultado, nil
 }
 
+func (s *MysqlPublicacionStore) Existe(id string) (bool, error) {
+	err := s.db.QueryRow("SELECT id FROM publicaciones WHERE id=? LIMIT 1", id).Scan(&id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return false, err
+		}
+		return false, nil
+	}
+	return true, nil
+}
+
 func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (models.Publicacion, error) {
 	var post models.Publicacion
 	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(serie_id, ""), COALESCE(serie_posicion, 0) as serie_posicion, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags
