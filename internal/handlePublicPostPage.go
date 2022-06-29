@@ -19,7 +19,7 @@ import (
 )
 
 func (s *Server) handlePublicPostPage() http.HandlerFunc {
-	var cs = service.NewComentarioService(s.store.comentario)
+	var cs = service.NewComentarioService(s.store.comentario, s.store.publicacion)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
@@ -62,17 +62,13 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		}
 
 		post.Serie.Publicaciones = post.Serie.Publicaciones.FiltrarPublicas()
+		var ct []service.ComentarioTree
 
-		if nc, err := s.store.comentario.ListarPublicos(post.Id); err != nil {
+		if nct, err := cs.ListarPublicos(post.Id); err != nil {
 			logger.Error("error recuperando comentarios para %s: %s", post.Id, err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 		} else {
-			post.Comentarios = nc
-		}
-
-		ct, e2 := cs.ListarPublicos(post.Id)
-		if e2 != nil {
-			panic(e2)
+			ct = nct
 		}
 
 		var err = templates.Render(w, "post-id.html", struct {
