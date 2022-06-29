@@ -19,7 +19,6 @@ type Comentario struct {
 	Padre_id       string
 
 	Nombre         string
-	Email_hash     string
 	Es_autor       bool
 	Autor_original bool
 	Contenido      string

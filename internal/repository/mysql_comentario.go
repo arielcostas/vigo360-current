@@ -41,8 +41,8 @@ func (s *MysqlComentarioStore) ListarPorEstado(estado models.EstadoComentario) (
 }
 
 func (s *MysqlComentarioStore) GuardarComentario(c models.Comentario) error {
-	const query = `INSERT INTO comentarios VALUES(?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)`
-	_, err := s.db.Exec(query, c.Id, c.Publicacion_id, c.Padre_id, c.Nombre, c.Email_hash, c.Es_autor, c.Autor_original, c.Contenido, c.Fecha_creacion, c.Fecha_moderacion, c.Estado, c.Moderador)
+	const query = `INSERT INTO comentarios VALUES(?, ?, ?, ?, ?, ?,?,?,?,?,?)`
+	_, err := s.db.Exec(query, c.Id, c.Publicacion_id, c.Padre_id, c.Nombre, c.Es_autor, c.Autor_original, c.Contenido, c.Fecha_creacion, c.Fecha_moderacion, c.Estado, c.Moderador)
 	return err
 }
 
