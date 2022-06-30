@@ -20,10 +20,6 @@ main {
 	padding: 2rem 3rem;
 }
 
-button {
-	font-weight: bold;
-	width: auto;
-}
 
 input[type="file"] {
 	border: 0;
@@ -36,46 +32,8 @@ input[disabled] {
 	cursor: not-allowed;
 }
 
-button,
-input,
-select {
-	font-size: 1.1rem;
-}
-
 textarea {
 	font-size: 14px;
-}
-
-button {
-	cursor: pointer;
-}
-
-button.btn-theme {
-	background-color: var(--correct);
-	border-color: var(--theme);
-	color: white;
-}
-
-button.btn-outline-theme {
-	border: 1px solid var(--correct);
-	background: white;
-	color: var(--theme);
-}
-
-button.btn-empty-theme {
-	border: none;
-	color: var(--theme);
-	background: #ffffff00;
-}
-
-button.btn-error {
-	background-color: var(--incorrect);
-	border-color: darkred;
-	color: white;
-}
-
-button.btn-large {
-	width: 100%;
 }
 
 .dialog-error {

@@ -1,0 +1,31 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+#comment_section_header,
+#comment_section_publish {
+	padding: 0 3%;
+}
+
+#comment_container {
+	padding: 0 3% 1rem;
+}
+
+#post-main > .form_comentario {
+	padding: 0 3% 1rem;
+	max-width: 24rem;
+}
+
+.post_comment_replies {
+	margin-left: 1.5rem;
+	margin-right: 1.5rem;
+}
+
+.form_comentario {
+	display: flex;
+	flex-direction: column;
+	input[type="text"], textarea {
+		margin-bottom: 1rem;
+	}
+}

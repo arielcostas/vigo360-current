@@ -4,6 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 @use "public/_pager.scss";
+@use "public/_comentarios.scss";
 @use "public/_busqueda.scss";
 @use "public/_footer.scss";
 
@@ -491,7 +492,7 @@ code {
 
 #post-related-articles,
 #related-articles-header {
-	padding: 0 3% 2rem;
+	padding: 0 3% 1rem;
 }
 
 #post-related-articles {
