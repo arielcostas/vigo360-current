@@ -310,6 +310,7 @@ main#authors #user-info #section-title {
 
 .article-title {
 	font-size: 1.35rem;
+	flex-grow: 1;
 }
 
 #frontpage-articles .primero .article-title {
@@ -500,15 +501,21 @@ code {
 	gap: 1rem;
 }
 
-
 .post-related-article a {
 	color: var(--text);
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 	&:hover {
 		text-decoration: none;
 		.article-title {
 			color: var(--theme);
 		}
 	}
+}
+
+.related-article-summary {
+	-webkit-line-clamp: 3;
 }
 
 .post-related-article a:hover img {
