@@ -18,6 +18,16 @@ func (se *Comentario) AgregarComentario(
 	nombre string,
 	contenido string,
 ) (models.Comentario, error) {
+
+	return se.AgregarRespuesta(publicacion_id, nombre, contenido, "")
+}
+
+func (se *Comentario) AgregarRespuesta(
+	publicacion_id string,
+	nombre string,
+	contenido string,
+	padre string,
+) (models.Comentario, error) {
 	if nombre == "" || len(nombre) > 40 {
 		return models.Comentario{}, Err_ComentarioNombreInvalido
 	}
@@ -37,6 +47,7 @@ func (se *Comentario) AgregarComentario(
 	var nuevo_comentario = models.Comentario{
 		Id:             randstr.String(13),
 		Publicacion_id: publicacion_id,
+		Padre_id:       padre,
 
 		Nombre:         nombre,
 		Es_autor:       false,
@@ -53,12 +64,3 @@ func (se *Comentario) AgregarComentario(
 	}
 	return nuevo_comentario, nil
 }
-
-// func (se *Comentario) AgregarRespuesta(
-// 	publicacion_id string,
-// 	nombre string,
-// 	contenido string,
-// 	padre_id string,
-// ) (models.Comentario, error) {
-
-// }

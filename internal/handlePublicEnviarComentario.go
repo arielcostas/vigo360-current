@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/service"
 )
 
@@ -23,8 +24,17 @@ func (s *Server) handlePublicEnviarComentario() http.HandlerFunc {
 		var publicacion_id = mux.Vars(r)["postid"]
 		var nombre = r.Form.Get("nombre")
 		var contenido = r.Form.Get("contenido")
+		var padre = r.Form.Get("padre")
 
-		nc, err := cs.AgregarComentario(publicacion_id, nombre, contenido)
+		var nc models.Comentario
+		var err error
+
+		if padre == "" {
+			nc, err = cs.AgregarComentario(publicacion_id, nombre, contenido)
+		} else {
+			nc, err = cs.AgregarRespuesta(publicacion_id, nombre, contenido, padre)
+		}
+
 		if err != nil {
 			logger.Error("error guardando comentario: %s", err.Error())
 			s.handleError(w, 400, err.Error())
