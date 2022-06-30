@@ -169,7 +169,7 @@
 	<p>
 		<strong>{{ .Nombre }}{{ if .Es_autor}} (Autor Vigo360){{end}}{{ if .Autor_original}} (Autor del
 			artículo){{end}}</strong>
-		- publicado {{ .Fecha_moderacion }}
+		- publicado {{ date_format .Fecha_moderacion "01 Feb. 15:04" }}
 	</p>
 	<p>
 		{{ .Contenido }}

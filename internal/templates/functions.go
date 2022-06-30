@@ -55,4 +55,11 @@ var Functions = template.FuncMap{
 	"sum": func(a int, b int) int {
 		return a + b
 	},
+	"date_format": func(sqldate string, format string) string {
+		tm, err := time.Parse("2006-01-02 15:04:05", sqldate)
+		if err != nil {
+			return sqldate
+		}
+		return tm.Format(format)
+	},
 }
