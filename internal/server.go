@@ -63,9 +63,11 @@ func (s *Server) Routes() {
 	s.Router.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminCrearFotoExtra())).Methods(http.MethodPost)
 	s.Router.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminDeleteFotoExtra())).Methods(http.MethodDelete)
 
+	s.Router.HandleFunc(`/post/{postid}`, s.handlePublicPostPage()).Methods(http.MethodGet)
+	s.Router.HandleFunc(`/post/{postid}`, s.handlePublicEnviarComentario()).Methods(http.MethodPost)
+
 	s.Router.HandleFunc(`/tags`, s.handlePublicListTags()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/tags/{tagid}/`, s.handlePublicTagPage()).Methods(http.MethodGet)
-	s.Router.HandleFunc(`/post/{postid}`, s.handlePublicPostPage()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/trabajos`, s.handlePublicListTrabajos()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/trabajos/{trabajoid}`, s.handlePublicTrabajoPage()).Methods(http.MethodGet)
 	s.Router.HandleFunc(`/autores/{id}`, s.handlePublicAutorPage()).Methods(http.MethodGet)

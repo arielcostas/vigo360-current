@@ -6,6 +6,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	"vigo360.es/new/internal/models"
 )
@@ -41,8 +43,11 @@ func (s *MysqlComentarioStore) ListarPorEstado(estado models.EstadoComentario) (
 }
 
 func (s *MysqlComentarioStore) GuardarComentario(c models.Comentario) error {
-	const query = `INSERT INTO comentarios VALUES(?, ?, ?, ?, ?, ?,?,?,?,?,?)`
-	_, err := s.db.Exec(query, c.Id, c.Publicacion_id, c.Padre_id, c.Nombre, c.Es_autor, c.Autor_original, c.Contenido, c.Fecha_creacion, c.Fecha_moderacion, c.Estado, c.Moderador)
+	const query = `INSERT INTO comentarios(id, publicacion_id, padre_id, nombre, es_autor, autor_original, contenido, fecha_creacion, fecha_moderacion, estado, moderador) VALUES(?, ?, NULLIF(?, ""), ?, ?, ?,?,?,NULLIF(?, ''),?,NULLIF(?, ""))`
+	if c.Fecha_creacion == "" {
+		c.Fecha_creacion = time.Now().Format("2006-01-02 15:04:05")
+	}
+	_, err := s.db.Exec(query, c.Id, c.Publicacion_id, c.Padre_id, c.Nombre, c.Es_autor, c.Autor_original, c.Contenido, c.Fecha_creacion, c.Fecha_moderacion, c.Estado+1, c.Moderador)
 	return err
 }
 

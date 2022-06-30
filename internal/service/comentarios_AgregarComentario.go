@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/models"
@@ -10,6 +11,7 @@ import (
 var Err_ComentarioPublicacionInvalida = errors.New("el ID de la publicación no es válido")
 var Err_ComentarioNombreInvalido = errors.New("el nombre de autor del comentario no es válido")
 var Err_ComentarioContenidoInvalido = errors.New("el contenido del comentario no es válido")
+var Err_ComentarioErrorBaseDatos = errors.New("hubo un error guardando el comentario")
 
 func (se *Comentario) AgregarComentario(
 	publicacion_id string,
@@ -44,7 +46,12 @@ func (se *Comentario) AgregarComentario(
 		Estado: models.ESTADO_PENDIENTE,
 	}
 
-	return nuevo_comentario, se.cstore.GuardarComentario(nuevo_comentario)
+	dberr := se.cstore.GuardarComentario(nuevo_comentario)
+	if dberr != nil {
+		fmt.Printf("%s\n", dberr.Error())
+		return models.Comentario{}, Err_ComentarioErrorBaseDatos
+	}
+	return nuevo_comentario, nil
 }
 
 // func (se *Comentario) AgregarRespuesta(
