@@ -8,7 +8,7 @@ func (se *Comentario) generarArbol(ct []ComentarioTree) []ComentarioTree {
 
 	var mapaComentarios = make(map[string]ComentarioTree)
 
-	for _, c := range comentariosTreeMapeadosPorId {
+	for _, c := range ct {
 		if c.Padre_id == "" {
 			mapaComentarios[c.Id] = c
 		} else {
