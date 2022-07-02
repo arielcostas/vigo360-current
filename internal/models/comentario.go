@@ -8,9 +8,9 @@ package models
 type EstadoComentario int
 
 const (
-	ESTADO_PENDIENTE EstadoComentario = iota
-	ESTADO_APROBADO  EstadoComentario = iota
-	ESTADO_RECHAZADO EstadoComentario = iota
+	ESTADO_PENDIENTE EstadoComentario = 1
+	ESTADO_APROBADO  EstadoComentario = 2
+	ESTADO_RECHAZADO EstadoComentario = 3
 )
 
 type Comentario struct {

@@ -35,7 +35,7 @@ func (s *MysqlComentarioStore) ListarPublicos(publicacion_id string) ([]models.C
 // Lista los comentarios con un estado específico
 func (s *MysqlComentarioStore) ListarPorEstado(estado models.EstadoComentario) ([]models.Comentario, error) {
 	var comentarios []models.Comentario
-	var err = s.db.Select(&comentarios, `SELECT * FROM comentarios WHERE estado=?`, estado)
+	var err = s.db.Select(&comentarios, `SELECT id, publicacion_id, COALESCE(padre_id, "") as padre_id, nombre, es_autor, autor_original, contenido, fecha_creacion, COALESCE(fecha_moderacion, "") as fecha_moderacion, estado+0 as estado, COALESCE(moderador, "") as moderador FROM comentarios WHERE estado=?`, estado)
 	if err != nil {
 		return []models.Comentario{}, err
 	}
