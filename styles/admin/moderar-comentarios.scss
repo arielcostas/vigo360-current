@@ -1,0 +1,21 @@
+#comentarios > table {
+	width: 100%;
+	&, & td, & th {
+		border: 1px solid lightgray;
+		border-collapse: collapse;
+	}
+
+	& td:nth-child(1) {
+		white-space: nowrap;
+	}
+
+	& td:nth-last-child(1) {
+		white-space: nowrap;
+		text-align: right;
+	}
+
+	& td {
+		padding: 0.5rem;
+	}
+
+}
