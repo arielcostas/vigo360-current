@@ -6,15 +6,19 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
 	"vigo360.es/new/internal/models"
+	"vigo360.es/new/internal/templates"
 )
 
-func (s *Server) handleAdminListarComentarios() http.HandlerFunc {
+func (s *Server) handleAdminListComentarios() http.HandlerFunc {
+	type Response struct {
+		Comentarios []models.Comentario
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		//sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
@@ -26,6 +30,8 @@ func (s *Server) handleAdminListarComentarios() http.HandlerFunc {
 			s.handleError(w, 500, messages.ErrorDatos)
 		}
 
-		fmt.Fprintf(w, "%v\n", comentarios)
+		templates.Render(w, "admin-comentarios.html", Response{
+			Comentarios: comentarios,
+		})
 	}
 }
