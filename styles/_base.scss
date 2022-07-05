@@ -85,6 +85,7 @@ header {
 	display: flex;
 	align-items: center;
 	color: var(--color);
+	flex-shrink: 0;
 }
 
 #header-brand img {
