@@ -7,6 +7,7 @@
 @use "public/_comentarios.scss";
 @use "public/_busqueda.scss";
 @use "public/_footer.scss";
+@use "public/_frontpage.scss";
 
 #section-title {
 	font-size: 2.25rem;
@@ -247,86 +248,6 @@ main#authors #user-info #section-title {
 
 .user-article-summary {
 	opacity: 0.8;
-}
-
-#frontpage-articles {
-	max-width: 1280px;
-	margin: 0 auto;
-	background: var(--background);
-
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 2rem;
-}
-
-#frontpage-articles img {
-	width: 100%;
-	height: auto;
-	object-fit: cover;
-}
-
-#frontpage-articles > * {
-	background: #fff;
-	display: flex;
-	flex-direction: column;
-	color: var(--text);
-}
-
-#frontpage-articles a:hover {
-	text-decoration: none;
-}
-
-#frontpage-articles a:hover img {
-	opacity: 0.8;
-}
-
-#frontpage-articles a:hover .article-title {
-	color: var(--theme);
-}
-
-#frontpage-articles .primero {
-	grid-column: 1/4;
-	flex-direction: row;
-}
-
-#frontpage-articles .primero img {
-	flex: 0 0 65%;
-}
-
-.article-author {
-	font-family: var(--mono-fonts);
-	text-transform: uppercase;
-	font-weight: 700;
-	color: var(--theme);
-}
-
-.article-info {
-	padding: 1rem;
-}
-
-#frontpage-articles .primero .article-info {
-	padding: 1.5rem 2rem;
-}
-
-.article-title {
-	font-size: 1.35rem;
-	flex-grow: 1;
-}
-
-#frontpage-articles .primero .article-title {
-	margin-top: 0.5rem;
-	font-size: 2.25rem;
-	line-height: 1.15;
-}
-
-.article-summary {
-	display: none;
-}
-
-#frontpage-articles .primero .article-summary {
-	margin-top: 1rem;
-	display: block;
-	font-size: 1.125rem;
 }
 
 #papers {

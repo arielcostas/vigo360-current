@@ -35,9 +35,9 @@
 	{{ template "_header.html" }}
 	<main>
 		<div id="frontpage-articles">
-			{{ $postLen := len .Posts }}
+			{{ $page := .CurrentPage }}
 			{{- range $i, $post := .Posts }}
-			<a href="/post/{{ $post.Id }}" {{ if and (eq $postLen 10) (eq $i 0) }}class="primero" {{ end }}>
+			<a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
 				<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}"
 					title="{{ $post.Alt_portada }}" {{ if gt $i 3 }} loading="lazy" {{ end }} />
 				<div class="article-info">
