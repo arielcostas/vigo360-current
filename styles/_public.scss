@@ -350,21 +350,28 @@ main#authors #user-info #section-title {
 #papers-list {
 	max-width: 100%;
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 	gap: 2.5rem;
 	padding: 1.5rem 0;
 }
 
-#papers-list > article > a > div {
-	padding: 1rem;
-}
+#papers-list >  article {
+	height: 100%;
+	& > a {
+		color: var(--text);
+		background: #fff;
+	
+		display: flex;
+		flex-direction: column;
 
-#papers-list > article > a {
-	color: var(--text);
-	background: #fff;
+		height: 100%;
 
-	display: flex;
-	flex-direction: column;
+		& > div {
+			padding: 1rem;
+			flex-grow: 1;
+			flex-shrink: 0;
+		}
+	}
 }
 
 #papers-list > article > a:hover {
