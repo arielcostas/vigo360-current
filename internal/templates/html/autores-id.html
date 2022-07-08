@@ -90,12 +90,7 @@
 			{{ end }}
 
 			{{ if ne (len .Posts) 0 }}
-			<div class="title-atom">
-				<h2 class="user-section-title">Artículos publicados</h2>
-				<a href="/autores/{{ .Autor.Id }}/atom.xml" title="Suscripción via Atom">
-					<img src="/static/atom-icon.svg" />
-				</a>
-			</div>
+			<h2 class="user-section-title">Artículos publicados</h2>
 			<section class="user-list">
 				{{ range $i, $post := .Posts }}
 				<div class="user-article">

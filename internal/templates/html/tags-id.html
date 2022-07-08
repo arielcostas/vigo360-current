@@ -34,12 +34,7 @@
 <body>
 	{{ template "_header.html" }}
 	<main id="sections">
-		<div class="title-atom">
-			<h2 id="section-title">{{ .Tag.Nombre }}</h2>
-			<a href="/tags/{{ .Tag.Id }}/atom.xml" title="Suscripción via Atom">
-				<img src="/static/atom-icon.svg" />
-			</a>
-		</div>
+		<h2 id="section-title">{{ .Tag.Nombre }}</h2>
 		<ul id="section-articles">
 			{{ if eq (len .Posts) 0 }}
 			<span>No hay ninguna publicación</span>

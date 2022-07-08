@@ -77,8 +77,6 @@ func (s *Server) Routes() {
 	s.Router.HandleFunc(`/contacto`, s.handlePublicNodbPage()).Methods(http.MethodGet)
 
 	s.Router.HandleFunc(`/atom.xml`, s.handlePublicIndexAtom()).Methods(http.MethodGet)
-	s.Router.HandleFunc(`/tags/{tagid}/atom.xml`, s.handlePublicTagsAtom()).Methods(http.MethodGet)
-	s.Router.HandleFunc(`/autores/{autorid}/atom.xml`, s.handlePublicAutorAtom()).Methods(http.MethodGet)
 
 	s.Router.HandleFunc(`/sitemap.xml`, s.handlePublicSitemap()).Methods(http.MethodGet)
 	s.Router.HandleFunc("/buscar", s.handlePublicBusqueda()).Methods(http.MethodGet)
