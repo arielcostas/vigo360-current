@@ -56,12 +56,8 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 			pagina = o
 		}
 
-		var limite = getMinimo(pagina*9, len(posts)-1)
 		var inicio = pagina*9 - 9
-		if pagina > 1 {
-			limite++
-			inicio++
-		}
+		var limite = getMinimo(inicio+9, len(posts))
 
 		if inicio >= len(posts) || inicio < 0 {
 			logger.Error("con %d publicaciones no existe la página %s", len(posts), pagina)
@@ -69,20 +65,16 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 			return
 		}
 
-		if pagina == 1 {
-			limite++
-		}
-
-		var restantes = len(posts) - 10
-		var cantidad = 1
+		var restantes = len(posts) - 9 // Los artículos que aún no se han metido en una página
+		var cantidadPaginas = 1
 		for restantes > 0 {
-			cantidad++
+			cantidadPaginas++
 			restantes -= 9
 		}
 
 		err = templates.Render(w, "index.html", indexParams{
 			CurrentPage: pagina,
-			PageCount:   cantidad,
+			PageCount:   cantidadPaginas,
 			Posts:       posts[inicio:limite],
 			Meta:        meta,
 		})
