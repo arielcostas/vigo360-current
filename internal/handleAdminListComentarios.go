@@ -23,7 +23,6 @@ func (s *Server) handleAdminListComentarios() http.HandlerFunc {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		//sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
 
-		logger.Notice("Acceso a página no pública")
 		comentarios, err := s.store.comentario.ListarPorEstado(models.ESTADO_PENDIENTE)
 		if err != nil {
 			logger.Error("Error recuperando comentarios: " + err.Error())

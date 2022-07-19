@@ -42,6 +42,8 @@ func (s *Server) Routes() {
 	s.Router.HandleFunc("/admin/logout", s.withAuth(s.handleAdminLogoutAction())).Methods(http.MethodGet)
 
 	s.Router.HandleFunc("/admin/comentarios", s.withAuth(s.handleAdminListComentarios())).Methods(http.MethodGet)
+	s.Router.HandleFunc("/admin/comentarios/aprobar", s.withAuth(s.handleAdminAprobarComentario())).Methods(http.MethodGet)
+	s.Router.HandleFunc("/admin/comentarios/rechazar", s.withAuth(s.handleAdminRechazarComentario())).Methods(http.MethodGet)
 
 	s.Router.HandleFunc("/admin/dashboard", s.withAuth(s.handleAdminDashboardPage())).Methods(http.MethodGet)
 	s.Router.HandleFunc("/admin/post", s.withAuth(s.handleAdminListPost())).Methods(http.MethodGet)

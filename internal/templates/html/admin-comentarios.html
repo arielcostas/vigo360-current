@@ -28,14 +28,13 @@
 					<td>{{ .Fecha_creacion }}</td>
 					<td>{{ .Contenido }}</td>
 					<td>
-						<button class="btn-theme">aprobar</button>
-						<button class="btn-error">rechazar</button>
+						<a href="/admin/comentarios/aprobar?cid={{.Id}}" class="btn-theme">aprobar</a> -
+						<a href="/admin/comentarios/rechazar?cid={{.Id}}" class="btn-error">rechazar</a>
 					</td>
 				</tr>
 				{{ end }}
 			</tbody>
 		</table>
-		{{ .Comentarios }}
 	</main>
 	{{ template "_admin-footer.html" . }}
 </body>

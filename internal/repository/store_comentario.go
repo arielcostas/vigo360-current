@@ -15,7 +15,7 @@ type ComentarioStore interface {
 	// Guarda un nuevo comentario a la base de datos
 	GuardarComentario(models.Comentario) error
 	// Cambia el estado de PENDIENTE a APROBADO
-	Aprobar(comentario_id string) error
+	Aprobar(comentario_id string, moderador string) error
 	// Cambia el estado de PENDIENTE a RECHAZADO
-	Rechazar(comentario_id string) error
+	Rechazar(comentario_id string, moderador string) error
 }

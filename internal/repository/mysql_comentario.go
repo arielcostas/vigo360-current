@@ -52,13 +52,13 @@ func (s *MysqlComentarioStore) GuardarComentario(c models.Comentario) error {
 }
 
 // Cambia el estado de PENDIENTE a APROBADO
-func (s *MysqlComentarioStore) Aprobar(comentario_id string) error {
-	_, err := s.db.Exec(`UPDATE comentarios SET estado=1 WHERE comentario_id=?`, comentario_id)
+func (s *MysqlComentarioStore) Aprobar(comentario_id string, moderador string) error {
+	_, err := s.db.Exec(`UPDATE comentarios SET estado=2, moderador=?, fecha_moderacion=NOW() WHERE id=? AND estado=1`, moderador, comentario_id)
 	return err
 }
 
 // Cambia el estado de PENDIENTE a RECHAZADO
-func (s *MysqlComentarioStore) Rechazar(comentario_id string) error {
-	_, err := s.db.Exec(`UPDATE comentarios SET estado=2 WHERE comentario_id=?`, comentario_id)
+func (s *MysqlComentarioStore) Rechazar(comentario_id string, moderador string) error {
+	_, err := s.db.Exec(`UPDATE comentarios SET estado=3, moderador=?,fecha_moderacion=NOW() WHERE id=? AND estado=1`, moderador, comentario_id)
 	return err
 }
