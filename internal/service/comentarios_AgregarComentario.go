@@ -17,9 +17,11 @@ func (se *Comentario) AgregarComentario(
 	publicacion_id string,
 	nombre string,
 	contenido string,
+	es_autor bool,
+	autor_original bool,
 ) (models.Comentario, error) {
 
-	return se.AgregarRespuesta(publicacion_id, nombre, contenido, "")
+	return se.AgregarRespuesta(publicacion_id, nombre, contenido, "", es_autor, autor_original)
 }
 
 func (se *Comentario) AgregarRespuesta(
@@ -27,6 +29,8 @@ func (se *Comentario) AgregarRespuesta(
 	nombre string,
 	contenido string,
 	padre string,
+	es_autor bool,
+	autor_original bool,
 ) (models.Comentario, error) {
 	if nombre == "" || len(nombre) > 40 {
 		return models.Comentario{}, Err_ComentarioNombreInvalido
@@ -44,17 +48,22 @@ func (se *Comentario) AgregarRespuesta(
 		return models.Comentario{}, Err_ComentarioPublicacionInvalida
 	}
 
+	var estado = models.ESTADO_PENDIENTE
+	if es_autor || autor_original {
+		estado = models.ESTADO_APROBADO
+	}
+
 	var nuevo_comentario = models.Comentario{
 		Id:             randstr.String(13),
 		Publicacion_id: publicacion_id,
 		Padre_id:       padre,
 
 		Nombre:         nombre,
-		Es_autor:       false,
-		Autor_original: false,
+		Es_autor:       es_autor,
+		Autor_original: autor_original,
 		Contenido:      contenido,
 
-		Estado: models.ESTADO_PENDIENTE,
+		Estado: estado,
 	}
 
 	dberr := se.cstore.GuardarComentario(nuevo_comentario)

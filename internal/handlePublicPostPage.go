@@ -34,11 +34,10 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		var sc, err = r.Cookie("sess")
 		var loggedIn = false
 		if err == nil {
-			sess, err := s.getSession(sc.Value)
+			_, err := s.getSession(sc.Value)
 
 			if err == nil { // User is logged in
 				loggedIn = true
-				logger.Notice("%s sesión iniciada", sess.Autor_id)
 			}
 		}
 

@@ -26,13 +26,33 @@ func (s *Server) handlePublicEnviarComentario() http.HandlerFunc {
 		var contenido = r.Form.Get("contenido")
 		var padre = r.Form.Get("padre")
 
+		var es_autor = false
+		var autor_original = false
+
+		publicacion, err := s.store.publicacion.ObtenerPorId(publicacion_id, true)
+		if err != nil {
+			logger.Error("publicación %s no comentable: %s", publicacion_id, err.Error())
+		}
+
+		sc, err := r.Cookie("sess")
+		if err == nil {
+			sess, err := s.getSession(sc.Value)
+
+			if err == nil { // User is logged in
+				if publicacion.Autor.Id == sess.Autor_id {
+					autor_original = true
+				}
+				es_autor = true
+				nombre = sess.Autor_nombre
+			}
+		}
+
 		var nc models.Comentario
-		var err error
 
 		if padre == "" {
-			nc, err = cs.AgregarComentario(publicacion_id, nombre, contenido)
+			nc, err = cs.AgregarComentario(publicacion_id, nombre, contenido, es_autor, autor_original)
 		} else {
-			nc, err = cs.AgregarRespuesta(publicacion_id, nombre, contenido, padre)
+			nc, err = cs.AgregarRespuesta(publicacion_id, nombre, contenido, padre, es_autor, autor_original)
 		}
 
 		if err != nil {
