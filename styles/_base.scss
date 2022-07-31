@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-@import url("fira-sans.css");
-@import url("open-sans.css");
+@import url("inter.css");
+@import url("noto-sans-mono.css");
 
 :root {
 	--gray: #f8f8f8;
@@ -20,8 +20,8 @@
 
 	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
 
-	--sans-fonts: "Fira Sans", Cantarell, sans-serif;
-	--mono-fonts: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+	--sans-fonts: Inter, sans-serif;
+	--mono-fonts: "Noto Sans Mono", monospace;
 
 	font-family: var(--sans-fonts);
 	font-kerning: normal;

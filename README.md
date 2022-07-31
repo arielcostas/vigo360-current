@@ -5,7 +5,7 @@ Versión en desarrollo del nuevo Vigo360, donde en vez de generar un sitio está
 ## Requisitos
 
 -   Linux (probado en Debian 11), puede funcionar en otros sistemas
--   Go 1.17 o superior
+-   Go 1.18 o superior
 -   MySQL o MariaDB (probado en MariaDB 10.7)
 -   Dominio o subdominio apuntando al servidor y certificado TLS
 -   Acceso root
