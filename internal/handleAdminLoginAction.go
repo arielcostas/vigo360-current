@@ -102,7 +102,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "sess",
 			Value:    token,
-			Path:     "/admin",
+			Path:     "/",
 			Domain:   r.URL.Host,
 			HttpOnly: true,
 			SameSite: http.SameSiteStrictMode,

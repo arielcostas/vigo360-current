@@ -37,7 +37,7 @@ func (s *Server) handleAdminLogoutAction() http.HandlerFunc {
 		http.SetCookie(w, &http.Cookie{
 			Name:     "sess",
 			Value:    "",
-			Path:     "/admin",
+			Path:     "/",
 			Domain:   r.URL.Host,
 			Expires:  time.Date(1970, 01, 01, 00, 00, 00, 00, time.UTC),
 			HttpOnly: true,
