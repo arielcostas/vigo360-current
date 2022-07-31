@@ -19,10 +19,29 @@ import (
 )
 
 func (s *Server) handlePublicPostPage() http.HandlerFunc {
+	type Response struct {
+		Post            models.Publicacion
+		LoggedIn        bool
+		Comentarios     []service.ComentarioTree
+		Recommendations []Sugerencia
+		Meta            PageMeta
+	}
+
 	var cs = service.NewComentarioService(s.store.comentario, s.store.publicacion)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		var sc, err = r.Cookie("sess")
+		var loggedIn = false
+		if err == nil {
+			sess, err := s.getSession(sc.Value)
+
+			if err == nil { // User is logged in
+				loggedIn = true
+				logger.Notice("%s sesión iniciada", sess.Autor_id)
+			}
+		}
+
 		req_post_id := mux.Vars(r)["postid"]
 
 		var post models.Publicacion
@@ -71,13 +90,9 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			ct = nct
 		}
 
-		var err = templates.Render(w, "post-id.html", struct {
-			Post            models.Publicacion
-			Comentarios     []service.ComentarioTree
-			Recommendations []Sugerencia
-			Meta            PageMeta
-		}{
+		err = templates.Render(w, "post-id.html", Response{
 			Post:            post,
+			LoggedIn:        loggedIn,
 			Recommendations: recommendations,
 			Comentarios:     ct,
 			Meta: PageMeta{

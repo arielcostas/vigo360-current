@@ -101,7 +101,7 @@
 							{{ $postid := .Post.Id }}
 							{{ range .Post.Serie.Publicaciones }}
 							<li>
-								{{ if eq .Id $postid}}
+								{{ if eq .Id $postid }}
 								<b>{{ .Titulo }}</b>
 								{{ else }}
 								<a href="/post/{{.Id}}">{{ .Titulo }}</a>
@@ -150,20 +150,29 @@
 			</div>
 			{{ end }}
 			<h2 id="comment_section_header">Comentarios</h2>
+			{{ $loggedIn := .LoggedIn}}
 			<section id="comment_container">
 				{{- range .Comentarios }}
+				{{ if $loggedIn}}
+				{{ template "comentario_rep_admin" . }}
+				{{ else }}
 				{{ template "comentario" . }}
+				{{ end }}
+
 				{{ end }}
 			</section>
 			<h3 id="comment_section_publish">Publicar comentario</h3>
+			{{ if $loggedIn}}
+			{{ template "form_comentario_admin" }}
+			{{ else }}
 			{{ template "form_comentario" }}
+			{{ end }}
 		</div>
 	</main>
 	{{ template "_footer.html" }}
 </body>
 
 </html>
-
 {{ define "comentario" }}
 <div class="post_comment" id="comment-{{ .Id }}">
 	<p>
@@ -177,7 +186,7 @@
 	<div class="post_comment_replies">
 		<details>
 			<summary>Añadir respuesta</summary>
-			{{- template "form_comentario" .Id }}
+			{{ template "form_comentario" }}
 		</details>
 		{{ range .Children }}
 		{{- template "comentario" . }}
@@ -185,6 +194,29 @@
 	</div>
 </div>
 {{ end }}
+
+{{ define "comentario_rep_admin" }}
+<div class="post_comment" id="comment-{{ .Id }}">
+	<p>
+		<strong>{{ .Nombre }}{{ if .Es_autor}} (Autor Vigo360){{end}}{{ if .Autor_original}} (Autor del
+			artículo){{end}}</strong>
+		- publicado {{ date_format .Fecha_moderacion "01 Feb. 15:04" }}
+	</p>
+	<p>
+		{{ .Contenido }}
+	</p>
+	<div class="post_comment_replies">
+		<details>
+			<summary>Añadir respuesta</summary>
+			{{ template "form_comentario_admin" }}
+		</details>
+		{{ range .Children }}
+		{{- template "comentario" . }}
+		{{ end }}
+	</div>
+</div>
+{{ end }}
+
 
 {{ define "form_comentario" }}
 <form method="post" class="form_comentario">
@@ -194,6 +226,16 @@
 	<textarea name="contenido" id="fc_contenido" maxlength="500" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
 	<p>Nota: el comentario será puesto en cola de moderación, y no será visible hasta que lo apruebe un moderador.</p>
+	<button class="btn-theme" type="submit">Enviar</button>
+</form>
+{{ end }}
+
+{{ define "form_comentario_admin" }}
+<form method="post" class="form_comentario">
+	<label for="fc_contenido">Contenido</label>
+	<textarea name="contenido" id="fc_contenido" maxlength="500" required></textarea>
+	<input type="hidden" name="padre" value="{{ . }}">
+	<p>El comentario se publicará inmediatamente, por tener la sesión iniciada.</p>
 	<button class="btn-theme" type="submit">Enviar</button>
 </form>
 {{ end }}
