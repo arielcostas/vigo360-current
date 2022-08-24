@@ -149,6 +149,7 @@
 				{{ end }}
 			</div>
 			{{ end }}
+			<hr />
 			<h2 id="comment_section_header">Comentarios</h2>
 			{{ $loggedIn := .LoggedIn}}
 			<section id="comment_container">
@@ -176,8 +177,10 @@
 {{ define "comentario" }}
 <div class="post_comment" id="comment-{{ .Id }}">
 	<p>
-		<strong>{{ .Nombre }}{{ if .Es_autor}} (Autor Vigo360){{end}}{{ if .Autor_original}} (Autor del
-			artículo){{end}}</strong>
+		<strong>{{ .Nombre }}</strong>&nbsp;
+		{{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg" />{{end}}
+		{{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
+			src="/static/user-icon.svg" />{{end}}
 		- publicado {{ date_format .Fecha_moderacion "01 Feb. 15:04" }}
 	</p>
 	<p>
@@ -221,7 +224,7 @@
 {{ define "form_comentario" }}
 <form method="post" class="form_comentario">
 	<label for="fc_nombre">Nombre</label>
-	<input type="text" id="fc_nombre" name="nombre" placeholder="Pepito" required>
+	<input type="text" id="fc_nombre" name="nombre" required>
 	<label for="fc_contenido">Contenido</label>
 	<textarea name="contenido" id="fc_contenido" maxlength="500" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">

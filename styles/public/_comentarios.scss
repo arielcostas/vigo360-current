@@ -20,6 +20,13 @@
 .post_comment_replies {
 	margin-left: 1.5rem;
 	margin-right: 1.5rem;
+
+	.post_comment {
+		border-left: 3px solid darkgray;
+		padding-left: 1rem;
+		margin-top: 0.7rem;
+		margin-bottom: 0.7rem;
+	}
 }
 
 .form_comentario {
@@ -27,5 +34,22 @@
 	flex-direction: column;
 	input[type="text"], textarea {
 		margin-bottom: 1rem;
+	}
+}
+
+
+
+.post_comment {
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+
+	p {
+		display: flex;
+		align-items: center;
+		img {
+			width: auto;
+			height: 1.25rem;
+			margin-left: 1rem;
+		}
 	}
 }
