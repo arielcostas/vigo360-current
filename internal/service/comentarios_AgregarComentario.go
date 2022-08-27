@@ -58,7 +58,7 @@ func (se *Comentario) AgregarRespuesta(
 		Autor_original: autor_original,
 		Contenido:      contenido,
 
-		Estado: models.ESTADO_PENDIENTE
+		Estado: models.ESTADO_PENDIENTE,
 	}
 
 	if es_autor || autor_original {
