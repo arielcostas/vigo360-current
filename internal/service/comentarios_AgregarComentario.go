@@ -48,11 +48,6 @@ func (se *Comentario) AgregarRespuesta(
 		return models.Comentario{}, Err_ComentarioPublicacionInvalida
 	}
 
-	var estado = models.ESTADO_PENDIENTE
-	if es_autor || autor_original {
-		estado = models.ESTADO_APROBADO
-	}
-
 	var nuevo_comentario = models.Comentario{
 		Id:             randstr.String(13),
 		Publicacion_id: publicacion_id,
@@ -63,7 +58,11 @@ func (se *Comentario) AgregarRespuesta(
 		Autor_original: autor_original,
 		Contenido:      contenido,
 
-		Estado: estado,
+		Estado: models.ESTADO_PENDIENTE
+	}
+
+	if es_autor || autor_original {
+		nuevo_comentario.Estado = models.ESTADO_APROBADO
 	}
 
 	dberr := se.cstore.GuardarComentario(nuevo_comentario)
