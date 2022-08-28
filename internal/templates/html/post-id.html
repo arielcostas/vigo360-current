@@ -181,7 +181,7 @@
 		{{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg" />{{end}}
 		{{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
 			src="/static/user-icon.svg" />{{end}}
-		- publicado {{ date_format .Fecha_moderacion "01 Feb. 15:04" }}
+		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
 	<p>
 		{{ .Contenido }}
@@ -201,8 +201,10 @@
 {{ define "comentario_rep_admin" }}
 <div class="post_comment" id="comment-{{ .Id }}">
 	<p>
-		<strong>{{ .Nombre }}{{ if .Es_autor}} (Autor Vigo360){{end}}{{ if .Autor_original}} (Autor del
-			artículo){{end}}</strong>
+		<strong>{{ .Nombre }}</strong>&nbsp;
+		{{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg" />{{end}}
+		{{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
+			src="/static/user-icon.svg" />{{end}}
 		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
 	<p>
