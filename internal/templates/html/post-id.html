@@ -189,7 +189,7 @@
 	<div class="post_comment_replies">
 		<details>
 			<summary>Añadir respuesta</summary>
-			{{ template "form_comentario" }}
+			{{ template "form_comentario" .Id }}
 		</details>
 		{{ range .Children }}
 		{{- template "comentario" . }}
@@ -203,7 +203,7 @@
 	<p>
 		<strong>{{ .Nombre }}{{ if .Es_autor}} (Autor Vigo360){{end}}{{ if .Autor_original}} (Autor del
 			artículo){{end}}</strong>
-			{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
+		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
 	<p>
 		{{ .Contenido }}
@@ -211,7 +211,7 @@
 	<div class="post_comment_replies">
 		<details>
 			<summary>Añadir respuesta</summary>
-			{{ template "form_comentario_admin" }}
+			{{ template "form_comentario_admin" .Id }}
 		</details>
 		{{ range .Children }}
 		{{- template "comentario" . }}
