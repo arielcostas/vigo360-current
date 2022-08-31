@@ -8,8 +8,10 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/messages"
 )
 
 type sessionContextKey string
@@ -32,6 +34,24 @@ func (s *Server) withAuth(h http.HandlerFunc) http.HandlerFunc {
 		if err != nil {
 			logger.Error("error accediendo a página que requiere autenticación: %s", err.Error())
 			gotoLogin(w, r.URL.Path)
+			return
+		}
+		newContext := context.WithValue(r.Context(), sessionContextKey("sess"), sess)
+		r = r.WithContext(newContext)
+		h(w, r)
+	}
+}
+
+func (s *Server) withJsonAuth(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var authValue = strings.Split(r.Header.Get("Authorization"), "Bearer ")[0]
+		if authValue == "" {
+			s.handleJsonError(w, 401, messages.ErrorSinAutenticar)
+			return
+		}
+		sess, err := s.getSession(authValue)
+		if err != nil {
+			s.handleJsonError(w, 401, messages.ErrorSinAutenticar)
 			return
 		}
 		newContext := context.WithValue(r.Context(), sessionContextKey("sess"), sess)

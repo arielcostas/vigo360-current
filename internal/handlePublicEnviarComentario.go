@@ -9,6 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
+	"vigo360.es/new/internal/messages"
 	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/service"
 )
@@ -56,7 +57,7 @@ func (s *Server) handlePublicEnviarComentario() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error guardando comentario: %s", err.Error())
-			s.handleError(w, 400, err.Error())
+			s.handleError(w, 400, messages.ErrorDatos)
 			return
 		}
 
