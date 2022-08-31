@@ -25,7 +25,7 @@ cd /opt/vigo360
 3. Copiar y activar el servicio systemd
 
 ```bash
-sudo cp config/vigo360.service /etc/systemd/system/vigo360.service
+sudo cp deploy/config/vigo360.service /etc/systemd/system/vigo360.service
 sudo systemctl daemon-reload
 sudo systemctl enable vigo360
 ```
@@ -42,7 +42,7 @@ sudo nginx -t
 5. Ejecutar migraciones (pedirá contraseña de MySQL)
 
 ```bash
-cat _schema/* | mysql -D vigo360 -u vigo360 -p
+cat deploy/mysql/* | mysql -D vigo360 -u vigo360 -p
 ```
 
 6. Modificar variables de entorno

@@ -12,4 +12,4 @@ Versión en desarrollo del nuevo Vigo360, donde en vez de generar un sitio está
 
 ## Instalación
 
-Ver INSTALL.md
+Ver [INSTALL.md](INSTALL.md)
