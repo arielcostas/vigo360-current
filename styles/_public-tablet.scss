@@ -34,4 +34,8 @@
 	#section-articles {
 		grid-template-columns: repeat(2, 1fr);
 	}
+
+	#frontpage-articles .primero {
+		flex-direction: column;
+	}
 }
