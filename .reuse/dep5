@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Vigo360
+Upstream-Contact: Ariel Costas <ariel@vigo360.es>
+Source: https://github.com/vigo360/vigo360
+
+# Sample paragraph, commented out:
+#
+# Files: src/*
+# Copyright: $YEAR $NAME <$CONTACT>
+# License: ...
