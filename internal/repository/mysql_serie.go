@@ -39,7 +39,7 @@ func (s *MysqlSerieStore) Listar() ([]models.Serie, error) {
 
 	// TODO: Eliminar esto, que la carga de artículos (o cuenta) dependa de mysql_publicacion
 	for i, serie := range series {
-		filas, err := s.db.Query(`SELECT id, titulo, fecha_publicacion FROM publicaciones WHERE serie_id=?`, serie.Id)
+		filas, err := s.db.Query(`SELECT id, titulo, fecha_publicacion FROM publicaciones WHERE serie_id=? ORDER BY serie_posicion ASC`, serie.Id)
 		if err != nil {
 			return []models.Serie{}, err
 		}
@@ -63,7 +63,7 @@ func (s *MysqlSerieStore) Obtener(serie_id string) (models.Serie, error) {
 		return models.Serie{}, err
 	}
 
-	filas, err := s.db.Query(`SELECT id, titulo, fecha_publicacion FROM publicaciones WHERE serie_id=?`, serie_id)
+	filas, err := s.db.Query(`SELECT id, titulo, fecha_publicacion FROM publicaciones WHERE serie_id=? ORDER BY serie_posicion ASC`, serie_id)
 	if err != nil {
 		return models.Serie{}, err
 	}
