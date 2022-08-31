@@ -44,14 +44,19 @@ func (s *Server) withAuth(h http.HandlerFunc) http.HandlerFunc {
 
 func (s *Server) withJsonAuth(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var authValue = strings.Split(r.Header.Get("Authorization"), "Bearer ")[0]
+		var authParts = strings.Split(r.Header.Get("Authorization"), "Bearer ")
+		if len(authParts) != 2 {
+			s.handleJsonError(w, 400, messages.ErrorSinAutenticar)
+			return
+		}
+		var authValue = authParts[1]
 		if authValue == "" {
 			s.handleJsonError(w, 401, messages.ErrorSinAutenticar)
 			return
 		}
 		sess, err := s.getSession(authValue)
 		if err != nil {
-			s.handleJsonError(w, 401, messages.ErrorSinAutenticar)
+			s.handleJsonError(w, 403, messages.ErrorSinAutenticar)
 			return
 		}
 		newContext := context.WithValue(r.Context(), sessionContextKey("sess"), sess)
