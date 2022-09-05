@@ -88,3 +88,9 @@
 	display: block;
 	font-size: 1.125rem;
 }
+
+@media (max-width: 640px) {
+	#frontpage-articles .primero img  {
+		flex:unset;
+	}
+}
