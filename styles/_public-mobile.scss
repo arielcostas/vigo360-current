@@ -148,4 +148,9 @@
 	{
 		grid-column: 1/7;
 	}
+
+	.pager {
+		overflow: scroll;
+    	justify-content: start;
+	}
 }
