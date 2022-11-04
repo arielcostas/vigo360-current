@@ -68,7 +68,7 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 	}
 
 	// Resize to 800x450
-	portada = resize.Resize(800, 450, portada, resize.Bicubic)
+	portada = resize.Resize(1200, 675, portada, resize.Bicubic)
 
 	// Encode as formats
 	err = jpeg.Encode(&portadaJpg, portada, &jpeg.Options{Quality: 95})
