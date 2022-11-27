@@ -184,7 +184,7 @@
 		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
 	<p>
-		{{ .Contenido }}
+		{{ .Contenido | markdown }}
 	</p>
 	<div class="post_comment_replies">
 		<details>
@@ -208,7 +208,7 @@
 		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
 	<p>
-		{{ .Contenido }}
+		{{ .Contenido | markdown }}
 	</p>
 	<div class="post_comment_replies">
 		<details>
