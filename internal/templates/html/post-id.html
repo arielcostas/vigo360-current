@@ -183,9 +183,9 @@
 			src="/static/user-icon.svg" />{{end}}
 		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
-	<p>
+	<div>
 		{{ .Contenido | markdown }}
-	</p>
+	</div>
 	<div class="post_comment_replies">
 		<details>
 			<summary>Añadir respuesta</summary>
@@ -207,9 +207,9 @@
 			src="/static/user-icon.svg" />{{end}}
 		{{ with .Fecha_moderacion }} - publicado {{ date_format . "01 Feb. 15:04" }}{{ end }}
 	</p>
-	<p>
+	<div>
 		{{ .Contenido | markdown }}
-	</p>
+	</div>
 	<div class="post_comment_replies">
 		<details>
 			<summary>Añadir respuesta</summary>
