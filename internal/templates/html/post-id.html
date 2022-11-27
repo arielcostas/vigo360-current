@@ -228,7 +228,7 @@
 	<label for="fc_nombre">Nombre</label>
 	<input type="text" id="fc_nombre" name="nombre" required>
 	<label for="fc_contenido">Contenido</label>
-	<textarea name="contenido" id="fc_contenido" maxlength="500" required></textarea>
+	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
 	<p>Nota: el comentario será puesto en cola de moderación, y no será visible hasta que lo apruebe un moderador.</p>
 	<button class="btn-theme" type="submit">Enviar</button>
@@ -238,7 +238,7 @@
 {{ define "form_comentario_admin" }}
 <form method="post" class="form_comentario">
 	<label for="fc_contenido">Contenido</label>
-	<textarea name="contenido" id="fc_contenido" maxlength="500" required></textarea>
+	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
 	<p>El comentario se publicará inmediatamente, por tener la sesión iniciada.</p>
 	<button class="btn-theme" type="submit">Enviar</button>
