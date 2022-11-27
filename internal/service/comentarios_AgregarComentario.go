@@ -7,6 +7,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"unicode/utf8"
 
 	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/models"
@@ -40,7 +41,7 @@ func (se *Comentario) AgregarRespuesta(
 		return models.Comentario{}, Err_ComentarioNombreInvalido
 	}
 
-	if contenido == "" || len(contenido) > 500 {
+	if contenido == "" || utf8.RuneCountInString(contenido) > 500 {
 		return models.Comentario{}, Err_ComentarioContenidoInvalido
 	}
 
