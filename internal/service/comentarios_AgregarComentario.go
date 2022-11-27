@@ -41,7 +41,7 @@ func (se *Comentario) AgregarRespuesta(
 		return models.Comentario{}, Err_ComentarioNombreInvalido
 	}
 
-	if contenido == "" || utf8.RuneCountInString(contenido) > 500 {
+	if contenido == "" || utf8.RuneCountInString(contenido) > 2000 {
 		return models.Comentario{}, Err_ComentarioContenidoInvalido
 	}
 
