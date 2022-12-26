@@ -38,7 +38,7 @@
 			{{ $page := .CurrentPage }}
 			{{- range $i, $post := .Posts }}
 			<a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
-				<img width="800" height="450" src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}"
+				<img src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}"
 					title="{{ $post.Alt_portada }}" {{ if gt $i 3 }} loading="lazy" {{ end }} />
 				<div class="article-info">
 					<p class="article-author">

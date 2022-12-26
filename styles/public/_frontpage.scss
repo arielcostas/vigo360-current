@@ -9,7 +9,6 @@
 }
 
 #frontpage-articles img {
-	width: 100%;
 	height: auto;
 	object-fit: cover;
 }
@@ -35,6 +34,7 @@
 
 #frontpage-articles .primero img {
 	flex: 0 0 65%;
+	width: 800px;
 }
 
 .article-author {
