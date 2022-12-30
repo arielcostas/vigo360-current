@@ -10,6 +10,8 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"vigo360.es/new/internal/models"
+	"vigo360.es/new/internal/notify"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -120,6 +122,13 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 			err = seo.BingIndexnowRequest(indexnowurls)
 			if err != nil {
 				logger.Error("error llamando a indexnow: %s", err.Error())
+			}
+
+			var sess, _ = r.Context().Value(sessionContextKey("sess")).(models.Session)
+			err = notify.NotifyNewPost(publicacion_id, fi.Titulo, sess.Autor_nombre)
+
+			if err != nil {
+				logger.Error("error notificando nueva publicación: %s", err.Error())
 			}
 		}
 
