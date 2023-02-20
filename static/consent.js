@@ -13,7 +13,8 @@ window.addEventListener('load', function () {
 		onAccept: function (cookie) {
 			gtag('consent', 'update', {
 				'analytics_storage': 'granted'
-			})
+			});
+			window.clarity('consent');
 		},
 
 		onChange: function (cookie, changed_categories) {
