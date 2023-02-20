@@ -5,6 +5,7 @@
 package seo
 
 import (
+	"fmt"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -30,13 +31,11 @@ func BingIndexnowRequest(urls []string) error {
 	}
 	var requestBody = bytes.NewBuffer(requestBytes)
 
-	request, err := http.NewRequest(http.MethodPost, "https://www.bing.com/indexnow", requestBody)
-	if err != nil {
-		return err
-	}
-	response, err := client.Do(request)
+	response, err := client.Post("https://www.bing.com/indexnow", "application/json", requestBody)
 	if err != nil || response.StatusCode != 200 {
 		return err
+	} else {
+		fmt.Println("enviado a indexnow: " + requestBody.String())
 	}
 	return nil
 }
