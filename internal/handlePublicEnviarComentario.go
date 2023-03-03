@@ -6,7 +6,6 @@ package internal
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
@@ -55,7 +54,7 @@ func (s *Server) handlePublicEnviarComentario() http.HandlerFunc {
 		} else {
 			nc, err = cs.AgregarRespuesta(publicacion_id, nombre, contenido, padre, es_autor, autor_original)
 		}
-		
+
 		if err != nil {
 			logger.Error("error guardando comentario: %s", err.Error())
 			s.handleError(w, 400, messages.ErrorDatos)
