@@ -224,7 +224,7 @@
 </div>
 {{ end }}
 
-
+{{ $hcaptchaClient := .HcaptchaClient}}
 {{ define "form_comentario" }}
 <form method="post" class="form_comentario">
 	<label for="fc_nombre">Nombre</label>
@@ -232,7 +232,7 @@
 	<label for="fc_contenido">Contenido</label>
 	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
-	<div class="h-captcha" data-sitekey="{{ .HcaptchaClient }}"></div>
+	<div class="h-captcha" data-sitekey="{{ $hcaptchaClient }}"></div>
 	<p>Nota: el comentario será puesto en cola de moderación, y no será visible hasta que lo apruebe un moderador.</p>
 	<button class="btn-theme" type="submit">Enviar</button>
 </form>

@@ -53,7 +53,10 @@ func (s *Server) handlePublicEnviarComentario() http.HandlerFunc {
 			nc, err = cs.AgregarComentario(publicacion_id, nombre, contenido, es_autor, autor_original)
 		} else {
 			nc, err = cs.AgregarRespuesta(publicacion_id, nombre, contenido, padre, es_autor, autor_original)
-		}
+		}	var secretKey = os.Getenv("HCAPTCHA_SECRET")
+		var siteKey = os.Getenv("HCAPTCHA_SITEKEY")
+	
+		var cli = hcaptcha.New(secretKey)
 
 		if err != nil {
 			logger.Error("error guardando comentario: %s", err.Error())
