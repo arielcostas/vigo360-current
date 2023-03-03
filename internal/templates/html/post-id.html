@@ -71,6 +71,8 @@
 			"inLanguage": "es-ES"
 		}
 	</script>
+
+	<script src="https://hcaptcha.com/1/api.js" async defer></script>
 </head>
 
 <body>
@@ -230,6 +232,7 @@
 	<label for="fc_contenido">Contenido</label>
 	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
+	<div class="h-captcha" data-sitekey="{{ .HcaptchaClient }}"></div>
 	<p>Nota: el comentario será puesto en cola de moderación, y no será visible hasta que lo apruebe un moderador.</p>
 	<button class="btn-theme" type="submit">Enviar</button>
 </form>

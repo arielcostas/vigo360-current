@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/kataras/hcaptcha"
 	"github.com/thanhpk/randstr"
 )
 
@@ -87,7 +88,12 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminDeleteFotoExtra())).Methods(http.MethodDelete)
 
 	newrouter.HandleFunc(`/post/{postid}`, s.handlePublicPostPage()).Methods(http.MethodGet)
-	newrouter.HandleFunc(`/post/{postid}`, s.handlePublicEnviarComentario()).Methods(http.MethodPost)
+
+	var secretKey = os.Getenv("HCAPTCHA_SECRET")
+
+	var cli = hcaptcha.New(secretKey)
+
+	newrouter.HandleFunc(`/post/{postid}`, cli.HandlerFunc(s.handlePublicEnviarComentario())).Methods(http.MethodPost)
 
 	newrouter.HandleFunc(`/tags`, s.handlePublicListTags()).Methods(http.MethodGet)
 	newrouter.HandleFunc(`/tags/{tagid}/`, s.handlePublicTagPage()).Methods(http.MethodGet)

@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/logger"
@@ -24,6 +25,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		Comentarios     []service.ComentarioTree
 		Recommendations []Sugerencia
 		Meta            PageMeta
+		HcaptchaClient  string
 	}
 
 	var cs = service.NewComentarioService(s.store.comentario, s.store.publicacion)
@@ -93,6 +95,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			LoggedIn:        loggedIn,
 			Recommendations: recommendations,
 			Comentarios:     ct,
+			HcaptchaClient:  os.Getenv("HCAPTCHA_SITEKEY"),
 			Meta: PageMeta{
 				Titulo:      post.Titulo,
 				Descripcion: post.Resumen,
