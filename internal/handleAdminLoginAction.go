@@ -102,6 +102,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 			Name:     "sess",
 			Value:    token,
 			Path:     "/",
+			MaxAge:   60*60*24*365,
 			Domain:   r.URL.Host,
 			HttpOnly: true,
 			SameSite: http.SameSiteStrictMode,
