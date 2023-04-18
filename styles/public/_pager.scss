@@ -18,3 +18,10 @@
 	margin: 0 0.5rem;
 	box-shadow: var(--shadow);
 }
+
+@media (max-width: 1366px) {
+	.pager {
+		justify-content: start;
+		overflow-x: auto;
+	}
+}
