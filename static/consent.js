@@ -24,9 +24,9 @@ window.addEventListener('load', function () {
 			'es': {
 				consent_modal: {
 					title: 'Utilizamos cookies',
-					description: 'Vigo360 usa Google Analytics con fines estadísticos. Si pulsas aceptar, aceptas el uso de cookies de terceros y que se compartan dichos datos con Google. Rechazarlo ocultará este mensaje y no se compartirán datos con terceros..',
+					description: 'Vigo360 usa Google Analytics y Microsoft Clarity con fines estadísticos. Si pulsas aceptar, aceptas el uso de cookies de terceros y que se compartan datos de uso anonimizados con Google y Microsoft. Rechazarlo ocultará este mensaje y no se compartirán datos con terceros; sin impedir en ningún caso visitar el sitio.',
 					primary_btn: {
-						text: 'Aceptar',
+						text: 'Aceptar todo',
 						role: 'accept_all'
 					},
 					secondary_btn: {
