@@ -1,6 +1,5 @@
-#comment_section_header,
-#comment_section_publish {
-	padding: 0 3%;
+#comment-section-container {
+	padding: 0 15rem;
 }
 
 #comment_container {
@@ -30,9 +29,20 @@
 	input[type="text"], textarea {
 		margin-bottom: 1rem;
 	}
+	p {
+		margin-top: 1rem; 
+		margin-bottom: 1rem;
+	}
 }
 
+#comment-send {
+	display: flex;
+	justify-content: space-between;
+}
 
+#comment-send button {
+	margin: auto 1rem;
+}
 
 .post_comment {
     margin-top: 0.7rem;
@@ -46,5 +56,19 @@
 			height: 1.25rem;
 			margin-left: 0.25rem;
 		}
+	}
+}
+
+@media screen and (max-width: 960px) {
+	#comment-section-container {
+		padding: 1rem 5vh;
+	}
+
+	#comment-send {
+		flex-direction: column;
+	}
+
+	#comment-send button {
+		margin: 1rem 0;
 	}
 }

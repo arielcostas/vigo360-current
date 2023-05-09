@@ -152,24 +152,26 @@
 			</div>
 			{{ end }}
 			<hr />
-			<h2 id="comment_section_header">Comentarios</h2>
-			{{ $loggedIn := .LoggedIn}}
-			<section id="comment_container">
-				{{- range .Comentarios }}
-				{{ if $loggedIn}}
-				{{ template "comentario_rep_admin" . }}
-				{{ else }}
-				{{ template "comentario" . }}
-				{{ end }}
+			<div id="comment-section-container">
+				<h2 id="comment_section_header">Comentarios</h2>
+				{{ $loggedIn := .LoggedIn}}
+				<section id="comment_container">
+					{{- range .Comentarios }}
+					{{ if $loggedIn}}
+					{{ template "comentario_rep_admin" . }}
+					{{ else }}
+					{{ template "comentario" . }}
+					{{ end }}
 
+					{{ end }}
+				</section>
+				<h3 id="comment_section_publish">Déjanos tu comentario</h3>
+				{{ if $loggedIn}}
+				{{ template "form_comentario_admin" }}
+				{{ else }}
+				{{ template "form_comentario" }}
 				{{ end }}
-			</section>
-			<h3 id="comment_section_publish">Publicar comentario</h3>
-			{{ if $loggedIn}}
-			{{ template "form_comentario_admin" }}
-			{{ else }}
-			{{ template "form_comentario" }}
-			{{ end }}
+			</div>
 		</div>
 	</main>
 	{{ template "_footer.html" }}
@@ -231,9 +233,11 @@
 	<label for="fc_contenido">Contenido</label>
 	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
-	<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
-	<p>Nota: el comentario será puesto en cola de moderación, y no será visible hasta que lo apruebe un moderador.</p>
-	<button class="btn-theme" type="submit">Enviar</button>
+	<p>Para evitar el spam, revisaremos tu comentario, y no será visible hasta que lo aprobemos.</p>
+	<div id="comment-send">
+		<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
+		<button class="btn-theme" type="submit">Enviar</button>
+	</div>
 </form>
 {{ end }}
 
@@ -242,8 +246,8 @@
 	<label for="fc_contenido">Contenido</label>
 	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
+	<p>Tu comentario será publicado inmediatamente, pero solo por ser tú. 😉</p>
 	<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
-	<p>El comentario se publicará inmediatamente, por tener la sesión iniciada.</p>
 	<button class="btn-theme" type="submit">Enviar</button>
 </form>
 {{ end }}

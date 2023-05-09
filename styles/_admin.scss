@@ -29,7 +29,8 @@ input[disabled] {
 }
 
 textarea {
-	font-size: 14px;
+	font-family: "Fira Code", "JetBrains Mono", "Cascadia Code", "Noto Sans Mono", Consolas, monospace;
+    font-size: 15px;
 }
 
 .dialog-error {
@@ -96,9 +97,13 @@ form button[type="submit"] {
 }
 
 #dashboard > div {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	display: flex;
 	gap: 3rem;
+	padding: 1.2rem;
+}
+
+#dashboard > div > p {
+	flex: 1 0;
 }
 
 #dashboard > p {
@@ -228,8 +233,7 @@ main h2 {
 	}
 
 	#dashboard > div {
-		gap: 1rem;
-		grid-template-columns: 1fr;
+		flex-direction: column;
 	}
 
 	#post-editor .form-column,

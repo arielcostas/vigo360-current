@@ -83,6 +83,7 @@ figure {
 	background: var(--gray);
 	overflow: hidden;
 	border-radius: 3px;
+	padding-bottom: 4px;
 }
 
 figure:not(#post-thumbnail) {
@@ -369,10 +370,10 @@ article#post-inner p img {
 }
 
 .post-author-photo {
-	border-radius: 35%;
+	border-radius: 2rem;
 	flex: 1 1;
-	width: 180px;
-	height: 180px;
+	width: 150px;
+	height: 150px;
 }
 
 #post-author-container {
