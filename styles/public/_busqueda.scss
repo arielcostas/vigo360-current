@@ -3,6 +3,10 @@
 	width: 100%;
 }
 
+form :has(#busqueda-termino) {
+	flex-grow: 1;
+}
+
 #busqueda {
 	margin: auto;
 	max-width: 1024px;

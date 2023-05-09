@@ -153,7 +153,7 @@ func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (mod
 }
 
 func (s *MysqlPublicacionStore) Buscar(termino string) (models.Publicaciones, error) {
-	var query = `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id WHERE LOWER(CONCAT_WS(" ", titulo, resumen, contenido)) LIKE LOWER(?) ORDER BY fecha_publicacion DESC GROUP BY id`
+	var query = `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id WHERE LOWER(CONCAT_WS(" ", titulo, resumen, contenido)) LIKE LOWER(?) GROUP BY id ORDER BY fecha_publicacion DESC`
 
 	termino = strings.Join(strings.Split(termino, " "), "%")
 

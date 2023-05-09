@@ -10,7 +10,10 @@
 	<div id="login-background"></div>
 	<main>
 		<div id="login">
-			<h2>Inicie sesión para continuar</h2>
+			<h2>Panel administrativo de Vigo360</h2>
+			<p>
+				Para acceder al panel administrativo, debes iniciar sesión con tu ID de usuario y contraseña.
+			</p>
 			{{ if .LoginError }}
 			<div class="dialog-error">Nombre de usuario o contraseña inválidos.</div>
 			{{ end }}
@@ -20,7 +23,7 @@
 				<label for="password">Contraseña</label>
 				<input type="password" id="password" name="password" />
 				<button class="btn-theme" type="submit">Iniciar sesión</button>
-				<small>Recuerde cerrar sesión antes de abandonar la página.</small>
+				<small>Por tu seguridad, recuerda cerrar sesión antes de abandonar la página.</small>
 			</form>
 		</div>
 	</main>
