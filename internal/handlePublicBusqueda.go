@@ -29,7 +29,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 
 		var termino = r.URL.Query().Get("termino")
 		termino = strings.TrimSpace(termino)
-		// TODO Gestionar-impedir términos vacíos
+
 		if termino == "" {
 			w.Header().Add("Location", "/")
 			w.WriteHeader(302)

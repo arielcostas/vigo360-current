@@ -11,7 +11,7 @@
 	{{ template "_header.html" }}
 	<main>
 		<div id="busqueda">
-			<h2 id="section-title">Resultados de la búsqueda para {{ .Termino }}</h2>
+			<h2 id="section-title">Resultados de la búsqueda para <code>{{ .Termino }}</code></h2>
 			{{ range .Resultados }}
 			<div id="busqueda-list">
 				<article>
