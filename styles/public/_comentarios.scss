@@ -30,7 +30,6 @@
 		margin-bottom: 1rem;
 	}
 	p {
-		margin-top: 1rem; 
 		margin-bottom: 1rem;
 	}
 }
@@ -38,6 +37,7 @@
 #comment-send {
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 1rem;
 }
 
 #comment-send button {

@@ -1,15 +1,19 @@
 # Nuevo Vigo360
 
-Versión en desarrollo del nuevo Vigo360, donde en vez de generar un sitio estático con Hugo se utiliza una base de datos en condiciones y páginas dinámicas.
+Versión actual de Vigo360, usando renderizado HTML en Go.
 
 ## Requisitos
 
--   Linux (probado en Debian 11), puede funcionar en otros sistemas
--   Go 1.18 o superior
--   MySQL o MariaDB (probado en MariaDB 10.7)
+-   Linux, puede funcionar en otros sistemas
+-   Go
+-   MySQL
 -   Dominio o subdominio apuntando al servidor y certificado TLS
 -   Acceso root
 
 ## Instalación
 
 Ver [INSTALL.md](INSTALL.md)
+
+## Licencia
+
+Copyright 2022-23 Ariel Costas Guerrero. Cedido bajo licencia BSD 3-Clause.

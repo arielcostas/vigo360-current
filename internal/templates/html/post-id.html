@@ -156,6 +156,9 @@
 				<h2 id="comment_section_header">Comentarios</h2>
 				{{ $loggedIn := .LoggedIn}}
 				<section id="comment_container">
+					{{ if eq (len .Comentarios) 0 }}
+					<p id="no_comments">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+					{{ end }}
 					{{- range .Comentarios }}
 					{{ if $loggedIn}}
 					{{ template "comentario_rep_admin" . }}
@@ -229,9 +232,9 @@
 {{ define "form_comentario" }}
 <form method="post" class="form_comentario">
 	<label for="fc_nombre">Nombre</label>
-	<input type="text" id="fc_nombre" name="nombre" required>
+	<input type="text" autocomplete="name" id="fc_nombre" name="nombre" required>
 	<label for="fc_contenido">Contenido</label>
-	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
+	<textarea name="contenido" id="fc_contenido" maxlength="2000" rows="5" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
 	<p>Para evitar el spam, revisaremos tu comentario, y no será visible hasta que lo aprobemos.</p>
 	<div id="comment-send">
@@ -244,10 +247,12 @@
 {{ define "form_comentario_admin" }}
 <form method="post" class="form_comentario">
 	<label for="fc_contenido">Contenido</label>
-	<textarea name="contenido" id="fc_contenido" maxlength="2000" required></textarea>
+	<textarea name="contenido" id="fc_contenido" maxlength="2000" rows="5" required></textarea>
 	<input type="hidden" name="padre" value="{{ . }}">
 	<p>Tu comentario será publicado inmediatamente, pero solo por ser tú. 😉</p>
-	<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
-	<button class="btn-theme" type="submit">Enviar</button>
+	<div id="comment-send">
+		<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
+		<button class="btn-theme" type="submit">Enviar</button>
+	</div>
 </form>
 {{ end }}

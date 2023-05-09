@@ -99,8 +99,8 @@ figcaption {
 	margin-left: 0.5rem;
 }
 
-main#tags-list > div,
-main#authors > div {
+main#tags-list>div,
+main#authors>div {
 	max-width: 1024px;
 	margin: 0 auto 2rem;
 
@@ -130,6 +130,7 @@ main#authors #section-title,
 #authors-grid a {
 	color: var(--text);
 	text-decoration: none;
+
 	&:hover .authors-name {
 		color: var(--theme);
 	}
@@ -177,11 +178,11 @@ main#authors #user-info #section-title {
 	padding: 0;
 }
 
-#user-info > div {
+#user-info>div {
 	flex: 0 0 75%;
 }
 
-#user-info > div h1 {
+#user-info>div h1 {
 	margin-bottom: 0.5rem;
 }
 
@@ -189,7 +190,7 @@ main#authors #user-info #section-title {
 	opacity: 0.85;
 }
 
-#user-info > div p {
+#user-info>div p {
 	margin-top: 0.5rem;
 	font-size: 1.125rem;
 }
@@ -207,24 +208,24 @@ main#authors #user-info #section-title {
 	padding: 1rem 1.5rem;
 }
 
-.user-article > a {
+.user-article>a {
 	color: var(--text);
 }
 
-.user-article > a:hover {
+.user-article>a:hover {
 	text-decoration: none;
 }
 
-.user-article > a:hover .user-article-title {
+.user-article>a:hover .user-article-title {
 	color: var(--theme);
 }
 
-.user-article > a > div {
+.user-article>a>div {
 	display: flex;
 	gap: 1rem;
 }
 
-.user-article > a > div > div {
+.user-article>a>div>div {
 	padding: 1rem;
 	padding-left: 0;
 }
@@ -251,11 +252,11 @@ main#authors #user-info #section-title {
 	margin: auto;
 }
 
-#papers > * {
+#papers>* {
 	background: var(--background);
 }
 
-#papers > h1 {
+#papers>h1 {
 	font-size: 2.25rem;
 	font-weight: bolder;
 	line-height: 1.125;
@@ -272,18 +273,19 @@ main#authors #user-info #section-title {
 	padding: 1.5rem 0;
 }
 
-#papers-list >  article {
+#papers-list>article {
 	height: 100%;
-	& > a {
+
+	&>a {
 		color: var(--text);
 		background: #fff;
-	
+
 		display: flex;
 		flex-direction: column;
 
 		height: 100%;
 
-		& > div {
+		&>div {
 			padding: 1rem;
 			flex-grow: 1;
 			flex-shrink: 0;
@@ -291,15 +293,15 @@ main#authors #user-info #section-title {
 	}
 }
 
-#papers-list > article > a:hover {
+#papers-list>article>a:hover {
 	text-decoration: none;
 }
 
-#papers-list > article > a:hover img {
+#papers-list>article>a:hover img {
 	opacity: 0.7;
 }
 
-#papers-list > article > a:hover .article-title {
+#papers-list>article>a:hover .article-title {
 	color: var(--theme);
 }
 
@@ -333,7 +335,7 @@ main#authors #user-info #section-title {
 }
 
 #post-inner {
-	padding: 1rem 7%;
+	padding: 1rem 4%;
 	max-width: 95ch;
 	margin: 1rem auto;
 	text-align: justify;
@@ -352,12 +354,12 @@ article#post-inner p img {
 	color: green;
 }
 
-#post-inner > p,
-#post-inner > ul li,
-#post-inner > ol li {
+#post-inner>p,
+#post-inner>ul li,
+#post-inner>ol li {
 	margin-bottom: 1rem;
-	font-size: 18px;
-	line-height: 1.6;
+	font-size: 19px;
+	line-height: 1.8;
 }
 
 #post-inner blockquote p {
@@ -386,7 +388,7 @@ article#post-inner p img {
 	text-decoration: none;
 }
 
-#post-author-container > a:hover .post-author-info h3 {
+#post-author-container>a:hover .post-author-info h3 {
 	color: var(--theme);
 }
 
@@ -430,8 +432,10 @@ code {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+
 	&:hover {
 		text-decoration: none;
+
 		.article-title {
 			color: var(--theme);
 		}
@@ -452,6 +456,7 @@ code {
 
 .post-related-article img {
 	width: 100%;
+	height: auto;
 }
 
 .post-inline-related {
@@ -468,7 +473,7 @@ code {
 	opacity: 0.7;
 }
 
-.post-inline-related > div {
+.post-inline-related>div {
 	width: 100%;
 	display: flex;
 	background: var(--gray);
@@ -522,11 +527,11 @@ code {
 	margin: auto;
 }
 
-#sections > #section-title {
+#sections>#section-title {
 	max-width: 100%;
 }
 
-#sections > * {
+#sections>* {
 	background: var(--background);
 }
 
@@ -540,31 +545,31 @@ code {
 	gap: 2.5rem;
 }
 
-#section-articles > li {
+#section-articles>li {
 	background: #fff;
 }
 
-#section-articles > li a {
+#section-articles>li a {
 	color: var(--text);
 }
 
-#section-articles > li a:hover {
+#section-articles>li a:hover {
 	text-decoration: none;
 }
 
-#section-articles > li a:hover img {
+#section-articles>li a:hover img {
 	opacity: 0.7;
 }
 
-#section-articles > li a:hover h3 {
+#section-articles>li a:hover h3 {
 	color: var(--theme);
 }
 
-#section-articles > li div {
+#section-articles>li div {
 	padding: 1rem;
 }
 
-#section-articles > li img {
+#section-articles>li img {
 	max-width: 100%;
 	width: 100%;
 	height: auto;
@@ -577,10 +582,10 @@ code {
 	justify-content: space-between;
 }
 
-.title-atom > a {
+.title-atom>a {
 	line-height: 1;
 }
 
-#tags-list > ul {
+#tags-list>ul {
 	width: 100%;
 }
