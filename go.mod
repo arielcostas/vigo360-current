@@ -3,7 +3,7 @@ module vigo360.es/new
 go 1.18
 
 require (
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gorilla/mux v1.8.0
 	github.com/yuin/goldmark v1.4.7
 )
@@ -28,6 +28,6 @@ require (
 )
 
 require (
-	github.com/gabriel-vasile/mimetype v1.4.0
+	github.com/gabriel-vasile/mimetype v1.4.2
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 )

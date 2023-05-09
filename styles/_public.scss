@@ -1,8 +1,3 @@
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
 @use "public/_pager.scss";
 @use "public/_comentarios.scss";
 @use "public/_busqueda.scss";
@@ -421,12 +416,12 @@ code {
 
 #post-related-articles,
 #related-articles-header {
-	padding: 0 3% 1rem;
+	padding: 0 5% 1rem;
 }
 
 #post-related-articles {
 	display: flex;
-	gap: 1rem;
+	gap: 2rem;
 }
 
 .post-related-article a {
@@ -451,7 +446,7 @@ code {
 }
 
 .post-related-article {
-	flex: 0 0 33%;
+	flex: 1 0;
 }
 
 .post-related-article img {

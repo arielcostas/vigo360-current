@@ -1,4 +1,4 @@
-## Instalación de Vigo360
+# Instalación de Vigo360
 
 1. Crear un nuevo usuario en el sistema y MySQL
 
