@@ -3,7 +3,7 @@
 	width: 100%;
 }
 
-form :has(#busqueda-termino) {
+form:has(#busqueda-termino) {
 	flex-grow: 1;
 }
 

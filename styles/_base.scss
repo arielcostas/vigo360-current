@@ -1,10 +1,9 @@
 :root {
-	--gray: #f8f8f8;
+	--gray: #f6f6fa;
 
 	--accent: var(--gray);
-	--background: unset;
 	--text: rgb(18, 20, 24);
-	--theme: #236535;
+	--theme: #24703b;
 
 	--correct: #16a34a;
 	--alternate: #0284c7;
@@ -21,9 +20,14 @@
 	font-size: 16px;
 
 	scroll-behavior: smooth;
-	line-height: 1.5;
+	line-height: 1.69;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+	background: #00ac0f;
+	color: #fff;
 }
 
 * {

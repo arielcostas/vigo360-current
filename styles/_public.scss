@@ -37,7 +37,7 @@ main {
 
 ul,
 ol {
-	padding-left: 1rem;
+	padding-left: 2rem;
 }
 
 blockquote {
@@ -339,6 +339,18 @@ main#authors #user-info #section-title {
 	max-width: 95ch;
 	margin: 1rem auto;
 	text-align: justify;
+
+	h2 {
+		font-size: 2.25rem;
+		line-height: 1;
+		margin-bottom: 1rem;
+	}
+
+	h3 {
+		font-size: 1.75rem;
+		line-height: 1;
+		margin-bottom: 1rem;
+	}
 }
 
 article#post-inner p img {
@@ -360,6 +372,10 @@ article#post-inner p img {
 	margin-bottom: 1rem;
 	font-size: 19px;
 	line-height: 1.8;
+}
+
+#post-inner > ul li {
+	margin-bottom: 0;
 }
 
 #post-inner blockquote p {
