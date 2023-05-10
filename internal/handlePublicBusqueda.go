@@ -11,10 +11,13 @@ import (
 
 func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 	type resultado struct {
-		Id      string
-		Titulo  string
-		Resumen string
-		Uri     string
+		Id                string
+		Titulo            string
+		Resumen           string
+		Autor_nombre      string
+		Alt_portada       string
+		Uri               string
+		Fecha_publicacion string
 	}
 
 	type response struct {
@@ -61,10 +64,13 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 
 		for _, pub := range publicaciones {
 			resultados = append(resultados, resultado{
-				Id:      pub.Id,
-				Titulo:  pub.Titulo,
-				Resumen: pub.Resumen,
-				Uri:     "/post/" + pub.Id,
+				Id:                pub.Id,
+				Titulo:            pub.Titulo,
+				Autor_nombre:      pub.Autor.Nombre,
+				Alt_portada:       pub.Alt_portada,
+				Resumen:           pub.Resumen,
+				Uri:               "/post/" + pub.Id,
+				Fecha_publicacion: pub.Fecha_publicacion,
 			})
 		}
 

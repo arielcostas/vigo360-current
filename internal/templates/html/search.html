@@ -9,20 +9,21 @@
 
 <body>
 	{{ template "_header.html" }}
-	<main>
-		<div id="busqueda">
-			<h2 id="section-title">Resultados de la búsqueda para <code>{{ .Termino }}</code></h2>
+	<main id="sections">
+		<h2 id="section-title">Resultados de la búsqueda para {{ .Termino }}</h2>
+		<ul id="section-articles">
 			{{ range .Resultados }}
-			<div id="busqueda-list">
-				<article>
-					<a href="{{ .Uri }}">
-						<h3>{{ .Titulo }}</h3>
-						<p>{{ .Resumen }}</p>
-					</a>
-				</article>
-			</div>
+			<li>
+				<a href="{{ .Uri }}">
+					<img width="370" height="270" src="/static/images/{{ .Id }}.webp" />
+					<div>
+						<span class="article-author">{{ .Autor_nombre }} / {{ dateDayMonth .Fecha_publicacion}}</span>
+						<h3 class="article-title">{{ .Titulo }}</h3>
+					</div>
+				</a>
+			</li>
 			{{ end }}
-		</div>
+		</ul>
 	</main>
 	{{ template "_footer.html" }}
 </body>
