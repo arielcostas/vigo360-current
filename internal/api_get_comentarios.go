@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -36,7 +35,6 @@ func (s *Server) handle_api_listar_comentarios(w http.ResponseWriter, r *http.Re
 	}
 
 	if len(comentarios) == 0 {
-		fmt.Fprintf(w, "[]")
 		return
 	}
 

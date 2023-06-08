@@ -8,6 +8,7 @@ import (
 	"image/png"
 	"io"
 
+	"github.com/Kagami/go-avif"
 	"github.com/chai2010/webp"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/nfnt/resize"
@@ -33,7 +34,7 @@ func imagenDesdeMime(archivo []byte) (image.Image, error) {
 
 }
 
-func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaWebp bytes.Buffer, err error) {
+func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaWebp bytes.Buffer, portadaAvif bytes.Buffer, err error) {
 	var portada image.Image
 	photoBytes, err := io.ReadAll(photo)
 	if err != nil {
@@ -41,6 +42,7 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 	}
 	portadaJpg = bytes.Buffer{}
 	portadaWebp = bytes.Buffer{}
+	portadaAvif = bytes.Buffer{}
 
 	ctype := mimetype.Detect(photoBytes)
 	if err != nil {
@@ -63,15 +65,18 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 		return
 	}
 
-	// Resize to 800x450
 	portada = resize.Resize(1200, 675, portada, resize.Bicubic)
 
 	// Encode as formats
-	err = jpeg.Encode(&portadaJpg, portada, &jpeg.Options{Quality: 95})
+	err = jpeg.Encode(&portadaJpg, portada, &jpeg.Options{Quality: 88})
 	if err != nil {
 		return
 	}
 	err = webp.Encode(&portadaWebp, portada, &webp.Options{Quality: 98})
+	if err != nil {
+		return
+	}
+	err = avif.Encode(&portadaAvif, portada, &avif.Options{Quality: 5})
 	if err != nil {
 		return
 	}

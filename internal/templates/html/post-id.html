@@ -81,8 +81,16 @@
 		<div id="post-main">
 			<article>
 				<figure id="post-thumbnail">
-					<img width="1024" height="576" src="/static/images/{{ .Post.Id}}.webp"
-						alt="{{ .Post.Alt_portada }}" />
+					<picture id="portada_actual" class="user-article-thumbnail">
+						<source srcset="/static/images/{{ .Post.Id}}.avif" type="image/avif"
+							alt="{{ .Post.Alt_portada }}" title="{{ .Post.Alt_portada }}"
+							width="220" height="137">
+						<source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
+							alt="{{ .Post.Alt_portada }}" title="{{ .Post.Alt_portada }}"
+							width="220" height="137">
+						<img src="/static/thumb/{{ .Post.Id }}.jpg" width="220" height="137"
+							alt="{{ .Post.Alt_portada }}" />
+					</picture>
 					<figcaption>{{ .Post.Alt_portada }}</figcaption>
 				</figure>
 

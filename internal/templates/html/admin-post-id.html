@@ -49,8 +49,11 @@
 					</select>
 					<hr>
 					<h3>Foto de portada</h3>
-					<img id="portada_actual" src="/static/images/{{ .Post.Id }}.webp" height="224px" width="400px"
-						alt="Foto de portada actual" />
+					<picture id="portada_actual">
+						<source srcset="/static/images/{{ .Post.Id}}.avif" type="image/avif" height="224px" width="400px" alt="Foto de portada actual">
+						<source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp" height="224px" width="400px" alt="Foto de portada actual">
+						<img src="/static/thumb/{{ .Post.Id }}.jpg" height="224px" width="400px" alt="Foto de portada actual" />
+					</picture>
 					<input type="file" id="portada" name="portada" accept="image/png, image/jpeg, image/webp">
 					<p>
 						Debe tener una relación de aspecto 16:9, ser menor de 20 MB y

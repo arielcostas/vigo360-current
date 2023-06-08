@@ -38,8 +38,16 @@
 			{{ $page := .CurrentPage }}
 			{{- range $i, $post := .Posts }}
 			<a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
-				<img src="/static/images/{{ $post.Id }}.webp" alt="{{ $post.Alt_portada}}"
-					title="{{ $post.Alt_portada }}" {{ if gt $i 3 }} loading="lazy" {{ end }} />
+				<picture id="portada_actual" class="user-article-thumbnail">
+					<source srcset="/static/images/{{ $post.Id}}.avif" type="image/avif"
+						alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }}
+						loading="lazy" {{ end }}>
+					<source srcset="/static/images/{{ $post.Id}}.webp" type="image/webp"
+						alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }}
+						loading="lazy" {{ end }}>
+					<img src="/static/thumb/{{ $post.Id }}.jpg"
+						alt="{{ $post.Alt_portada }}" />
+				</picture>
 				<div class="article-info">
 					<p class="article-author">
 						{{ $post.Autor.Nombre }} - {{ dateDayMonth $post.Fecha_publicacion }}

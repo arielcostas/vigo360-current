@@ -14,6 +14,8 @@ Versión actual de Vigo360, usando renderizado HTML en Go.
 
 Ver [INSTALL.md](INSTALL.md)
 
+Necesario para AVIF: `sudo apt-get install libaom-dev`
+
 ## Licencia
 
 Copyright 2022-23 Ariel Costas Guerrero. Cedido bajo licencia BSD 3-Clause.

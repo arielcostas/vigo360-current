@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"database/sql"
 	"errors"
+	"io"
 	"net/http"
 	"os"
+
 	"vigo360.es/new/internal/models"
 	"vigo360.es/new/internal/notify"
 
@@ -157,33 +159,7 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		// Image uploaded
 		// TODO: Revisar esto
 		if !errors.Is(err, http.ErrMissingFile) {
-			uppath := os.Getenv("UPLOAD_PATH")
-
-			var portadaJpg, portadaWebp bytes.Buffer
-			if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
-				logger.Error("error procesando imágenes: %s", err.Error())
-				s.handleError(w, 500, "El formato de la imagen no es válido. El resto de datos se han guardado.")
-				return
-			} else if err != nil {
-				logger.Error("error procesando imágenes: %s", err.Error())
-				s.handleError(w, 500, "Error procesando la imagen. El resto de datos fueron guardados.")
-				return
-			} else {
-				portadaJpg = pj
-				portadaWebp = pw
-			}
-
-			if e2 := os.WriteFile(uppath+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm); e2 != nil {
-				logger.Error("error guardando imagen jpg: %s", err.Error())
-				s.handleError(w, 500, "Error guardando imagen. El resto de datos fueron guardados.")
-				return
-			}
-
-			if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm); e2 != nil {
-				logger.Error("error guardando imagen webp: %s", err.Error())
-				s.handleError(w, 500, "Error guardando imagen. El resto de datos fueron guardados.")
-				return
-			}
+			go encodeImagesAndSaveCoroutine(portada_file, publicacion_id)
 		}
 
 		defer w.WriteHeader(303)
@@ -192,5 +168,39 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		} else {
 			w.Header().Add("Location", r.URL.Path)
 		}
+	}
+}
+
+func encodeImagesAndSaveCoroutine(portada_file io.Reader, publicacion_id string) {
+	uppath := os.Getenv("UPLOAD_PATH")
+	var err error
+	logger := logger.NewLogger("encodeImagesAndSaveCoroutine " + publicacion_id)
+
+	var portadaJpg, portadaWebp, portadaAvif bytes.Buffer
+	if pj, pw, pa, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
+		logger.Error("error procesando imágenes: %s", err.Error())
+		return
+	} else if err != nil {
+		logger.Error("error procesando imágenes: %s", err.Error())
+		return
+	} else {
+		portadaJpg = pj
+		portadaWebp = pw
+		portadaAvif = pa
+	}
+
+	if e2 := os.WriteFile(uppath+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm); e2 != nil {
+		logger.Error("error guardando imagen jpg: %s", err.Error())
+		return
+	}
+
+	if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm); e2 != nil {
+		logger.Error("error guardando imagen webp: %s", err.Error())
+		return
+	}
+
+	if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".avif", portadaAvif.Bytes(), os.ModePerm); e2 != nil {
+		logger.Error("error guardando imagen avif: %s", err.Error())
+		return
 	}
 }
