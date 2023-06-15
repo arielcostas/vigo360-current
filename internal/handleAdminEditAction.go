@@ -157,9 +157,8 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		}
 
 		// Image uploaded
-		// TODO: Revisar esto
 		if !errors.Is(err, http.ErrMissingFile) {
-			go encodeImagesAndSaveCoroutine(portada_file, publicacion_id)
+			encodeImagesAndSave(portada_file, publicacion_id)
 		}
 
 		defer w.WriteHeader(303)
@@ -171,13 +170,13 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 	}
 }
 
-func encodeImagesAndSaveCoroutine(portada_file io.Reader, publicacion_id string) {
+func encodeImagesAndSave(portada_file io.Reader, publicacion_id string) {
 	uppath := os.Getenv("UPLOAD_PATH")
 	var err error
-	logger := logger.NewLogger("encodeImagesAndSaveCoroutine " + publicacion_id)
+	logger := logger.NewLogger("encodeImagesAndSave " + publicacion_id)
 
-	var portadaJpg, portadaWebp, portadaAvif bytes.Buffer
-	if pj, pw, pa, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
+	var portadaJpg, portadaWebp bytes.Buffer
+	if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
 		logger.Error("error procesando imágenes: %s", err.Error())
 		return
 	} else if err != nil {
@@ -186,7 +185,6 @@ func encodeImagesAndSaveCoroutine(portada_file io.Reader, publicacion_id string)
 	} else {
 		portadaJpg = pj
 		portadaWebp = pw
-		portadaAvif = pa
 	}
 
 	if e2 := os.WriteFile(uppath+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm); e2 != nil {
@@ -196,11 +194,6 @@ func encodeImagesAndSaveCoroutine(portada_file io.Reader, publicacion_id string)
 
 	if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm); e2 != nil {
 		logger.Error("error guardando imagen webp: %s", err.Error())
-		return
-	}
-
-	if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".avif", portadaAvif.Bytes(), os.ModePerm); e2 != nil {
-		logger.Error("error guardando imagen avif: %s", err.Error())
 		return
 	}
 }
