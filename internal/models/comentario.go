@@ -11,6 +11,7 @@ const (
 type Comentario struct {
 	Id             string
 	Publicacion_id string
+	Publicacion_titulo string
 	Padre_id       string
 
 	Nombre         string
