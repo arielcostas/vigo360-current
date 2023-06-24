@@ -336,9 +336,9 @@ main#authors #user-info #section-title {
 
 #post-inner {
 	padding: 1rem 4%;
-	max-width: 85ch;
+	max-width: 90ch;
 	margin: 1rem auto;
-	text-align: left;
+	text-align: justify;
 	hyphens: auto;
 
 	h2 {
@@ -352,31 +352,27 @@ main#authors #user-info #section-title {
 		line-height: 1;
 		margin-bottom: 1rem;
 	}
-}
 
-article#post-inner p img {
-	width: 100%;
-	object-fit: cover;
-}
+	p img {
+		width: 100%;
+		object-fit: cover;
+	}
 
-#post-inner p a {
-	text-decoration: underline;
-}
+	p a {
+		text-decoration: underline;
+	}
 
-#post-inner a:hover {
-	color: green;
+	p a:hover {
+		color: green;
+	}
 }
 
 #post-inner>p,
 #post-inner>ul li,
 #post-inner>ol li {
 	margin-bottom: 1rem;
-	font-size: 20px;
+	font-size: 19px;
 	line-height: 1.8;
-}
-
-#post-inner > ul li {
-	margin-bottom: 0;
 }
 
 #post-inner blockquote p {

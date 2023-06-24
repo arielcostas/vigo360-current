@@ -1,5 +1,5 @@
 #comment-section-container {
-	padding: 0 15rem;
+	padding: 0 12rem;
 }
 
 #comment_container {
@@ -56,6 +56,12 @@
 			height: 1.25rem;
 			margin-left: 0.25rem;
 		}
+	}
+}
+
+.post_comment_content {
+	> p {
+		flex-direction: column;
 	}
 }
 
