@@ -34,7 +34,7 @@ func imagenDesdeMime(archivo []byte) (image.Image, error) {
 }
 
 func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaWebp bytes.Buffer, err error) {
-	var portada image.Image
+	var portada, thumb image.Image
 	photoBytes, err := io.ReadAll(photo)
 	if err != nil {
 		return
@@ -64,9 +64,10 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 	}
 
 	portada = resize.Resize(1200, 675, portada, resize.Bicubic)
+	thumb = resize.Resize(800, 450, portada, resize.Bicubic)
 
 	// Encode as formats
-	err = jpeg.Encode(&portadaJpg, portada, &jpeg.Options{Quality: 88})
+	err = jpeg.Encode(&portadaJpg, thumb, &jpeg.Options{Quality: 90})
 	if err != nil {
 		return
 	}

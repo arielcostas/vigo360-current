@@ -97,9 +97,6 @@
 					<a href="/post/{{ $post.Id }}">
 						<div>
 							<picture id="portada_actual" class="user-article-thumbnail">
-								<source srcset="/static/images/{{ $post.Id}}.avif" type="image/avif"
-									alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }}
-									loading="lazy" {{ end }} width="220" height="137">
 								<source srcset="/static/images/{{ $post.Id}}.webp" type="image/webp"
 									alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }}
 									loading="lazy" {{ end }} width="220" height="137">

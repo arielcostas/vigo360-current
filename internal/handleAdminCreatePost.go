@@ -22,9 +22,6 @@ var defaultImageJPG []byte
 //go:embed extra/default.webp
 var defaultImageWebp []byte
 
-//go:embed extra/default.avif
-var defaultImageAvif []byte
-
 func (s *Server) handleAdminCreatePost() http.HandlerFunc {
 	type entrada struct {
 		Titulo string `validate:"required,min=3,max=80"`
@@ -87,13 +84,6 @@ func (s *Server) handleAdminCreatePost() http.HandlerFunc {
 		if err := os.WriteFile(photopath+"/images/"+id+".webp", defaultImageWebp, 0o644); err != nil {
 			tx.Rollback()
 			logger.Error("error escribiendo imagen webp: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
-			return
-		}
-
-		if err := os.WriteFile(photopath+"/images/"+id+".avif", defaultImageAvif, 0o644); err != nil {
-			tx.Rollback()
-			logger.Error("error escribiendo imagen avif: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
