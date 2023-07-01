@@ -1,0 +1,36 @@
+.form-inline {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.5rem;
+
+	outline: var(--outline);
+	border-radius: 4px;
+}
+
+.form-inline > * {
+	font-size: 18px;
+	line-height: 1;
+}
+
+.form-inline > input {
+	font-weight: 500;
+	width: 35ch;
+
+	padding: 0.1rem 0.5rem;
+	border: none;
+	height: 100%;
+}
+
+.form-inline > input:focus {
+	outline: none;
+}
+
+.form-inline:focus-within {
+	outline: var(--);
+}
+
+.form-inline .button {
+	margin: 0.15rem;
+	padding: 0.5rem 1rem;
+}

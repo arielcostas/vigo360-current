@@ -1,8 +1,7 @@
 :root {
-	--gray: #f6f6fa;
-
-	--accent: var(--gray);
-	--text: rgb(18, 20, 24);
+	--fondo: hsl(210deg, 40%, 98%);
+	--gray: hsl(0, 0%, 80%);
+	--text: hsl(0, 0%, 5%);
 
 	--theme-dark: hsl(134deg, 40%, 35%);
 	--theme-main: hsl(134deg, 40%, 45%);
@@ -16,6 +15,8 @@
 	--incorrect-light: hsl(356deg, 86%, 58%);
 
 	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
+	--outline: 1px solid var(--gray);
+	--outline-primary: 2px solid var(--theme-main);
 
 	--sans-fonts: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 	--mono-fonts: "Noto Sans Mono", monospace;
@@ -47,7 +48,7 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	min-height: 100vh;
-	background-color: #f2f2f6;
+	background-color: var(--fondo);
 
 	--sides-pad: 10%;
 }
@@ -81,40 +82,36 @@ header {
     padding-bottom: 0;
 }
 
-header-brand > * {
+#header-brand > * {
 	font-size: 24px;
-    color: var(--texto);
+    color: var(--text);
     display: inline;
     vertical-align: middle;
     text-transform: uppercase;
 	user-select: none;
 }
 
-.nav-link {
-	font-size: 1rem;
-	text-decoration: none;
-	color: var(--theme-main);
-	padding: 0;
-	font-weight: 700;
-	text-transform: uppercase;
-	border-bottom: 2px solid rgba(0,0,0,0);
-	margin: 1rem 1.5rem;
-	transform: translateY(2px);
-	transition: all 250ms ease-in-out;
-}
-
-.nav-link:hover {
-	text-decoration: none;
-	border-bottom-color: var(--theme-main);
-	transform: none;
-}
-
 header nav {
 	display: flex;
+	align-items: center;
+	gap: 2rem;
 }
 
-header .mobile {
-	display: none;
+header nav a {
+	font-size: 16px;
+	font-weight: bold;
+
+	text-transform: uppercase;
+
+	border-bottom: 2px solid transparent;
+	transform: translateY(2px);
+
+	transition: border-bottom 300ms, transform 300ms;
+}
+
+header nav a:hover {
+	transform: unset;
+	border-bottom: 2px solid var(--primario-dark);
 }
 
 footer {
