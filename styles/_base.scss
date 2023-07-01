@@ -3,16 +3,22 @@
 
 	--accent: var(--gray);
 	--text: rgb(18, 20, 24);
-	--theme: hsl(138deg, 80%, 40%);
 
-	--correct: hsl(138deg, 40%, 40%);
-	--warning: hsla(60, 100%, 70%, 0.7);
-	--incorrect: hsl(2deg, 70%, 40%);
+	--theme-dark: hsl(134deg, 40%, 35%);
+	--theme-main: hsl(134deg, 40%, 45%);
+	--theme-light: hsl(134deg, 40%, 55%);
+
+	--warning-dark: hsla(60, 100%, 70%);
+	--warning: hsla(60, 100%, 70%);
+
+	--incorrect-dark: hsl(356deg, 86%, 38%);
+	--incorrect-main: hsl(356deg, 86%, 48%);
+	--incorrect-light: hsl(356deg, 86%, 58%);
 
 	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
 
-	--sans-fonts: -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
-	--mono-fonts: "Fira Code", "Cascadia Code", "Noto Sans Mono", Consolas, monospace;
+	--sans-fonts: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+	--mono-fonts: "Noto Sans Mono", monospace;
 
 	font-family: var(--sans-fonts);
 	font-kerning: normal;
@@ -20,13 +26,11 @@
 	font-size: 16px;
 
 	scroll-behavior: smooth;
-	line-height: 1.69;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+	line-height: 1.6;
 }
 
 ::selection {
-	background: var(--theme);
+	background: var(--theme-main);
 	color: #fff;
 }
 
@@ -48,7 +52,7 @@ body {
 
 a {
 	text-decoration: none;
-	color: var(--theme);
+	color: var(--theme-main);
 	transition: color 300ms, opacity 300ms, background-color 300ms;
 }
 
@@ -65,7 +69,7 @@ header {
 	letter-spacing: 1px;
 
 	background: #fff;
-	border-top: 5px solid var(--theme);
+	border-top: 5px solid var(--theme-main);
 }
 
 #header-brand,
@@ -104,7 +108,7 @@ h1 {
 .nav-link {
 	font-size: 1rem;
 	text-decoration: none;
-	color: var(--theme);
+	color: var(--theme-main);
 	padding: 0;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -116,7 +120,7 @@ h1 {
 
 .nav-link:hover {
 	text-decoration: none;
-	border-bottom-color: var(--theme);
+	border-bottom-color: var(--theme-main);
 	transform: none;
 }
 
@@ -169,7 +173,10 @@ select {
 	top: 15%;
 	font-size: 1.2rem;
 	font-weight: 900;
+
 	background-color: var(--warning);
+	border: 1px solid var(--warning-dark);
+
 	padding: 0.8rem;
 }
 
@@ -185,25 +192,25 @@ select {
 }
 
 button.btn-theme {
-	background-color: var(--correct);
-	border-color: var(--theme);
+	background-color: var(--theme-main);
+	border-color: var(--theme-dark);
 	color: white;
 }
 
 button.btn-outline-theme {
-	border: 1px solid var(--correct);
+	border: 1px solid var(--theme-main);
 	background: white;
-	color: var(--theme);
+	color: var(--theme-main);
 }
 
 button.btn-empty-theme {
 	border: none;
-	color: var(--theme);
+	color: var(--theme-main);
 	background: #ffffff00;
 }
 
 button.btn-error {
-	background-color: var(--incorrect);
+	background-color: var(--incorrect-main);
 	border-color: darkred;
 	color: white;
 }

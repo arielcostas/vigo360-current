@@ -34,7 +34,7 @@
 <body>
 	{{ template "_header.html" }}
 	<main>
-		<div id="frontpage-articles">
+		<section id="frontpage-articles">
 			{{ $page := .CurrentPage }}
 			{{- range $i, $post := .Posts }}
 			<a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
@@ -56,8 +56,8 @@
 				</div>
 			</a>
 			{{- end }}
-		</div>
-		<div class="pager">
+		</section>
+		<section class="pager">
 			{{ $currPage := .CurrentPage}}
 			{{ range (iterateInt .PageCount)}}
 			{{ if eq $currPage .}}
@@ -66,7 +66,7 @@
 			<a href="?page={{ . }}">{{ . }}</a>
 			{{ end }}
 			{{ end }}
-		</div>
+		</section>
 	</main>
 	{{ template "_footer.html" }}
 </body>

@@ -30,7 +30,7 @@
 }
 
 #frontpage-articles a:hover .article-title {
-	color: var(--theme);
+	color: var(--theme-main);
 }
 
 #frontpage-articles .primero img {
@@ -42,7 +42,7 @@
 	font-family: var(--mono-fonts);
 	text-transform: uppercase;
 	font-weight: 700;
-	color: var(--theme);
+	color: var(--theme-main);
 }
 
 .article-info {
