@@ -3,18 +3,19 @@
 		<img width="48" height="48" alt="Logo de Vigo360" src="/static/logo.webp">
 		<h1>Vigo360</h1>
 	</a>
-	<form action="/buscar">
+	<form action="/buscar" method="get">
 		<input type="search" name="termino" id="busqueda-termino" placeholder="Buscar en Vigo360">
+		<button type="submit" class="button button-primary" title="Buscar en Vigo360">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+				<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+				<path d="M21 21l-6 -6"></path>
+			</svg>
+		</button>
 	</form>
-	<nav class="desktop">
+	<nav>
 		<a class="nav-link" href="/trabajos">Trabajos</a>
 		<a class="nav-link" href="/autores">Quiénes somos</a>
 		<a class="nav-link" href="/tags">Secciones</a>
 	</nav>
-	<details class="mobile" id="nav">
-		<summary>Navegación</summary>
-		<a class="nav-link" href="/trabajos">Trabajos</a>
-		<a class="nav-link" href="/autores">Quiénes somos</a>
-		<a class="nav-link" href="/tags">Secciones</a>
-	</details>
 </header>
