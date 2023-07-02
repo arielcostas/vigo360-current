@@ -2,11 +2,6 @@
 @use "admin/editor-perfil.scss";
 @use "admin/moderar-comentarios.scss";
 
-body {
-	display: flex;
-	flex-direction: column;
-}
-
 main {
 	border-radius: 4px;
 	box-shadow: var(--shadow);
@@ -15,7 +10,6 @@ main {
 	margin: 2rem auto auto;
 	padding: 2rem 3rem;
 }
-
 
 input[type="file"] {
 	border: 0;
@@ -29,7 +23,7 @@ input[disabled] {
 }
 
 textarea {
-	font-family: "Fira Code", "JetBrains Mono", "Cascadia Code", "Noto Sans Mono", Consolas, monospace;
+	font-family: var(--mono-fonts);
     font-size: 15px;
 }
 

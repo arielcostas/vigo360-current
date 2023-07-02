@@ -1,28 +1,30 @@
+@use "global/_all.scss";
+
 :root {
-	--fondo: hsl(210deg, 40%, 98%);
-	--gray: hsl(0, 0%, 80%);
-	--text: hsl(0, 0%, 5%);
+	--fondo: $fondo;
+	--gray: $gray;
+	--text: $text;
 
-	--theme-dark: hsl(134deg, 40%, 35%);
-	--theme-main: hsl(134deg, 40%, 45%);
-	--theme-light: hsl(134deg, 40%, 55%);
+	--theme-dark: $primary-dark;
+	--theme-main: $primary-main;
+	--theme-light: $primary-light;
 
-	--warning-dark: hsla(60, 100%, 70%);
-	--warning: hsla(60, 100%, 70%);
+	--warning-dark: $warning-dark;
+	--warning: $warning;
+	--warning-light: $warning-light;
 
-	--incorrect-dark: hsl(356deg, 86%, 38%);
-	--incorrect-main: hsl(356deg, 86%, 48%);
-	--incorrect-light: hsl(356deg, 86%, 58%);
+	--incorrect-dark: $incorrect-dark;
+	--incorrect-main: $incorrect-main;
+	--incorrect-light: $incorrect-light;
 
 	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
 	--outline: 1px solid var(--gray);
-	--outline-primary: 2px solid var(--theme-main);
+	--outline-primary: 2px solid $primary-main;
 
-	--sans-fonts: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
-	--mono-fonts: "Noto Sans Mono", monospace;
+	--sans-fonts: $sans-fonts;
+	--mono-fonts: $mono-fonts;
 
 	font-family: var(--sans-fonts);
-	font-kerning: normal;
 	font-weight: 400;
 	font-size: 16px;
 
@@ -31,7 +33,7 @@
 }
 
 ::selection {
-	background: var(--theme-main);
+	background-color: $primary-main;
 	color: #fff;
 }
 
@@ -41,40 +43,19 @@
 	box-sizing: border-box;
 }
 
-body {
-	margin: 0 auto;
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	min-height: 100vh;
-	background-color: var(--fondo);
-
-	--sides-pad: 10%;
-}
 
 a {
 	text-decoration: none;
-	color: var(--theme-main);
+	color: $primary-dark;
 	transition: color 300ms, opacity 300ms, background-color 300ms;
+}
+
+a:hover, a:focus {
+	color: $primary-main;
 }
 
 p {
 	font-family: var(--sans-fonts);
-}
-
-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-	width: 100%;
-	letter-spacing: 1px;
-
-	background: #fff;
-	border-top: 5px solid var(--theme-main);
-
-	padding: 0.5rem var(--sides-pad);
 }
 
 #header-brand {
@@ -112,23 +93,6 @@ header nav a {
 header nav a:hover {
 	transform: unset;
 	border-bottom: 2px solid var(--theme-dark);
-}
-
-footer {
-	color: var(--text);
-	font-size: 1.05rem;
-
-	display: flex;
-	justify-content: space-between;
-
-	padding: 1.5rem;
-
-	width: 1280px;
-	margin: 0 auto;
-}
-
-footer div :not(:last-child) {
-	margin-right: 1rem;
 }
 
 form hr {
@@ -195,16 +159,6 @@ button.btn-error {
 
 button.btn-large {
 	width: 100%;
-}
-
-@media (max-width: 1280px) {
-	body {
-		--sides-pad: 2rem;
-	}
-	
-	header .form-inline input {
-		max-width: 20ch;
-	}	
 }
 
 @media (max-width: 960px) {
