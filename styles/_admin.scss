@@ -35,7 +35,7 @@ textarea {
 
 .dialog-error {
 	margin-bottom: 1rem;
-	color: var(--incorrect);
+	color: var(--incorrect-dark);
 	font-weight: bold;
 	margin-left: 1rem;
 }
@@ -180,7 +180,7 @@ main h2 {
 }
 
 .list-post > a.unpublished {
-	color: var(--incorrect);
+	color: var(--incorrect-main);
 }
 
 #post-editor {
