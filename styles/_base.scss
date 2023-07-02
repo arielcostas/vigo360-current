@@ -92,7 +92,7 @@ header nav a {
 
 header nav a:hover {
 	transform: unset;
-	border-bottom: 2px solid var(--theme-dark);
+	border-bottom: 2px solid var(--primary-dark);
 }
 
 form hr {
@@ -134,20 +134,20 @@ select {
 }
 
 button.btn-theme {
-	background-color: var(--theme-main);
-	border-color: var(--theme-dark);
+	background-color: var(--primary-main);
+	border-color: var(--primary-dark);
 	color: white;
 }
 
 button.btn-outline-theme {
-	border: 1px solid var(--theme-main);
+	border: 1px solid var(--primary-main);
 	background: white;
-	color: var(--theme-main);
+	color: var(--primary-main);
 }
 
 button.btn-empty-theme {
 	border: none;
-	color: var(--theme-main);
+	color: var(--primary-main);
 	background: #ffffff00;
 }
 

@@ -60,7 +60,7 @@ blockquote::before {
 	top: 0;
 	bottom: 0;
 	left: 0;
-	background: var(--theme-main);
+	background: var(--primary-main);
 }
 
 blockquote p {
@@ -132,7 +132,7 @@ main#authors #section-title,
 	text-decoration: none;
 
 	&:hover .authors-name {
-		color: var(--theme-main);
+		color: var(--primary-main);
 	}
 }
 
@@ -217,7 +217,7 @@ main#authors #user-info #section-title {
 }
 
 .user-article>a:hover .user-article-title {
-	color: var(--theme-main);
+	color: var(--primary-main);
 }
 
 .user-article>a>div {
@@ -302,7 +302,7 @@ main#authors #user-info #section-title {
 }
 
 #papers-list>article>a:hover .article-title {
-	color: var(--theme-main);
+	color: var(--primary-main);
 }
 
 #papers-list img {
@@ -402,7 +402,7 @@ main#authors #user-info #section-title {
 }
 
 #post-author-container>a:hover .post-author-info h3 {
-	color: var(--theme-main);
+	color: var(--primary-main);
 }
 
 .post-author-info {
@@ -426,7 +426,7 @@ main#authors #user-info #section-title {
 
 code {
 	font-size: 1rem;
-	color: var(--theme-main);
+	color: var(--primary-main);
 	background: var(--gray);
 }
 
@@ -450,7 +450,7 @@ code {
 		text-decoration: none;
 
 		.article-title {
-			color: var(--theme-main);
+			color: var(--primary-main);
 		}
 	}
 }
@@ -478,7 +478,7 @@ code {
 }
 
 .post-inline-related:hover {
-	color: var(--theme-main);
+	color: var(--primary-main);
 	text-decoration: none;
 }
 
@@ -528,7 +528,7 @@ code {
 }
 
 .post-series h4 {
-	background-color: var(--theme-main);
+	background-color: var(--primary-main);
 	color: white;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
@@ -575,7 +575,7 @@ code {
 }
 
 #section-articles>li a:hover h3 {
-	color: var(--theme-main);
+	color: var(--primary-main);
 }
 
 #section-articles>li div {
