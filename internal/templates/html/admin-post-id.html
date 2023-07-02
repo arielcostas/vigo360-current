@@ -75,9 +75,9 @@
 			<input type="hidden" name="post-id" value="{{ .Post.Id }}">
 
 			<div class="submit-buttons">
-				<button class="btn-empty-theme" type="submit" formtarget="_blank" formaction="/admin/preview">Previsualizar</button>
-				<button name="salir" value="false" type="submit" class="btn-outline-theme">Guardar y seguir editando</button>
-				<button name="salir" value="true" type="submit" class="btn-theme">Guardar y salir</button>
+				<button type="submit" formtarget="_blank" formaction="/admin/preview">Previsualizar</button>
+				<button name="salir" value="false" type="submit" class="button button-primary-outline">Guardar y seguir editando</button>
+				<button name="salir" value="true" type="submit" class="button button-primary">Guardar y salir</button>
 			</div>
 
 		</form>
@@ -96,7 +96,7 @@
 				<form id="extra-image-upload">
 					<h3>Subir imágen</h3>
 					<input type="file" name="archivo" id="archivo" accept="image/png, image/jpeg, image/webp">
-					<button class="btn-theme">Subir</button>
+					<button class="button button-primary">Subir</button>
 				</form>
 			</div>
 		</div>

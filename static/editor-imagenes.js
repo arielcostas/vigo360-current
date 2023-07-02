@@ -29,7 +29,7 @@ function crearFigura(i) {
 	})
 
 	let deleteButton = document.createElement("button")
-	deleteButton.setAttribute("class", "btn-error btn-large")
+	deleteButton.setAttribute("class", "button button-incorrect")
 	deleteButton.innerText = "Eliminar"
 	deleteButton.addEventListener("click", e => {
 		e.preventDefault()

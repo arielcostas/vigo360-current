@@ -135,34 +135,6 @@ select {
 	font-size: 1.1rem;
 }
 
-button.btn-theme {
-	background-color: var(--primary-main);
-	border-color: var(--primary-dark);
-	color: white;
-}
-
-button.btn-outline-theme {
-	border: 1px solid var(--primary-main);
-	background: white;
-	color: var(--primary-main);
-}
-
-button.btn-empty-theme {
-	border: none;
-	color: var(--primary-main);
-	background: #ffffff00;
-}
-
-button.btn-error {
-	background-color: var(--incorrect-main);
-	border-color: darkred;
-	color: white;
-}
-
-button.btn-large {
-	width: 100%;
-}
-
 @media (max-width: 960px) {
 	header {
 		flex-direction: column;

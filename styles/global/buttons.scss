@@ -26,3 +26,25 @@
 .button-primary:focus {
 	background-color: var(--primary-dark);
 }
+
+.button-primary-outline {
+	background-color: transparent;
+	border-color: var(--primary-main);
+	color: currentColor;
+}
+
+.button-primary-outline:hover,
+.button-primary-outline:focus {
+	background-color: var(--primary-main);
+}
+
+.button-incorrect {
+	background-color: var(--incorrect-main);
+	border-color: var(--incorrect-dark);
+	color: white;
+}
+
+.button-incorrect:hover,
+.button-incorrect:focus {
+	background-color: var(--incorrect-dark);
+}
