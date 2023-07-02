@@ -5,7 +5,7 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	min-height: 100vh;
-	background-color: $fondo;
+	background-color: var(--fondo);
 
 	--sides-pad: 10%;
 }

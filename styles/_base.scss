@@ -1,28 +1,28 @@
 @use "global/_all.scss";
 
 :root {
-	--fondo: $fondo;
-	--gray: $gray;
-	--text: $text;
-
-	--theme-dark: $primary-dark;
-	--theme-main: $primary-main;
-	--theme-light: $primary-light;
-
-	--warning-dark: $warning-dark;
-	--warning: $warning;
-	--warning-light: $warning-light;
-
-	--incorrect-dark: $incorrect-dark;
-	--incorrect-main: $incorrect-main;
-	--incorrect-light: $incorrect-light;
+	--fondo: hsl(210deg, 40%, 98%);
+	--gray: hsl(0, 0%, 80%);
+	--text: hsl(0, 0%, 5%);
+	
+	--primary-dark: hsl(134deg, 40%, 35%);
+	--primary-main: hsl(134deg, 40%, 45%);
+	--primary-light: hsl(134deg, 40%, 55%);
+	
+	--warning-dark: hsla(60, 70%, 50%);
+	--warning: hsl(60, 85%, 50%);
+	--warning-light: hsl(60, 100%, 50%);
+	
+	--incorrect-dark: hsl(356deg, 86%, 38%);
+	--incorrect-main: hsl(356deg, 86%, 48%);
+	--incorrect-light: hsl(356deg, 86%, 58%);
 
 	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
 	--outline: 1px solid var(--gray);
-	--outline-primary: 2px solid $primary-main;
+	--outline-primary: 2px solid var(--primary-main);
 
-	--sans-fonts: $sans-fonts;
-	--mono-fonts: $mono-fonts;
+	--sans-fonts: BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+	--mono-fonts: "Cascadia Mono", "Fira Code", "Fira Mono", "Noto Sans Mono", "Ubuntu Mono", "Consolas", "Hack", monospace;
 
 	font-family: var(--sans-fonts);
 	font-weight: 400;
@@ -33,7 +33,7 @@
 }
 
 ::selection {
-	background-color: $primary-main;
+	background-color: var(--primary-main);
 	color: #fff;
 }
 
@@ -46,12 +46,12 @@
 
 a {
 	text-decoration: none;
-	color: $primary-dark;
+	color: var(--primary-dark);
 	transition: color 300ms, opacity 300ms, background-color 300ms;
 }
 
 a:hover, a:focus {
-	color: $primary-main;
+	color: var(--primary-main);
 }
 
 p {
