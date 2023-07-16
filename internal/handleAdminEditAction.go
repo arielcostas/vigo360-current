@@ -8,9 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	"vigo360.es/new/internal/models"
-	"vigo360.es/new/internal/notify"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"vigo360.es/new/internal/database"
@@ -22,44 +19,44 @@ import (
 func (s *Server) handleAdminEditAction() http.HandlerFunc {
 
 	type EditPostActionFormInput struct {
-		Titulo      string `validate:"required,min=3,max=80"`
-		Resumen     string `validate:"required,min=3,max=300"`
-		Contenido   string `validate:"required"`
-		Alt_portada string `validate:"required,min=3,max=300"`
+		Titulo     string `validate:"required,min=3,max=80"`
+		Resumen    string `validate:"required,min=3,max=300"`
+		Contenido  string `validate:"required"`
+		AltPortada string `validate:"required,min=3,max=300"`
 
-		Serie_id       string
-		Serie_posicion string
+		SerieId       string
+		SeriePosicion string
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		publicacion_id := mux.Vars(r)["id"]
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		publicacionId := mux.Vars(r)["id"]
 
-		_, err := s.store.publicacion.ObtenerPorId(publicacion_id, false)
+		_, err := s.store.publicacion.ObtenerPorId(publicacionId, false)
 		if err != nil {
-			logger.Error("no se encontró la publicación a editar")
+			log.Error("no se encontró la publicación a editar")
 			s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
 			return
 		}
 
 		if err := r.ParseMultipartForm(26214400); err != nil {
-			logger.Error("no se pudo extraer datos del formulario: %s", err.Error())
+			log.Error("no se pudo extraer datos del formulario: %s", err.Error())
 			s.handleError(w, 404, messages.ErrorFormulario)
 			return
 		}
 
 		fi := EditPostActionFormInput{
-			Titulo:         r.FormValue("art-titulo"),
-			Resumen:        r.FormValue("art-resumen"),
-			Contenido:      r.FormValue("art-contenido"),
-			Alt_portada:    r.FormValue("alt-portada"),
-			Serie_id:       r.FormValue("serie-id"),
-			Serie_posicion: r.FormValue("serie-num"),
+			Titulo:        r.FormValue("art-titulo"),
+			Resumen:       r.FormValue("art-resumen"),
+			Contenido:     r.FormValue("art-contenido"),
+			AltPortada:    r.FormValue("alt-portada"),
+			SerieId:       r.FormValue("serie-id"),
+			SeriePosicion: r.FormValue("serie-num"),
 		}
 
 		if err := validator.New().Struct(fi); err != nil {
 			// TODO: Show actual validation error, and form again
-			logger.Error("error validando el formulario: %s", err.Error())
+			log.Error("error validando el formulario: %s", err.Error())
 			s.handleError(w, 404, messages.ErrorValidacion)
 			return
 		}
@@ -68,41 +65,41 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		var tx *sql.Tx
 
 		if nt, err := database.GetDB().Begin(); err != nil {
-			logger.Error("error comenzando transacción: %s", err.Error())
+			log.Error("error comenzando transacción: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		} else {
 			tx = nt
 		}
 
-		if _, err := tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacion_id); err != nil {
+		if _, err := tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacionId); err != nil {
 			tx.Rollback()
-			logger.Error("error eliminando tags existentes: %s", err.Error())
+			log.Error("error eliminando tags existentes: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
 
 		for _, t := range tags {
-			if _, err := tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacion_id, t); err != nil {
+			if _, err := tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacionId, t); err != nil {
 				tx.Rollback()
-				logger.Error("error insertando nuevas tags: %s", err.Error())
+				log.Error("error insertando nuevas tags: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 				return
 			}
 		}
 
 		query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
-		if _, err := tx.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.Alt_portada, publicacion_id); err != nil {
+		if _, err := tx.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.AltPortada, publicacionId); err != nil {
 			tx.Rollback()
-			logger.Error("error actualizando publicación: %s", err.Error())
+			log.Error("error actualizando publicación: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
 
 		if r.FormValue("publicar") == "on" {
 			query := `UPDATE publicaciones SET fecha_publicacion=NOW() WHERE id=?`
-			if _, err := tx.Exec(query, publicacion_id); err != nil {
-				logger.Error("error actualizando fecha de publicación: %s", err.Error())
+			if _, err := tx.Exec(query, publicacionId); err != nil {
+				log.Error("error actualizando fecha de publicación: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 				return
 			}
@@ -110,7 +107,7 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 			var DOMAIN = os.Getenv("DOMAIN")
 			var indexnowurls = []string{
 				DOMAIN + "/",
-				DOMAIN + "/post/" + publicacion_id,
+				DOMAIN + "/post/" + publicacionId,
 			}
 
 			for _, t := range tags {
@@ -119,46 +116,39 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 
 			err = seo.BingIndexnowRequest(indexnowurls)
 			if err != nil {
-				logger.Error("error llamando a indexnow: %s", err.Error())
-			}
-
-			var sess, _ = r.Context().Value(sessionContextKey("sess")).(models.Session)
-			err = notify.NotifyNewPost(publicacion_id, fi.Titulo, sess.Autor_nombre)
-
-			if err != nil {
-				logger.Error("error notificando nueva publicación: %s", err.Error())
+				log.Error("error llamando a indexnow: %s", err.Error())
 			}
 		}
 
-		if fi.Serie_id != "" {
-			if fi.Serie_posicion == "" {
-				fi.Serie_posicion = "1"
+		if fi.SerieId != "" {
+			if fi.SeriePosicion == "" {
+				fi.SeriePosicion = "1"
 			}
 
-			if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.Serie_id, fi.Serie_posicion, publicacion_id); err != nil {
+			if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.SerieId, fi.SeriePosicion, publicacionId); err != nil {
 				tx.Rollback()
-				logger.Error("error guardando serie: %s", err.Error())
+				log.Error("error guardando serie: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 				return
 			}
 		}
 
 		if err := tx.Commit(); err != nil {
-			logger.Error("error haciendo commit: %s", err.Error())
+			log.Error("error haciendo commit: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
 		}
 
 		portada_file, _, err := r.FormFile("portada")
 		if err != nil && !errors.Is(err, http.ErrMissingFile) {
-			logger.Error("error extrayendo imagen: %s", err.Error())
+			log.Error("error extrayendo imagen: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorValidacion)
 			return
 		}
 
 		// Image uploaded
 		if !errors.Is(err, http.ErrMissingFile) {
-			encodeImagesAndSave(portada_file, publicacion_id)
+			encodeImagesAndSave(portada_file, publicacionId)
 		}
 
 		defer w.WriteHeader(303)

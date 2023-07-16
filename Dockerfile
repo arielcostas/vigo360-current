@@ -1,38 +1,35 @@
-FROM golang:1.20.5 AS build
-
-# prebuild() {
-# 	mkdir -p assets/{extra,images,papers,profile,thumb}
-# 	cp static/* assets/
-# 	sass --source-map -s compressed styles/:assets/
-# 	chmod -R a+r assets/
-# }
-# 
-# if [ "$1" == "run" ];
-# then
-# 	prebuild
-# 	export $(cat .env | grep -v '^#' | xargs)
-# 	go run -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
-# elif  [ "$1" == "build" ];
-# then
-# 	prebuild
-# 	go build -o vigo360 -ldflags "-X main.version=$(git rev-parse --short HEAD)" .
-# else
-# 	printf "Vigo360 launcher script\nusage: ${0} [command]\n\n	build: compiles vigo360 to a binary to be ran in production\n	  run: runs vigo360 via in memory.\n"
-# fi
-# Copilot, generate a Dockerfile that does this
+FROM golang:1.20.5-alpine AS build
 
 COPY . /app
 WORKDIR /app
 RUN go build -o vigo360-server .
 
-FROM gcr.io/distroless/base-debian10 AS runtime
+FROM alpine:3.18.2 AS sass
 
-COPY --from=build /app/vigo360-server /app/executable
+RUN apk add --no-cache nodejs npm
+RUN npm install -g sass
+
+COPY ./styles /app/styles
+
+WORKDIR /app/styles
+
+RUN sass --no-source-map --style compressed admin.scss admin.css
+RUN sass --no-source-map --style compressed main.scss main.css
+
+FROM alpine:3.18.2 AS runtime
+
+RUN apk add --no-cache nginx supervisor
+COPY ./docker/nginx.conf /etc/nginx/nginx.conf
+COPY ./docker/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /app
 
-EXPOSE 8080
+COPY ./static /app/assets
 
-CMD ["/app/executable"]
+COPY --from=build /app/vigo360-server /app/executable
+COPY --from=sass /app/styles/admin.css /app/styles/main.css /app/assets/
 
+ARG PORT=6000
+ENV PORT=${PORT}
 
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

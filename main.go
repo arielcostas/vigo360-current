@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -70,7 +69,10 @@ func checkEnv() error {
 		if err != nil {
 			return fmt.Errorf("no se puede escribir a UPLOAD_PATH: %s", err.Error())
 		}
-		os.Remove(val + "/.test")
+		err = os.Remove(val + "/.test")
+		if err != nil {
+			return fmt.Errorf("no se puede escribir a UPLOAD_PATH: %s", err.Error())
+		}
 	}
 
 	if val, is := os.LookupEnv("DOMAIN"); !is || val == "" {
