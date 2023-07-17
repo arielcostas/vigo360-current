@@ -58,11 +58,11 @@
     </section>
 
     <section id="pager" role="doc-pagelist">
-        <a title="Primera página" {{ if gt .CurrentPage 1 }}href="?page=1"{{ end }}>&laquo;</a>
-        <a title="Página anterior" {{ if gt .CurrentPage 1 }}href="?page={{ sub .CurrentPage 1 }}"{{end}}>&lsaquo;</a>
+        <a title="Primera página" {{ if gt .CurrentPage 1 }}href="?page=1"{{ end }}>↞</a>
+        <a title="Página anterior" {{ if gt .CurrentPage 1 }}href="?page={{ sub .CurrentPage 1 }}"{{end}}>←</a>
         <b title="Página actual ({{ .CurrentPage }})">{{ .CurrentPage }}</b>
-        <a title="Página siguiente" {{ if lt .CurrentPage .PageCount }}href="?page={{ sum .CurrentPage 1 }}"{{end}}>&rsaquo;</a>
-        <a title="Última página" {{ if lt .CurrentPage .PageCount }}href="?page={{ .PageCount }}"{{end}}>&raquo;</a>
+        <a title="Página siguiente" {{ if lt .CurrentPage .PageCount }}href="?page={{ sum .CurrentPage 1 }}"{{end}}>→</a>
+        <a title="Última página" {{ if lt .CurrentPage .PageCount }}href="?page={{ .PageCount }}"{{end}}>↠</a>
     </section>
 </main>
 {{ template "_footer.html" }}
