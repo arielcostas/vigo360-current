@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
+	"github.com/Masterminds/sprig/v3"
 	"html/template"
 	"io"
 	"os"
@@ -13,7 +14,7 @@ import (
 var rawtemplates embed.FS
 
 var t = func() *template.Template {
-	t := template.New("")
+	t := template.New("").Funcs(sprig.FuncMap())
 
 	entries, _ := rawtemplates.ReadDir("html")
 	for _, de := range entries {
@@ -31,8 +32,8 @@ var t = func() *template.Template {
 }()
 
 /*
-	Render ejecuta una plantilla con los datos proveídos, llamando por debajo a ExecuteTemplate.
-	Si hay un error al ejecutar la plantilla, no escribe nada al io.Writer y devuelve el error, con lo que es seguro no tener una página escrita a medias.
+Render ejecuta una plantilla con los datos proveídos, llamando por debajo a ExecuteTemplate.
+Si hay un error al ejecutar la plantilla, no escribe nada al io.Writer y devuelve el error, con lo que es seguro no tener una página escrita a medias.
 */
 func Render(w io.Writer, name string, data any) error {
 	var output bytes.Buffer

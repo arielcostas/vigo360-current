@@ -2,95 +2,94 @@
 <html lang="es-ES">
 
 <head>
-	{{- template "_head.html" . }}
+    {{- template "_head.html" . }}
 
-	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+    <link rel="alternate" type="application/atom+xml" href="/atom.xml"/>
 
-	<script type="application/ld+json">
-		{
-			"@context": "http://schema.org",
-			"@type": "WebPage",
-			"publisher": {
-				"@type": "Organization",
-				"name": "Vigo360",
-				"url": "https://vigo360.es",
-				"email": "vigo360@costas.dev",
-				"logo": {
-					"@type": "ImageObject",
-					"url": "https://vigo360.es/static/logo.webp",
-					"width": 400,
-					"height": 400
-				}
-			},
-			"headline": "Vigo360",
-			"description": "Un proyecto dedicado a estudiar varios aspectos de la ciudad de Vigo (España) y su área de influencia, centrándose en la toponimia y el transporte.",
-			"inLanguage": "es-ES",
-			"url": "https://vigo360.es/"
-		}
-		
-	</script>
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebPage",
+            "publisher": {
+                "@type": "Organization",
+                "name": "Vigo360",
+                "url": "https://vigo360.es",
+                "email": "vigo360@costas.dev",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://vigo360.es/static/logo.webp",
+                    "width": 400,
+                    "height": 400
+                }
+            },
+            "headline": "Vigo360",
+            "description": "Un proyecto dedicado a estudiar varios aspectos de la ciudad de Vigo (España) y su área de influencia, centrándose en la toponimia y el transporte.",
+            "inLanguage": "es-ES",
+            "url": "https://vigo360.es/"
+        }
+
+    </script>
 </head>
 
 <body>
-	{{ template "_header.html" }}
-	<main>
-		<section id="frontpage-articles">
-			{{ $page := .CurrentPage }}
-			{{- range $i, $post := .Posts }}
-			<a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
-				<picture class="user-article-thumbnail">
-					<source srcset="/static/images/{{ $post.Id}}.webp" type="image/webp"
-						alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}"
-						loading="lazy"/>
-					<img src="/static/thumb/{{ $post.Id }}.jpg"
-						alt="{{ $post.Alt_portada }}" />
-				</picture>
-				<div class="article-info">
-					<p class="article-author">
-						{{ $post.Autor.Nombre }} - {{ dateDayMonth $post.Fecha_publicacion }}
-					</p>
-					<h2 class="article-title">{{ $post.Titulo }}</h2>
-					<p class="article-summary">
-						{{ $post.Resumen }}
-					</p>
-				</div>
-			</a>
-			{{- end }}
-		</section>
+{{ template "_header.html" }}
+<main>
+    <section id="frontpage-articles">
+        {{ $page := .CurrentPage }}
+        {{- range $i, $post := .Posts }}
+            <a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
+                <picture class="user-article-thumbnail">
+                    <source srcset="/static/images/{{ $post.Id}}.webp" type="image/webp"
+                            title="{{ $post.Alt_portada }}"/>
+                    <img src="/static/thumb/{{ $post.Id }}.jpg"
+                         alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}"/>
+                </picture>
+                <div class="article-info">
+                    <p class="article-author">
+                        {{ $post.Autor.Nombre }} - {{ dateDayMonth $post.Fecha_publicacion }}
+                    </p>
+                    <h2 class="article-title">{{ $post.Titulo }}</h2>
+                    <p class="article-summary">
+                        {{ $post.Resumen }}
+                    </p>
+                </div>
+            </a>
+        {{- end }}
+    </section>
 
-		<section class="pager">
-			<!-- Show a double arrow to the left if we are not in the first page to go to the first page -->
-			{{ if gt .CurrentPage 1 }}
-			<a href="?page=1">&laquo;</a>
-			{{ end }}
-			<!-- Show a single arrow to the left if we are not in the first page to go to the previous page -->
-			{{ if gt .CurrentPage 1 }}
-			<a href="?page={{ sub .CurrentPage 1 }}">&lsaquo;</a>
-			{{ end }}
-			<!-- Show a <b> with the current page number -->
-			<b>{{ .CurrentPage }}</b>
-			<!-- Show a single arrow to the right if we are not in the last page to go to the next page -->
-			{{ if lt .CurrentPage .PageCount }}
-			<a href="?page={{ add .CurrentPage 1 }}">&rsaquo;</a>
-			{{ end }}
-			<!-- Show a double arrow to the right if we are not in the last page to go to the last page -->
-			{{ if lt .CurrentPage .PageCount }}
-			<a href="?page={{ .PageCount }}">&raquo;</a>
-			{{ end }}
-		</section>
+    <section class="pager">
+        <!-- Show a double arrow to the left if we are not in the first page to go to the first page -->
+        {{ if gt .CurrentPage 1 }}
+            <a href="?page=1">&laquo;</a>
+        {{ end }}
+        <!-- Show a single arrow to the left if we are not in the first page to go to the previous page -->
+        {{ if gt .CurrentPage 1 }}
+            <a href="?page={{ sum .CurrentPage 1 }}">&lsaquo;</a>
+        {{ end }}
+        <!-- Show a <b> with the current page number -->
+        <b>{{ .CurrentPage }}</b>
+        <!-- Show a single arrow to the right if we are not in the last page to go to the next page -->
+        {{ if lt .CurrentPage .PageCount }}
+            <a href="?page={{ add .CurrentPage 1 }}">&rsaquo;</a>
+        {{ end }}
+        <!-- Show a double arrow to the right if we are not in the last page to go to the last page -->
+        {{ if lt .CurrentPage .PageCount }}
+            <a href="?page={{ .PageCount }}">&raquo;</a>
+        {{ end }}
+    </section>
 
-		<section class="pager">
-			{{ $currPage := .CurrentPage}}
-			{{ range (iterateInt .PageCount)}}
-			{{ if eq $currPage .}}
-			<b>{{ . }} </b>
-			{{ else }}
-			<a href="?page={{ . }}">{{ . }}</a>
-			{{ end }}
-			{{ end }}
-		</section>
-	</main>
-	{{ template "_footer.html" }}
+    <section class="pager">
+        {{ $currPage := .CurrentPage}}
+        {{ range (iterateInt .PageCount)}}
+            {{ if eq $currPage .}}
+                <b>{{ . }} </b>
+            {{ else }}
+                <a href="?page={{ . }}">{{ . }}</a>
+            {{ end }}
+        {{ end }}
+    </section>
+</main>
+{{ template "_footer.html" }}
 </body>
 
 </html>
