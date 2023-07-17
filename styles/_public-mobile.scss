@@ -136,16 +136,10 @@
 	#section-articles {
 		grid-template-columns: 1fr;
 	}
-
-
+	
 	#frontpage-articles .primero+a, #frontpage-articles .primero+a+a, 
 	#frontpage-articles a
 	{
 		grid-column: 1/7;
-	}
-
-	.pager {
-		overflow: scroll;
-    	justify-content: start;
 	}
 }

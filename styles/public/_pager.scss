@@ -1,22 +1,17 @@
-.pager {
+#pager {
 	margin-top: 2rem;
 	background: var(--background);
 	display: flex;
 	justify-content: center;
 }
 
-.pager > a, .pager > b {
+#pager > a, #pager > b {
 	background: white;
 	padding: 0.6rem 1rem 0.5rem;
-	border-radius: 8px;
 	font-size: 1.25rem;
 	margin: 0 0.5rem;
-	box-shadow: var(--shadow);
-}
 
-@media (max-width: 1280px) {
-	.pager {
-		justify-content: start;
-		overflow-x: auto;
-	}
+	border-radius: 0.25rem;
+	width: 1.5rem;
+	box-shadow: var(--shadow-strong);
 }

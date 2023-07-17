@@ -57,36 +57,12 @@
         {{- end }}
     </section>
 
-    <section class="pager">
-        <!-- Show a double arrow to the left if we are not in the first page to go to the first page -->
-        {{ if gt .CurrentPage 1 }}
-            <a href="?page=1">&laquo;</a>
-        {{ end }}
-        <!-- Show a single arrow to the left if we are not in the first page to go to the previous page -->
-        {{ if gt .CurrentPage 1 }}
-            <a href="?page={{ sum .CurrentPage 1 }}">&lsaquo;</a>
-        {{ end }}
-        <!-- Show a <b> with the current page number -->
-        <b>{{ .CurrentPage }}</b>
-        <!-- Show a single arrow to the right if we are not in the last page to go to the next page -->
-        {{ if lt .CurrentPage .PageCount }}
-            <a href="?page={{ add .CurrentPage 1 }}">&rsaquo;</a>
-        {{ end }}
-        <!-- Show a double arrow to the right if we are not in the last page to go to the last page -->
-        {{ if lt .CurrentPage .PageCount }}
-            <a href="?page={{ .PageCount }}">&raquo;</a>
-        {{ end }}
-    </section>
-
-    <section class="pager">
-        {{ $currPage := .CurrentPage}}
-        {{ range (iterateInt .PageCount)}}
-            {{ if eq $currPage .}}
-                <b>{{ . }} </b>
-            {{ else }}
-                <a href="?page={{ . }}">{{ . }}</a>
-            {{ end }}
-        {{ end }}
+    <section id="pager" role="doc-pagelist">
+        <a title="Primera página" {{ if gt .CurrentPage 1 }}href="?page=1"{{ end }}>&laquo;</a>
+        <a title="Página anterior" {{ if gt .CurrentPage 1 }}href="?page={{ sub .CurrentPage 1 }}"{{end}}>&lsaquo;</a>
+        <b title="Página actual ({{ .CurrentPage }})">{{ .CurrentPage }}</b>
+        <a title="Página siguiente" {{ if lt .CurrentPage .PageCount }}href="?page={{ sum .CurrentPage 1 }}"{{end}}>&rsaquo;</a>
+        <a title="Última página" {{ if lt .CurrentPage .PageCount }}href="?page={{ .PageCount }}"{{end}}>&raquo;</a>
     </section>
 </main>
 {{ template "_footer.html" }}

@@ -1,143 +1,145 @@
 @use "global/_all.scss";
 
 :root {
-	--fondo: hsl(210deg, 40%, 98%);
-	--gray: hsl(0, 0%, 80%);
-	--text: hsl(0, 0%, 5%);
-	--blanco: hsl(0deg, 0%, 100%);
-	--negro: hsl(0deg, 0%, 0%);
-	
-	--primary-dark: hsl(134deg, 40%, 35%);
-	--primary-main: hsl(134deg, 40%, 45%);
-	--primary-light: hsl(134deg, 40%, 55%);
-	
-	--warning-dark: hsla(60, 70%, 50%);
-	--warning: hsl(60, 85%, 50%);
-	--warning-light: hsl(60, 100%, 50%);
-	
-	--incorrect-dark: hsl(356deg, 86%, 38%);
-	--incorrect-main: hsl(356deg, 86%, 48%);
-	--incorrect-light: hsl(356deg, 86%, 58%);
+  --fondo: hsl(210deg, 40%, 98%);
+  --gray: hsl(0, 0%, 80%);
+  --text: hsl(0, 0%, 5%);
+  --blanco: hsl(0deg, 0%, 100%);
+  --negro: hsl(0deg, 0%, 0%);
 
-	--shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
-	--outline: 1px solid var(--gray);
-	--outline-primary: 2px solid var(--primary-main);
+  --primary-dark: hsl(134deg, 40%, 35%);
+  --primary-main: hsl(134deg, 40%, 45%);
+  --primary-light: hsl(134deg, 40%, 55%);
 
-	--sans-fonts: BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-	--mono-fonts: "Cascadia Mono", "Fira Code", "Fira Mono", "Noto Sans Mono", "Ubuntu Mono", "Consolas", "Hack", monospace;
+  --warning-dark: hsla(60, 70%, 50%);
+  --warning: hsl(60, 85%, 50%);
+  --warning-light: hsl(60, 100%, 50%);
 
-	font-family: var(--sans-fonts);
-	font-weight: 400;
-	font-size: 16px;
+  --incorrect-dark: hsl(356deg, 86%, 38%);
+  --incorrect-main: hsl(356deg, 86%, 48%);
+  --incorrect-light: hsl(356deg, 86%, 58%);
 
-	scroll-behavior: smooth;
-	line-height: 1.6;
+  --shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.2);
+  --shadow-strong: 0 0px 4px 0px rgba(50, 50, 93, 0.2);
+
+  --outline: 1px solid var(--gray);
+  --outline-primary: 2px solid var(--primary-main);
+
+  --sans-fonts: BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --mono-fonts: "Cascadia Mono", "Fira Code", "Fira Mono", "Noto Sans Mono", "Ubuntu Mono", "Consolas", "Hack", monospace;
+
+  font-family: var(--sans-fonts);
+  font-weight: 400;
+  font-size: 16px;
+
+  scroll-behavior: smooth;
+  line-height: 1.6;
 }
 
 ::selection {
-	background-color: var(--primary-main);
-	color: #fff;
+  background-color: var(--primary-main);
+  color: #fff;
 }
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 
 a {
-	text-decoration: none;
-	color: var(--primary-dark);
-	transition: color 300ms, opacity 300ms, background-color 300ms;
+  text-decoration: none;
+  color: var(--primary-dark);
+  transition: color 300ms, opacity 300ms, background-color 300ms;
 }
 
 a:hover, a:focus {
-	color: var(--primary-main);
+  color: var(--primary-main);
 }
 
 p {
-	font-family: var(--sans-fonts);
+  font-family: var(--sans-fonts);
 }
 
 #header-brand {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 #header-brand > * {
-	font-size: 24px;
-    color: var(--text);
-    display: inline;
-    vertical-align: middle;
-    text-transform: uppercase;
-	user-select: none;
+  font-size: 24px;
+  color: var(--text);
+  display: inline;
+  vertical-align: middle;
+  text-transform: uppercase;
+  user-select: none;
 }
 
 header nav {
-	display: flex;
-	align-items: center;
-	gap: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 header nav a {
-	font-size: 16px;
-	font-weight: bold;
+  font-size: 16px;
+  font-weight: bold;
 
-	text-transform: uppercase;
+  text-transform: uppercase;
 
-	border-bottom: 2px solid transparent;
-	transform: translateY(2px);
+  border-bottom: 2px solid transparent;
+  transform: translateY(2px);
 
-	transition: border-bottom 300ms, transform 300ms;
+  transition: border-bottom 300ms, transform 300ms;
 }
 
 header nav a:hover {
-	transform: unset;
-	border-bottom: 2px solid var(--primary-dark);
+  transform: unset;
+  border-bottom: 2px solid var(--primary-dark);
 }
 
 form hr {
-	margin: 1rem 0;
+  margin: 1rem 0;
 }
 
 button,
 input,
 textarea,
 select {
-	border: 1px solid black;
-	border-radius: 4px;
-	padding: 0.5rem 1rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
 }
 
 .preview-marca-agua {
-    position: fixed;
-    left: 50%;
-	transform: translateX(-50%);
-	top: 15%;
-	font-size: 1.2rem;
-	font-weight: 900;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 15%;
+  font-size: 1.2rem;
+  font-weight: 900;
 
-	background-color: var(--warning);
-	border: 1px solid var(--warning-dark);
+  background-color: var(--warning);
+  border: 1px solid var(--warning-dark);
 
-	padding: 0.8rem;
+  padding: 0.8rem;
 }
 
 button {
-	font-weight: bold;
-	width: auto;
+  font-weight: bold;
+  width: auto;
 }
 
 button,
 input,
 select {
-	font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 @media (max-width: 960px) {
-	header {
-		flex-direction: column;
-		gap: 1.5rem;
-	}	
+  header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 }

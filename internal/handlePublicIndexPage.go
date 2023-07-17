@@ -74,10 +74,6 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 		err = templates.Render(w, "index.html", indexParams{
 			CurrentPage: pagina,
 			PageCount:   cantidadPaginas,
-			HasNextPage: pagina < cantidadPaginas,
-			HasPrevPage: pagina > 1,
-			IsFirstPage: pagina == 1,
-			IsLastPage:  pagina == cantidadPaginas,
 			Posts:       posts[inicio:limite],
 			Meta:        meta,
 		})
