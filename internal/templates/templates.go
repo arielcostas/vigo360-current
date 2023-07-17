@@ -14,14 +14,14 @@ import (
 var rawtemplates embed.FS
 
 var t = func() *template.Template {
-	t := template.New("").Funcs(sprig.FuncMap())
+	t := template.New("")
 
 	entries, _ := rawtemplates.ReadDir("html")
 	for _, de := range entries {
 		filename := de.Name()
 		contents, _ := rawtemplates.ReadFile("html/" + filename)
 
-		_, err := t.New(filename).Funcs(Functions).Parse(string(contents))
+		_, err := t.New(filename).Funcs(Functions).Funcs(sprig.FuncMap()).Parse(string(contents))
 		if err != nil {
 			fmt.Printf("error parsing template: %s", err.Error())
 			os.Exit(1)
