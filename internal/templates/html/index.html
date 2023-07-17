@@ -57,6 +57,28 @@
 			</a>
 			{{- end }}
 		</section>
+
+		<section class="pager">
+			<!-- Show a double arrow to the left if we are not in the first page to go to the first page -->
+			{{ if gt .CurrentPage 1 }}
+			<a href="?page=1">&laquo;</a>
+			{{ end }}
+			<!-- Show a single arrow to the left if we are not in the first page to go to the previous page -->
+			{{ if gt .CurrentPage 1 }}
+			<a href="?page={{ sub .CurrentPage 1 }}">&lsaquo;</a>
+			{{ end }}
+			<!-- Show a <b> with the current page number -->
+			<b>{{ .CurrentPage }}</b>
+			<!-- Show a single arrow to the right if we are not in the last page to go to the next page -->
+			{{ if lt .CurrentPage .PageCount }}
+			<a href="?page={{ add .CurrentPage 1 }}">&rsaquo;</a>
+			{{ end }}
+			<!-- Show a double arrow to the right if we are not in the last page to go to the last page -->
+			{{ if lt .CurrentPage .PageCount }}
+			<a href="?page={{ .PageCount }}">&raquo;</a>
+			{{ end }}
+		</section>
+
 		<section class="pager">
 			{{ $currPage := .CurrentPage}}
 			{{ range (iterateInt .PageCount)}}

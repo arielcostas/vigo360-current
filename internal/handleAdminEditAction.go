@@ -73,7 +73,10 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		}
 
 		if _, err := tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacionId); err != nil {
-			tx.Rollback()
+			e2 := tx.Rollback()
+			if e2 != nil {
+				s.handleError(w, 500, messages.ErrorDatos)
+			}
 			log.Error("error eliminando tags existentes: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
@@ -81,7 +84,10 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 
 		for _, t := range tags {
 			if _, err := tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacionId, t); err != nil {
-				tx.Rollback()
+				e2 := tx.Rollback()
+				if e2 != nil {
+					s.handleError(w, 500, messages.ErrorDatos)
+				}
 				log.Error("error insertando nuevas tags: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 				return
@@ -90,7 +96,10 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 
 		query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
 		if _, err := tx.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.AltPortada, publicacionId); err != nil {
-			tx.Rollback()
+			e2 := tx.Rollback()
+			if e2 != nil {
+				s.handleError(w, 500, messages.ErrorDatos)
+			}
 			log.Error("error actualizando publicación: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 			return
@@ -126,7 +135,10 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 			}
 
 			if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.SerieId, fi.SeriePosicion, publicacionId); err != nil {
-				tx.Rollback()
+				e2 := tx.Rollback()
+				if e2 != nil {
+					s.handleError(w, 500, messages.ErrorDatos)
+				}
 				log.Error("error guardando serie: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 				return
@@ -163,14 +175,14 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 func encodeImagesAndSave(portada_file io.Reader, publicacion_id string) {
 	uppath := os.Getenv("UPLOAD_PATH")
 	var err error
-	logger := logger.NewLogger("encodeImagesAndSave " + publicacion_id)
+	log := logger.NewLogger("encodeImagesAndSave " + publicacion_id)
 
 	var portadaJpg, portadaWebp bytes.Buffer
 	if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
-		logger.Error("error procesando imágenes: %s", err.Error())
+		log.Error("error procesando imágenes: %s", err.Error())
 		return
 	} else if err != nil {
-		logger.Error("error procesando imágenes: %s", err.Error())
+		log.Error("error procesando imágenes: %s", err.Error())
 		return
 	} else {
 		portadaJpg = pj
@@ -178,12 +190,12 @@ func encodeImagesAndSave(portada_file io.Reader, publicacion_id string) {
 	}
 
 	if e2 := os.WriteFile(uppath+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm); e2 != nil {
-		logger.Error("error guardando imagen jpg: %s", err.Error())
+		log.Error("error guardando imagen jpg: %s", err.Error())
 		return
 	}
 
 	if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm); e2 != nil {
-		logger.Error("error guardando imagen webp: %s", err.Error())
+		log.Error("error guardando imagen webp: %s", err.Error())
 		return
 	}
 }

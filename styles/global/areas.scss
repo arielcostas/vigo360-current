@@ -24,6 +24,10 @@ header {
 	padding: 0.5rem var(--sides-pad);
 }
 
+#pre-footer {
+	flex-grow: 1;
+}
+
 footer {
 	display: flex;
 	justify-content: space-between;
@@ -86,8 +90,6 @@ footer {
         text-align: center;
     }    
 }
-
-
 
 @media print {
     header,

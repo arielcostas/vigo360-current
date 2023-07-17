@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8081:80"
+    volumes:
+      - ./volumes/files:/app/static
