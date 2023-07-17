@@ -38,7 +38,7 @@
         {{ $page := .CurrentPage }}
         {{- range $i, $post := .Posts }}
             <a href="/post/{{ $post.Id }}" {{ if and (eq $page 1) (eq $i 0) }}class="primero" {{ end }}>
-                <picture class="user-article-thumbnail">
+                <picture>
                     <source srcset="/static/images/{{ $post.Id}}.webp" type="image/webp"
                             title="{{ $post.Alt_portada }}"/>
                     <img src="/static/thumb/{{ $post.Id }}.jpg"

@@ -1,11 +1,11 @@
 #frontpage-articles {
-	max-width: 1280px;
-	margin: 0 auto;
-	background: var(--background);
+  max-width: 1280px;
+  margin: 0 auto;
+  background: var(--background);
 
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
-	gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2rem;
 }
 
 #frontpage-articles img {
@@ -14,91 +14,96 @@
 	width: 100%;
 }
 
-#frontpage-articles>* {
-	background: #fff;
-	display: flex;
-	flex-direction: column;
-	color: var(--text);
+#frontpage-articles > * {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
 }
 
 #frontpage-articles a:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 #frontpage-articles a:hover img {
-	opacity: 0.8;
+  opacity: 0.8;
 }
 
 #frontpage-articles a:hover .article-title {
-	color: var(--primary-main);
+  color: var(--primary-main);
+}
+
+#frontpage-articles .primero picture {
+  flex: 0 0 65%;
+  height: 100%;
+  object-fit: cover;
 }
 
 #frontpage-articles .primero img {
-	flex: 0 0 65%;
-	width: 800px;
+  height: 100%;
 }
 
 .article-author {
-	font-family: var(--mono-fonts);
-	text-transform: uppercase;
-	font-weight: 700;
-	color: var(--primary-main);
+  font-family: var(--mono-fonts);
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--primary-main);
 }
 
 .article-info {
-	padding: 1rem;
+  padding: 1rem;
 }
 
 #frontpage-articles .primero .article-info {
-	padding: 1.5rem 2rem;
+  padding: 1.5rem 2rem;
 }
 
 #frontpage-articles .primero {
-	grid-column: span 6;
-	flex-direction: row;
+  grid-column: span 6;
+  flex-direction: row;
 }
 
-#frontpage-articles .primero+a,
-#frontpage-articles .primero+a+a {
-	grid-column: span 3;
+#frontpage-articles .primero + a,
+#frontpage-articles .primero + a + a {
+  grid-column: span 3;
 
-	& .article-summary {
-		display: unset;
-	}
+  & .article-summary {
+    display: unset;
+  }
 }
 
 #frontpage-articles a {
-	grid-column: span 2;
+  grid-column: span 2;
 }
 
 .article-title {
-	font-size: 1.35rem;
+  font-size: 1.35rem;
 }
 
 #frontpage-articles .primero .article-title {
-	margin-top: 0.5rem;
-	font-size: 2.25rem;
-	line-height: 1.15;
+  margin-top: 0.5rem;
+  font-size: 2.25rem;
+  line-height: 1.15;
 }
 
 .article-summary {
-	display: none;
+  display: none;
 }
 
 #frontpage-articles .primero .article-summary {
-	margin-top: 1rem;
-	display: block;
-	font-size: 1.125rem;
+  margin-top: 1rem;
+  display: block;
+  font-size: 1.125rem;
 }
 
 @media(max-width: 960px) {
-	#frontpage-articles .primero img {
-		width:100%;
-	}
+  #frontpage-articles .primero img {
+    width: 100%;
+  }
 }
 
 @media (max-width: 640px) {
-	#frontpage-articles .primero img {
-		flex: unset;
-	}
+  #frontpage-articles .primero img {
+    flex: unset;
+  }
 }
