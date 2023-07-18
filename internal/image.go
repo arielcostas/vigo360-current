@@ -71,7 +71,7 @@ func generateImagesFromImage(photo io.Reader) (portadaJpg bytes.Buffer, portadaW
 	if err != nil {
 		return
 	}
-	err = webp.Encode(&portadaWebp, portada, &webp.Options{Quality: 98})
+	err = webp.Encode(&portadaWebp, portada, &webp.Options{Quality: 80})
 	if err != nil {
 		return
 	}

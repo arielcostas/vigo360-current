@@ -37,7 +37,7 @@ func (s *Server) handleAdminListarFotoExtra() http.HandlerFunc {
 			}
 
 			name := de.Name()
-			if strings.HasPrefix(name, articuloId) && strings.HasSuffix(name, ".jpg") {
+			if strings.HasPrefix(name, articuloId) && (strings.HasSuffix(name, ".webp") || strings.HasSuffix(name, ".jpg")) {
 				result = append(result, name)
 			}
 		}

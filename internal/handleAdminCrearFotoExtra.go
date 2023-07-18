@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"image/jpeg"
+	"github.com/chai2010/webp"
 	"io"
 	"net/http"
 	"os"
@@ -16,50 +16,50 @@ import (
 
 func (s *Server) handleAdminCrearFotoExtra() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		uploadPath := os.Getenv("UPLOAD_PATH")
 
 		articuloId := r.FormValue("articulo")
 		if articuloId == "" {
-			logger.Error("el id del artículo no puede estar vacío: %s")
+			log.Error("el id del artículo no puede estar vacío: %s")
 			s.handleJsonError(w, 500, messages.ErrorFormulario)
 			return
 		}
 
 		file, _, err := r.FormFile("foto")
 		if err != nil && !errors.Is(err, http.ErrMissingFile) {
-			logger.Error("no se ha subido ninguna imagen: %s", err.Error())
+			log.Error("no se ha subido ninguna imagen: %s", err.Error())
 			s.handleJsonError(w, 500, messages.ErrorFormulario)
 			return
 		}
 
 		photoBytes, err := io.ReadAll(file)
 		if err != nil {
-			logger.Error("no se pudo extraer la imagen del formulario: %s", err.Error())
+			log.Error("no se pudo extraer la imagen del formulario: %s", err.Error())
 			s.handleJsonError(w, 500, messages.ErrorFormulario)
 			return
 		}
 
 		image, err := imagenDesdeMime(photoBytes)
 		if err != nil {
-			logger.Error("error extrayendo el tipo MIME de la imagen: %s", err.Error())
+			log.Error("error extrayendo el tipo MIME de la imagen: %s", err.Error())
 			s.handleJsonError(w, 500, messages.ErrorFormulario)
 			return
 		}
 
 		var fotoEscribir bytes.Buffer
-		err = jpeg.Encode(&fotoEscribir, image, &jpeg.Options{Quality: 95})
+		err = webp.Encode(&fotoEscribir, image, &webp.Options{Quality: 80})
 		if err != nil {
-			logger.Error("error codificando la imagen: %s", err.Error())
+			log.Error("error codificando la imagen: %s", err.Error())
 			s.handleJsonError(w, 500, messages.ErrorDatos)
 			return
 		}
 
 		var salt = randstr.String(5)
-		var imagePath = fmt.Sprintf("%s/extra/%s-%s.jpg", uploadPath, articuloId, salt)
+		var imagePath = fmt.Sprintf("%s/extra/%s-%s.webp", uploadPath, articuloId, salt)
 		err = os.WriteFile(imagePath, fotoEscribir.Bytes(), 0o644)
 		if err != nil {
-			logger.Error("error escribiendo imagen a %s: %s", imagePath, err.Error())
+			log.Error("error escribiendo imagen a %s: %s", imagePath, err.Error())
 			s.handleJsonError(w, 500, messages.ErrorRender)
 		}
 	}
