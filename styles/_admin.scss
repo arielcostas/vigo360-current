@@ -35,8 +35,7 @@ textarea {
 }
 
 #post-list,
-#dashboard,
-#series-list {
+#dashboard {
 	width: 100%;
 }
 
@@ -144,8 +143,7 @@ main h2 {
 	flex-wrap: wrap;
 }
 
-#post-list form,
-#series-list form {
+#post-list form {
 	display: flex;
 	flex-direction: column;
 	flex: 2;
@@ -189,8 +187,7 @@ main h2 {
 	}
 }
 
-#post-editor .form-column,
-#series-list > div {
+#post-editor .form-column {
 	display: grid;
 	grid-template-columns: 9fr 4fr;
 	gap: 2rem;
@@ -211,10 +208,6 @@ main h2 {
 	height: auto;
 }
 
-#series-list > p {
-	margin-bottom: 1.5rem;
-}
-
 @media (max-width: 640px) {
 	main {
 		padding: 1rem 1.5rem;
@@ -225,8 +218,7 @@ main h2 {
 		flex-direction: column;
 	}
 
-	#post-editor .form-column,
-	#series-list > div {
+	#post-editor .form-column {
 		grid-template-columns: 1fr;
 	}
 

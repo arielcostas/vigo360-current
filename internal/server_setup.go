@@ -72,9 +72,6 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc("/admin/post/{id}", s.withAuth(s.handleAdminEditAction())).Methods(http.MethodPost)
 	newrouter.HandleFunc("/admin/post/{postid}/delete", s.withAuth(s.handleAdminDeletePost())).Methods(http.MethodGet)
 
-	newrouter.HandleFunc("/admin/series", s.withAuth(s.handleAdminListSeries())).Methods(http.MethodGet)
-	newrouter.HandleFunc("/admin/series", s.withAuth(s.handleAdminCreateSeries())).Methods(http.MethodPost)
-
 	newrouter.HandleFunc("/admin/perfil", s.withAuth(s.handleAdminPerfilView())).Methods(http.MethodGet)
 	newrouter.HandleFunc("/admin/perfil", s.withAuth(s.handleAdminPerfilEdit())).Methods(http.MethodPost)
 

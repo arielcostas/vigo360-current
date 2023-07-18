@@ -94,30 +94,13 @@
 				<h2 id="post-title">{{ .Post.Titulo }}</h2>
 
 				<p id="post-info">
-					<a href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
+					<a class="link" href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
 					{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
 					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
 					}}){{end}}
 				</p>
 
 				<div id="post-inner">
-					{{ if ne .Post.Serie.Id "" }}
-					<aside class="post-series">
-						<h4>{{ .Post.Serie.Titulo }}</h4>
-						<ul>
-							{{ $postid := .Post.Id }}
-							{{ range .Post.Serie.Publicaciones }}
-							<li>
-								{{ if eq .Id $postid }}
-								<b>{{ .Titulo }}</b>
-								{{ else }}
-								<a href="/post/{{.Id}}">{{ .Titulo }}</a>
-								{{end}}
-							</li>
-							{{ end }}
-						</ul>
-					</aside>
-					{{ end }}
 					{{ .Post.Contenido | markdown }}
 				</div>
 			</article>

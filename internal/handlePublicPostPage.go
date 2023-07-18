@@ -27,7 +27,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 	var cs = service.NewComentarioService(s.store.comentario, s.store.publicacion)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		var sc, err = r.Cookie("sess")
 		var loggedIn = false
 		if err == nil {
@@ -43,10 +43,10 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		var post models.Publicacion
 		if np, err := s.store.publicacion.ObtenerPorId(req_post_id, true); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
-				logger.Error("no se encontró la publicación: %s", err.Error())
+				log.Error("no se encontró la publicación: %s", err.Error())
 				s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
 			} else {
-				logger.Error("error recuperando la publicación: %s", err.Error())
+				log.Error("error recuperando la publicación: %s", err.Error())
 				s.handleError(w, 500, messages.ErrorDatos)
 			}
 			return
@@ -54,18 +54,9 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			post = np
 		}
 
-		if post.Serie.Id != "" {
-			var err error
-			post.Serie, err = s.store.serie.Obtener(post.Serie.Id)
-			if err != nil {
-				logger.Error("error recuperando serie de la publicación: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
-			}
-		}
-
 		var recommendations []Sugerencia
 		if nr, err := generateSuggestions(post.Id, s.store.publicacion); err != nil {
-			logger.Error("error recuperando sugerencias: %s", err.Error())
+			log.Error("error recuperando sugerencias: %s", err.Error())
 			recommendations = make([]Sugerencia, 0)
 		} else {
 			recommendations = nr
@@ -76,11 +67,10 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			keywords += t.Nombre + ","
 		}
 
-		post.Serie.Publicaciones = post.Serie.Publicaciones.FiltrarPublicas()
 		var ct []service.ComentarioTree
 
 		if nct, err := cs.ListarPublicos(post.Id); err != nil {
-			logger.Error("error recuperando comentarios para %s: %s", post.Id, err.Error())
+			log.Error("error recuperando comentarios para %s: %s", post.Id, err.Error())
 			s.handleError(w, 500, messages.ErrorDatos)
 		} else {
 			ct = nct
@@ -101,7 +91,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			},
 		})
 		if err != nil {
-			logger.Error("error mostrando página: %s", err.Error())
+			log.Error("error mostrando página: %s", err.Error())
 			s.handleError(w, 500, messages.ErrorRender)
 		}
 	}

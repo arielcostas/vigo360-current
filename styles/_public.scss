@@ -329,10 +329,6 @@ main#authors #user-info #section-title {
 	font-weight: 700;
 }
 
-#post-info span {
-	opacity: 0.7;
-}
-
 #post-inner {
 	padding: 1rem 4%;
 	max-width: 90ch;
@@ -507,29 +503,6 @@ code {
 
 .post-inline-related div h4 {
 	font-size: 1.6rem;
-}
-
-.post-series {
-	width: 80%;
-	margin: 0.5rem 10% 1.5rem;
-	font-weight: bold;
-}
-
-.post-series ul {
-	padding: 0;
-}
-
-.post-series h4,
-.post-series li {
-	padding: 0.5rem 1rem;
-	list-style-type: none;
-	background: var(--gray);
-}
-
-.post-series h4 {
-	background-color: var(--primary-main);
-	color: white;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 #sections {

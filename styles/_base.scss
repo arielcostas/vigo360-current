@@ -48,6 +48,10 @@
   box-sizing: border-box;
 }
 
+a, a:hover {
+  text-decoration: none;
+}
+
 .link {
   text-decoration: none;
   color: var(--primary-dark);

@@ -21,7 +21,6 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 
 	type returnParams struct {
 		Post    models.Publicacion
-		Series  []models.Serie
 		Tags    []tag
 		Session models.Session
 	}
@@ -49,15 +48,6 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 			return
 		}
 
-		var series []models.Serie
-		series, err = s.store.serie.Listar()
-
-		if err != nil {
-			logger.Error("error recuperando series: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
-			return
-		}
-
 		var tags []tag
 		err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags ORDER BY nombre ASC`, post_id)
 		if err != nil {
@@ -67,7 +57,6 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 
 		err = templates.Render(w, "admin-post-id.html", returnParams{
 			Post:    publicacion,
-			Series:  series,
 			Tags:    tags,
 			Session: sess,
 		})

@@ -23,9 +23,6 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		Resumen    string `validate:"required,min=3,max=300"`
 		Contenido  string `validate:"required"`
 		AltPortada string `validate:"required,min=3,max=300"`
-
-		SerieId       string
-		SeriePosicion string
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -46,12 +43,10 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		}
 
 		fi := EditPostActionFormInput{
-			Titulo:        r.FormValue("art-titulo"),
-			Resumen:       r.FormValue("art-resumen"),
-			Contenido:     r.FormValue("art-contenido"),
-			AltPortada:    r.FormValue("alt-portada"),
-			SerieId:       r.FormValue("serie-id"),
-			SeriePosicion: r.FormValue("serie-num"),
+			Titulo:     r.FormValue("art-titulo"),
+			Resumen:    r.FormValue("art-resumen"),
+			Contenido:  r.FormValue("art-contenido"),
+			AltPortada: r.FormValue("alt-portada"),
 		}
 
 		if err := validator.New().Struct(fi); err != nil {
@@ -126,22 +121,6 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 			err = seo.BingIndexnowRequest(indexnowurls)
 			if err != nil {
 				log.Error("error llamando a indexnow: %s", err.Error())
-			}
-		}
-
-		if fi.SerieId != "" {
-			if fi.SeriePosicion == "" {
-				fi.SeriePosicion = "1"
-			}
-
-			if _, err := tx.Exec(`UPDATE publicaciones SET serie_id = ?, serie_posicion = ? WHERE id = ?`, fi.SerieId, fi.SeriePosicion, publicacionId); err != nil {
-				e2 := tx.Rollback()
-				if e2 != nil {
-					s.handleError(w, 500, messages.ErrorDatos)
-				}
-				log.Error("error guardando serie: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
-				return
 			}
 		}
 
