@@ -19,7 +19,7 @@ func (s *Server) handle_api_listar_comentarios(w http.ResponseWriter, r *http.Re
 		s.handleJsonError(w, 400, "estado debe ser un número entre 1 y 3")
 		return
 	} else if req_raw_estado_int < 1 || req_raw_estado_int > 3 {
-		estado = models.ESTADO_PENDIENTE
+		estado = models.EstadoPendiente
 	} else {
 		estado = models.EstadoComentario(req_raw_estado_int)
 	}

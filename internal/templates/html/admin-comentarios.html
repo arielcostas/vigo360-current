@@ -2,41 +2,56 @@
 <html lang="es">
 
 <head>
-	<title>Gestión de Comentarios - Admin Vigo360</title>
-	{{ template "_admin-head.html" . }}
+    <title>Gestión de comentarios - Admin Vigo360</title>
+    {{ template "_admin-head.html" . }}
 </head>
 
 <body>
-	{{ template "_admin-header.html" . }}
-	<main id="comentarios">
-		<h2>Comentarios pendientes de moderación</h2>
-		<table>
-			<thead>
-				<tr>
-					<th>Publicación</th>
-					<th>Nombre del autor</th>
-					<th>Fecha de envío</th>
-					<th>Contenido</th>
-					<th>Acciones</th>
-				</tr>
-			</thead>
-			<tbody>
-				{{ range .Comentarios }}
-				<tr>
-					<td>{{ .Publicacion_id }}</td>
-					<td>{{ .Nombre }}</td>
-					<td>{{ .Fecha_creacion }}</td>
-					<td>{{ .Contenido }}</td>
-					<td>
-						<a href="/admin/comentarios/aprobar?cid={{.Id}}" class="button button-primary">aprobar</a> -
-						<a href="/admin/comentarios/rechazar?cid={{.Id}}" class="button button-incorrect">rechazar</a>
-					</td>
-				</tr>
-				{{ end }}
-			</tbody>
-		</table>
-	</main>
-	{{ template "_admin-footer.html" . }}
+{{ template "_admin-header.html" . }}
+<main id="comentarios">
+    <h2>Comentarios pendientes de moderación</h2>
+    {{ range .Comentarios }}
+        <article>
+            <h3>{{ .Publicacion_titulo }}</h3>
+            <p>{{ .Contenido }}</p>
+            <code>
+				Enviado por {{ .Nombre }} el {{ .Fecha_creacion }}
+			</code>
+
+            <div>
+                <a href="/admin/comentarios/aprobar?cid={{.Id}}" class="button button-primary">aprobar</a>
+                <a href="/admin/comentarios/rechazar?cid={{.Id}}" class="button button-incorrect">rechazar</a>
+            </div>
+        </article>
+    {{end}}
+
+    <table>
+        <thead>
+        <tr>
+            <th>Publicación</th>
+            <th>Nombre del autor</th>
+            <th>Fecha de envío</th>
+            <th>Contenido</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ range .Comentarios }}
+            <tr>
+                <td>{{ .Publicacion_titulo }}</td>
+                <td>{{ .Nombre }}</td>
+                <td>{{ .Fecha_creacion }}</td>
+                <td>{{ .Contenido }}</td>
+                <td>
+                    <a href="/admin/comentarios/aprobar?cid={{.Id}}" class="button button-primary">aprobar</a> -
+                    <a href="/admin/comentarios/rechazar?cid={{.Id}}" class="button button-incorrect">rechazar</a>
+                </td>
+            </tr>
+        {{ end }}
+        </tbody>
+    </table>
+</main>
+{{ template "_admin-footer.html" . }}
 </body>
 
 </html>

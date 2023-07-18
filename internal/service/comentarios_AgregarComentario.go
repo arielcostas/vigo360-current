@@ -59,11 +59,11 @@ func (se *Comentario) AgregarRespuesta(
 		Autor_original: autor_original,
 		Contenido:      contenido,
 
-		Estado: models.ESTADO_PENDIENTE,
+		Estado: models.EstadoPendiente,
 	}
 
 	if es_autor || autor_original {
-		nuevo_comentario.Estado = models.ESTADO_APROBADO
+		nuevo_comentario.Estado = models.EstadoAprobado
 	}
 
 	dberr := se.cstore.GuardarComentario(nuevo_comentario)
