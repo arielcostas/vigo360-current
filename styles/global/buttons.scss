@@ -29,8 +29,8 @@
 
 .button-primary-outline {
 	background-color: transparent;
-	border-color: var(--primary-dark);
-	color: currentColor;
+	border-color: var(--primary-main);
+	color: var(--primary-main);
 }
 
 .button-primary-outline:hover,

@@ -168,6 +168,10 @@ main h2 {
 	font-weight: bold;
 }
 
+.list-post > a {
+	color: var(--primary-main);
+}
+
 .list-post > a.unpublished {
 	color: var(--incorrect-main);
 }

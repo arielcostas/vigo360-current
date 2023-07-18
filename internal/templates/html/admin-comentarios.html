@@ -10,6 +10,9 @@
 {{ template "_admin-header.html" . }}
 <main id="post-list">
     <h2>Comentarios pendientes de moderación</h2>
+    {{ if eq (len .Comentarios) 0 }}
+        <p>No hay comentarios pendientes de moderación 🙂</p>
+    {{ end }}
     {{ range .Comentarios }}
         <article id="comentarios-list">
             <h3>{{ .Publicacion_titulo }}</h3>
