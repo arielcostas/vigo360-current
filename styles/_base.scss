@@ -48,13 +48,13 @@
 }
 
 
-a {
+a:not(.button) {
   text-decoration: none;
   color: var(--primary-dark);
   transition: color 300ms, opacity 300ms, background-color 300ms;
 }
 
-a:hover, a:focus {
+a:not(.button):hover, a:not(.button):focus {
   color: var(--primary-main);
 }
 
