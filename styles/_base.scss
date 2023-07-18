@@ -3,6 +3,7 @@
 :root {
   --fondo: hsl(210deg, 40%, 98%);
   --gray: hsl(0, 0%, 80%);
+  --gray-light: hsl(0, 0%, 90%);
   --text: hsl(0, 0%, 5%);
   --blanco: hsl(0deg, 0%, 100%);
   --negro: hsl(0deg, 0%, 0%);
@@ -11,9 +12,9 @@
   --primary-main: hsl(134deg, 40%, 45%);
   --primary-light: hsl(134deg, 40%, 55%);
 
-  --warning-dark: hsla(60, 70%, 50%);
-  --warning: hsl(60, 85%, 50%);
-  --warning-light: hsl(60, 100%, 50%);
+  --warning-dark: hsla(60deg, 70%, 50%);
+  --warning: hsl(60deg, 85%, 50%);
+  --warning-light: hsl(60deg, 100%, 50%);
 
   --incorrect-dark: hsl(356deg, 86%, 38%);
   --incorrect-main: hsl(356deg, 86%, 48%);
@@ -47,14 +48,13 @@
   box-sizing: border-box;
 }
 
-
-a:not(.button) {
+.link {
   text-decoration: none;
   color: var(--primary-dark);
   transition: color 300ms, opacity 300ms, background-color 300ms;
 }
 
-a:not(.button):hover, a:not(.button):focus {
+.link:hover, .link:focus {
   color: var(--primary-main);
 }
 
@@ -87,15 +87,17 @@ header nav a {
   font-weight: bold;
 
   text-transform: uppercase;
+  text-decoration: none;
 
   border-bottom: 2px solid transparent;
   transform: translateY(2px);
 
-  transition: border-bottom 300ms, transform 300ms;
+  transition: all 300ms !important;
 }
 
 header nav a:hover {
   transform: unset;
+  text-decoration: none;
   border-bottom: 2px solid var(--primary-dark);
 }
 

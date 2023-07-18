@@ -159,14 +159,11 @@ main h2 {
 
 .list-post > p > span {
 	margin-right: 1rem;
-	margin-left: 0.3rem;
+	margin-left: 0.4rem;
 	display: flex;
 	align-items: center;
+	font-family: var(--mono-fonts);
 }
-
-// .list-post > p > img {
-// 	break-after: avoid;
-// }
 
 .list-post > a {
 	font-size: 1.2em;

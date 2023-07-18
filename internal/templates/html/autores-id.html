@@ -48,7 +48,7 @@
 					<h2 id="section-title">{{ .Autor.Nombre }}</h2>
 					<span id="user-role">{{ .Autor.Rol }}
 						{{ if .Autor.Web.Url}} &mdash;
-						<a href="{{.Autor.Web.Url}}">
+						<a class="link"  href="{{.Autor.Web.Url}}">
 							{{ if ne .Autor.Web.Titulo "" }}
 							{{ .Autor.Web.Titulo }}
 							{{ else }}
@@ -57,7 +57,7 @@
 						</a>
 						{{end}}
 						{{ with .Autor.Email }} &mdash;
-						<a href="mailto:{{.}}">{{ . }}</a>
+						<a class="link"  href="mailto:{{.}}">{{ . }}</a>
 						{{ end}}
 					</span>
 					<p>
@@ -73,7 +73,7 @@
 			<section class="user-list">
 				{{ range $i, $trabajo := .Trabajos }}
 				<div class="user-article">
-					<a href="/trabajos/{{ $trabajo.Id }}">
+					<a class="link" href="/trabajos/{{ $trabajo.Id }}">
 						<div>
 							<img class="user-article-thumbnail" src="/static/images/{{ $trabajo.Id }}.webp"
 								alt="{{ $trabajo.Alt_portada }}" title="{{ $trabajo.Alt_portada }}" {{ if gt $i 3 }}
@@ -94,12 +94,11 @@
 			<section class="user-list">
 				{{ range $i, $post := .Posts }}
 				<div class="user-article">
-					<a href="/post/{{ $post.Id }}">
+					<a class="link" href="/post/{{ $post.Id }}">
 						<div>
 							<picture id="portada_actual" class="user-article-thumbnail">
 								<source srcset="/static/images/{{ $post.Id}}.webp" type="image/webp"
-									alt="{{ $post.Alt_portada }}" title="{{ $post.Alt_portada }}" {{ if gt $i 3 }}
-									loading="lazy" {{ end }} width="220" height="137">
+									width="220" height="137">
 								<img src="/static/thumb/{{ $post.Id }}.jpg" width="220" height="137"
 									alt="{{ $post.Alt_portada }}" />
 							</picture>

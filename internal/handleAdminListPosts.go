@@ -45,6 +45,10 @@ func (s *Server) handleAdminListPost() http.HandlerFunc {
 			posts[i] = p
 		}
 
+		if len(posts) > 40 {
+			posts = posts[:50]
+		}
+
 		err = templates.Render(w, "admin-post.html", struct {
 			Posts   []ResumenPost
 			Session models.Session

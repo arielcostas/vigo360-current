@@ -17,9 +17,9 @@
 }
 
 .button-primary {
-	background-color: var(--primary-dark);
-	border-color: var(--primary-main);
-	color: #fff;
+	background-color: var(--primary-main);
+	border-color: var(--primary-dark);
+	color: var(--blanco);
 }
 
 .button-primary:hover,
@@ -29,19 +29,20 @@
 
 .button-primary-outline {
 	background-color: transparent;
-	border-color: var(--primary-main);
+	border-color: var(--primary-dark);
 	color: currentColor;
 }
 
 .button-primary-outline:hover,
 .button-primary-outline:focus {
 	background-color: var(--primary-main);
+	color: var(--blanco);
 }
 
 .button-incorrect {
 	background-color: var(--incorrect-main);
 	border-color: var(--incorrect-dark);
-	color: white;
+	color: var(--blanco);
 }
 
 .button-incorrect:hover,
