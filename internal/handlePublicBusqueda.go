@@ -27,7 +27,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		var resultados = make([]resultado, 0)
 
 		var termino = r.URL.Query().Get("termino")
@@ -38,26 +38,10 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 			w.WriteHeader(302)
 		}
 
-		autores, err := s.store.autor.Buscar(termino)
-		if err != nil {
-			logger.Error("error obteniendo autores: %s", err.Error())
-			s.handleError(r, w, 500, messages.ErrorDatos)
-			return
-		}
-
-		for _, autor := range autores {
-			resultados = append(resultados, resultado{
-				Id:      autor.Id,
-				Titulo:  autor.Nombre,
-				Resumen: autor.Biografia,
-				Uri:     "/autores/" + autor.Id,
-			})
-		}
-
 		publicaciones, err := s.store.publicacion.Buscar(termino)
 		publicaciones = publicaciones.FiltrarPublicas()
 		if err != nil {
-			logger.Error("error recuperando publicaciones: %s", err.Error())
+			log.Error("error recuperando publicaciones: %s", err.Error())
 			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
@@ -83,7 +67,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 			},
 		})
 		if err != nil {
-			logger.Error("error generando página: %s", err.Error())
+			log.Error("error generando página: %s", err.Error())
 			s.handleError(r, w, 500, messages.ErrorRender)
 			return
 		}

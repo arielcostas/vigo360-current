@@ -30,7 +30,13 @@ func (s *Server) handleError(r *http.Request, w http.ResponseWriter, status int,
 	})
 
 	if err != nil {
-		_, _ = fmt.Fprintf(w, `{ "error": "%s" }`, messages.ErrorFatal)
+		_ = templates.Render(w, "_error.html", &errorResponse{
+			Rid:          rid,
+			ErrorCode:    status,
+			Message:      fmt.Sprintf("%s", message),
+			RequestedUrl: r.URL.String(),
+			Time:         time.Now().Format("2006-01-02 15:04:05"),
+		})
 		fmt.Println(rid, err)
 	}
 }

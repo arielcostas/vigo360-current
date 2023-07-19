@@ -50,7 +50,7 @@
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--title-fonts) !important;
+  font-family: var(--title-fonts);
   line-height: 1.2;
 }
 
@@ -75,6 +75,7 @@ p {
 #header-brand {
   padding-top: 0;
   padding-bottom: 0;
+  font-family: var(--copy-fonts);
 }
 
 #header-brand > * {

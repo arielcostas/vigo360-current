@@ -15,7 +15,7 @@
 			{{ range .Resultados }}
 			<li>
 				<a href="{{ .Uri }}">
-					<img width="370" height="270" src="/static/images/{{ .Id }}.webp" />
+					<img alt="{{ .Titulo }}" width="370" height="270" src="/static/images/{{ .Id }}.webp" />
 					<div>
 						<span class="article-author">{{ .Autor_nombre }} / {{ dateDayMonth .Fecha_publicacion}}</span>
 						<h3 class="article-title">{{ .Titulo }}</h3>
