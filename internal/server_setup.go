@@ -34,7 +34,7 @@ func (s *Server) IdentifyRequests(router *mux.Router) *mux.Router {
 	var newrouter = router
 	newrouter.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var rid = randstr.String(10)
+			var rid = randstr.String(15)
 			fmt.Printf("<6>[%s] [%s] %s %s\n", r.Header.Get("X-Forwarded-For"), rid, r.Method, r.URL.Path)
 			newContext := context.WithValue(r.Context(), ridContextKey("rid"), rid)
 			r = r.WithContext(newContext)
