@@ -14,7 +14,14 @@
     <title>Error - Vigo360</title>
     <style>
         main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+
             text-align: center;
+            font-size: 125%;
+
             padding: 2rem;
         }
     </style>
@@ -25,14 +32,17 @@
 <main>
     <h1>Error {{ .ErrorCode }}</h1>
     <p>{{ .Message }}</p>
+
     <hr>
+
     <p>Si el error persiste, por favor, contacte con el administrador del sitio.</p>
     <a href="/" class="button button-primary">Volver a la página principal</a>
 
     <hr>
-    <small>
+
+    <pre>
         {{ .Rid }} -- {{ .Time }} -- {{ .RequestedUrl }}
-    </small>
+    </pre>
 </main>
 {{ template "_footer.html" }}
 </body>
