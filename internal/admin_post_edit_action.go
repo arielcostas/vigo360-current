@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -90,7 +91,13 @@ func (s *Server) handleAdminEditAction() http.HandlerFunc {
 		}
 
 		query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
-		if _, err := tx.Exec(query, fi.Titulo, fi.Resumen, fi.Contenido, fi.AltPortada, publicacionId); err != nil {
+		if _, err := tx.Exec(query,
+			strings.TrimSpace(fi.Titulo),
+			strings.TrimSpace(fi.Resumen),
+			strings.TrimSpace(fi.Contenido),
+			strings.TrimSpace(fi.AltPortada),
+			publicacionId,
+		); err != nil {
 			e2 := tx.Rollback()
 			if e2 != nil {
 				s.handleError(r, w, 500, messages.ErrorDatos)
