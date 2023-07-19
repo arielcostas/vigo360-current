@@ -19,7 +19,14 @@ type errorResponse struct {
 
 func (s *Server) handleError(r *http.Request, w http.ResponseWriter, status int, message messages.ErrorMessage) {
 	w.WriteHeader(status)
-	rid := r.Context().Value(ridContextKey("rid")).(string)
+
+	ridBase := r.Context().Value(ridContextKey("rid"))
+	var rid string
+	if ridBase != nil {
+		rid = ridBase.(string)
+	} else {
+		rid = "unknown"
+	}
 
 	err := templates.Render(w, "_error.html", &errorResponse{
 		Rid:          rid,
