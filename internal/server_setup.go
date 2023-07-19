@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"vigo360.es/new/internal/messages"
 
 	"github.com/gorilla/mux"
 	"github.com/kataras/hcaptcha"
@@ -108,5 +109,9 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc(indexnowkeyurl, s.handlePublicIndexnowKey()).Methods(http.MethodGet)
 
 	newrouter.HandleFunc("/", s.handlePublicIndex()).Methods(http.MethodGet)
+
+	newrouter.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		s.handleError(r, w, http.StatusNotFound, messages.ErrorPaginaNoEncontrada)
+	})
 	return newrouter
 }
