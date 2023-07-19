@@ -29,10 +29,10 @@ func (s *Server) handlePublicListAutores() http.HandlerFunc {
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("no se encontró ningún autor", err.Error())
-				s.handleError(w, 404, "No se ha encontrado ningún autor ¿está el servidor bien configurado?")
+				s.handleError(r, w, 404, "No se ha encontrado ningún autor ¿está el servidor bien configurado?")
 			} else {
 				logger.Error("error inesperado recuperando datos: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		}
@@ -43,7 +43,7 @@ func (s *Server) handlePublicListAutores() http.HandlerFunc {
 		})
 		if err != nil {
 			logger.Error("error renderizandoo plantilla: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

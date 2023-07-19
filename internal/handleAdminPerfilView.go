@@ -21,7 +21,7 @@ func (s *Server) handleAdminPerfilView() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error recuperando perfil del usuario actual")
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 
 		templates.Render(w, "admin-perfil.html", respuesta{

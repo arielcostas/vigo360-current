@@ -19,3 +19,16 @@
 	vertical-align: middle;
 	font-weight: bold;
 }
+
+#pager > a {
+	color: var(--text);
+}
+
+#pager > a:hover {
+	text-decoration: none;
+}
+
+#pager > a:not([href]) {
+	pointer-events: none;
+	cursor: not-allowed;
+}

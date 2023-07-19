@@ -23,7 +23,7 @@ func (s *Server) handlePublicListTrabajos() http.HandlerFunc {
 
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			logger.Error("error obteniendo trabajos: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -38,7 +38,7 @@ func (s *Server) handlePublicListTrabajos() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error mostrando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 			return
 		}
 

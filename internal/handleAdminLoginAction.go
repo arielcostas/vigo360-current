@@ -50,7 +50,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if err := r.ParseForm(); err != nil {
 			logger.Error("error recuperando datos del formulario: %s", err.Error())
-			s.handleError(w, 400, messages.ErrorFormulario)
+			s.handleError(r, w, 400, messages.ErrorFormulario)
 			return
 		}
 
@@ -75,7 +75,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 				s.handleAdminLoginPage(param_userid)(w, r)
 			} else {
 				logger.Error("error recuperando usuario: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		}
@@ -91,14 +91,14 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if _, err := db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid); err != nil {
 			logger.Error("error guardando nueva sesión: %s")
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 
 		http.SetCookie(w, &http.Cookie{
 			Name:     "sess",
 			Value:    token,
 			Path:     "/",
-			MaxAge:   60*60*24*365,
+			MaxAge:   60 * 60 * 24 * 365,
 			Domain:   r.URL.Host,
 			HttpOnly: true,
 			SameSite: http.SameSiteStrictMode,

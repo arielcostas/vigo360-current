@@ -40,7 +40,7 @@ func (s *Server) handleAdminLoginPage(prefill string) http.HandlerFunc {
 		err = templates.Render(w, "admin-login.html", resp)
 		if err != nil {
 			logger.Notice("error mostrando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

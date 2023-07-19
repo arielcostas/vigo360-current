@@ -28,7 +28,7 @@ func (s *Server) handleAdminPreviewPage() http.HandlerFunc {
 		autor, err := s.store.autor.Obtener(sess.Autor_id)
 		if err != nil {
 			logger.Error("error obteniendo datos del autor: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -51,7 +51,7 @@ func (s *Server) handleAdminPreviewPage() http.HandlerFunc {
 		if err != nil {
 			// TODO: Remplazar esto
 			fmt.Printf("%s\n", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 			return
 		}
 	}

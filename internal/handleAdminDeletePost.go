@@ -16,7 +16,7 @@ func (s *Server) handleAdminDeletePost() http.HandlerFunc {
 		sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		if !sess.Permisos["publicaciones_delete"] {
 			logger.Error("sin permiso para eliminar la publicación")
-			s.handleError(w, 403, messages.ErrorSinPermiso)
+			s.handleError(r, w, 403, messages.ErrorSinPermiso)
 			return
 		}
 
@@ -25,25 +25,25 @@ func (s *Server) handleAdminDeletePost() http.HandlerFunc {
 		tx, err := database.GetDB().Begin()
 		if err != nil {
 			logger.Error("error iniciando transacción: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 		_, err = tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id=?", postid)
 		if err != nil {
 			logger.Error("error eliminando tags: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 		_, err = tx.Exec("DELETE FROM publicaciones WHERE id=?", postid)
 		if err != nil {
 			logger.Error("error eliminando publicación: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 		err = tx.Commit()
 		if err != nil {
 			logger.Error("error ejecutando transacción: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 

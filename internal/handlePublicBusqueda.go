@@ -41,7 +41,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 		autores, err := s.store.autor.Buscar(termino)
 		if err != nil {
 			logger.Error("error obteniendo autores: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -58,7 +58,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 		publicaciones = publicaciones.FiltrarPublicas()
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -84,7 +84,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 		})
 		if err != nil {
 			logger.Error("error generando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 			return
 		}
 	}

@@ -47,9 +47,7 @@
                 </p>
 
                 <label for="alt_portada">Texto alternativo de portada</label>
-                <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300" required>
-                    {{ .Post.Alt_portada }}
-                </textarea>
+                <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300" required>{{- .Post.Alt_portada }}</textarea>
                 {{ if eq .Post.Fecha_publicacion "" }}
                     <hr>
                     <div>

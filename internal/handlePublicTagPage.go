@@ -27,10 +27,10 @@ func (s *Server) handlePublicTagPage() http.HandlerFunc {
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("no se encontró la tag: %s", err.Error())
-				s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
+				s.handleError(r, w, 404, messages.ErrorPaginaNoEncontrada)
 			} else {
 				logger.Error("error recuperando la tag: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		}
@@ -39,7 +39,7 @@ func (s *Server) handlePublicTagPage() http.HandlerFunc {
 
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			logger.Error("error recuperando publicaciones para tag: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -56,7 +56,7 @@ func (s *Server) handlePublicTagPage() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error generando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

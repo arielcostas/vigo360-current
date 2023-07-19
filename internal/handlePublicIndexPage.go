@@ -35,7 +35,7 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 		posts, err := s.store.publicacion.Listar()
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			log.Error("error recuperando datos: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -49,7 +49,7 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 			o, err := strconv.Atoi(queryPage)
 			if err != nil {
 				log.Error("no se pudo convertir '%s' a un número de página", queryPage)
-				s.handleError(w, 404, messages.ErrorNoResultados)
+				s.handleError(r, w, 404, messages.ErrorNoResultados)
 				return
 			}
 			pagina = o
@@ -60,7 +60,7 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 
 		if inicio >= len(posts) || inicio < 0 {
 			log.Error("con %d publicaciones no existe la página %s", len(posts), pagina)
-			s.handleError(w, 404, messages.ErrorNoResultados)
+			s.handleError(r, w, 404, messages.ErrorNoResultados)
 			return
 		}
 
@@ -80,7 +80,7 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 
 		if err != nil {
 			log.Error("error renderizando la página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

@@ -20,7 +20,7 @@ func (s *Server) handleAdminListComentarios() http.HandlerFunc {
 		comentarios, err := s.store.comentario.ListarPorEstado(models.EstadoPendiente)
 		if err != nil {
 			log.Error("Error recuperando comentarios: " + err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -30,7 +30,7 @@ func (s *Server) handleAdminListComentarios() http.HandlerFunc {
 
 		if err != nil {
 			log.Error("error recuperando el autor: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

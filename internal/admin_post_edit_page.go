@@ -26,33 +26,35 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
-		post_id := mux.Vars(r)["id"]
+		postId := mux.Vars(r)["id"]
 
 		db := database.GetDB()
 
 		var publicacion models.Publicacion
 
-		publicacion, err := s.store.publicacion.ObtenerPorId(post_id, false)
+		publicacion, err := s.store.publicacion.ObtenerPorId(postId, false)
 
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
-				logger.Error("publicacion no encontrada: %s", err.Error())
-				s.handleError(w, 400, messages.ErrorPaginaNoEncontrada)
+				log.Error("publicacion no encontrada: %s", err.Error())
+				s.handleError(r, w, 400, messages.ErrorPaginaNoEncontrada)
 			} else {
-				logger.Error("error recuperando publicacion: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				log.Error("error recuperando publicacion: %s", err.Error())
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 
 			return
 		}
 
 		var tags []tag
-		err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags ORDER BY nombre ASC`, post_id)
+
+		//goland:noinspection SqlConstantExpression
+		err = db.Select(&tags, `SELECT id, nombre, (SELECT tag_id FROM publicaciones_tags pt WHERE pt.publicacion_id = ? AND pt.tag_id = id) IS NOT NULL as seleccionada FROM tags ORDER BY nombre`, postId)
 		if err != nil {
-			logger.Error("error recuperando tags: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			log.Error("error recuperando tags: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 
 		err = templates.Render(w, "admin-post-id.html", returnParams{
@@ -61,8 +63,8 @@ func (s *Server) handleAdminEditPage() http.HandlerFunc {
 			Session: sess,
 		})
 		if err != nil {
-			logger.Error("error mostrando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			log.Error("error mostrando página: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

@@ -44,10 +44,10 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		if np, err := s.store.publicacion.ObtenerPorId(req_post_id, true); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				log.Error("no se encontró la publicación: %s", err.Error())
-				s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
+				s.handleError(r, w, 404, messages.ErrorPaginaNoEncontrada)
 			} else {
 				log.Error("error recuperando la publicación: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		} else {
@@ -71,7 +71,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 
 		if nct, err := cs.ListarPublicos(post.Id); err != nil {
 			log.Error("error recuperando comentarios para %s: %s", post.Id, err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		} else {
 			ct = nct
 		}
@@ -92,7 +92,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 		})
 		if err != nil {
 			log.Error("error mostrando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

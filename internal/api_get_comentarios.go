@@ -16,7 +16,7 @@ func (s *Server) handle_api_listar_comentarios(w http.ResponseWriter, r *http.Re
 
 	var estado models.EstadoComentario
 	if err != nil && req_raw_estado != "" {
-		s.handleJsonError(w, 400, "estado debe ser un número entre 1 y 3")
+		s.handleJsonError(r, w, 400, "estado debe ser un número entre 1 y 3")
 		return
 	} else if req_raw_estado_int < 1 || req_raw_estado_int > 3 {
 		estado = models.EstadoPendiente
@@ -29,7 +29,7 @@ func (s *Server) handle_api_listar_comentarios(w http.ResponseWriter, r *http.Re
 	logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 
 	if err != nil {
-		s.handleJsonError(w, 500, messages.ErrorDatos)
+		s.handleJsonError(r, w, 500, messages.ErrorDatos)
 		logger.Error("cannot get comentarios: " + err.Error())
 		return
 	}
@@ -42,7 +42,7 @@ func (s *Server) handle_api_listar_comentarios(w http.ResponseWriter, r *http.Re
 	salida, err = json.Marshal(comentarios)
 
 	if err != nil {
-		s.handleJsonError(w, 500, messages.ErrorRender)
+		s.handleJsonError(r, w, 500, messages.ErrorRender)
 		logger.Error("Error de json: " + err.Error())
 		return
 	}
