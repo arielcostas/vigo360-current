@@ -26,10 +26,11 @@
   --outline: 1px solid var(--gray);
   --outline-primary: 2px solid var(--primary-main);
 
-  --sans-fonts: BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --title-fonts: Roboto Slab, Cambria, Times New Roman, Liberation Serif, serif;
+  --copy-fonts: "Nunito Sans", Liberation Sans, Roboto, Helvetica, Arial, sans-serif;
   --mono-fonts: "Cascadia Mono", "Fira Code", "Fira Mono", "Noto Sans Mono", "Ubuntu Mono", "Consolas", "Hack", monospace;
 
-  font-family: var(--sans-fonts);
+  font-family: var(--copy-fonts);
   font-weight: 400;
   font-size: 16px;
 
@@ -48,6 +49,11 @@
   box-sizing: border-box;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--title-fonts) !important;
+  line-height: 1.2;
+}
+
 a, a:hover {
   text-decoration: none;
 }
@@ -63,7 +69,7 @@ a, a:hover {
 }
 
 p {
-  font-family: var(--sans-fonts);
+  font-family: var(--copy-fonts);
 }
 
 #header-brand {

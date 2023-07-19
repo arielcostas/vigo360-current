@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    {{- template "_head.html" . }}
+    <title>Error - Vigo360</title>
+    <style>
+        main {
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+{{ template "_header.html" }}
+<main>
+    <h1>Error {{ .ErrorCode }}</h1>
+    <p>{{ .Message }}</p>
+    <hr>
+    <p>Si el error persiste, por favor, contacte con el administrador del sitio.</p>
+    <a href="/" class="button button-primary">Volver a la página principal</a>
+
+    <hr>
+    <small>
+        {{ .Rid }} -- {{ .Time }} -- {{ .RequestedUrl }}
+    </small>
+</main>
+{{ template "_footer.html" }}
+</body>
+
+</html>
