@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/thanhpk/randstr"
 	"io"
 	"net/http"
 	"os"
@@ -55,15 +56,17 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 			tx = nt
 		}
 
+		var salt = randstr.String(3) + "_"
+
 		_, err = tx.Exec(
 			"INSERT INTO adjuntos (trabajo_id, nombre_archivo, titulo) VALUES (?, ?, ?)",
-			trabajoId, fileheader.Filename, titulo,
+			trabajoId, salt+fileheader.Filename, titulo,
 		)
 		if err != nil {
 			return
 		}
 
-		var imagePath = fmt.Sprintf("%s/trabajos/%s", uploadPath, fileheader.Filename)
+		var imagePath = fmt.Sprintf("%s/papers/%s", uploadPath, salt+fileheader.Filename)
 		err = os.WriteFile(imagePath, fileBytes, 0o644)
 		if err != nil {
 			_ = tx.Rollback()

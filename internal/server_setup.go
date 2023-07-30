@@ -81,6 +81,7 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 
 	newrouter.HandleFunc("/admin/async/attachments", s.withAuth(s.adminApiAttachmentList())).Methods(http.MethodGet)
 	newrouter.HandleFunc("/admin/async/attachments", s.withAuth(s.adminApiAttachmentCreate())).Methods(http.MethodPost)
+	newrouter.HandleFunc("/admin/async/attachments", s.withAuth(s.adminApiAttachmentDelete())).Methods(http.MethodDelete)
 
 	newrouter.HandleFunc(`/post/{postid}`, s.handlePublicPostPage()).Methods(http.MethodGet)
 
