@@ -11,7 +11,7 @@
 {{ $session := .Session }}
 <main id="post-list">
     <h2>Gestión de trabajos</h2>
-    <div>
+    <section>
         <form method="post">
             <h3>Crear un nuevo trabajo</h3>
             <label for="art-id">
@@ -50,7 +50,7 @@
                 <span class="user-section-title">No se encontró ningún trabajo</span>
             {{ end }}
         </section>
-    </div>
+    </section>
 </main>
 {{ template "_admin-footer.html" . }}
 <script src="/static/post-validarid.js"></script>

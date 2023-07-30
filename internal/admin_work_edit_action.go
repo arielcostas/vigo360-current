@@ -42,7 +42,7 @@ func (s *Server) handleAdminEditWorkAction() http.HandlerFunc {
 			Titulo:     r.FormValue("work-titulo"),
 			Resumen:    r.FormValue("work-resumen"),
 			Contenido:  r.FormValue("work-contenido"),
-			AltPortada: r.FormValue("work-portada"),
+			AltPortada: r.FormValue("alt_portada"),
 		}
 
 		if err := validator.New().Struct(fi); err != nil {
