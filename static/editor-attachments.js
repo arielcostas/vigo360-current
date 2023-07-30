@@ -14,7 +14,7 @@ async function listAttachments() {
      * @type {Attachment[]} attachments
      */
     let attachments = []
-    if (resp.status === 200) {
+    if (resp.status == 200) {
         attachments = body
     }
     return attachments
@@ -29,7 +29,7 @@ async function deleteAttachment(n) {
         method: "DELETE"
     })
 
-    if (resp.status === 204) {
+    if (resp.status == 204) {
         loadAttachments()
         imageStatus.innerText = `Adjunto borrado`
         setTimeout(() => {
@@ -87,8 +87,8 @@ form.addEventListener("submit", async (e) => {
         method: "POST",
         body: fd
     })
-    if (resp.status !== 201) {
-        body = await resp.json()
+    if (resp.status != 201) {
+        let body = await resp.json()
         imageStatus.innerText = body["error"]
     } else {
         imageStatus.innerText = `Archivo guardado exitosamente`
