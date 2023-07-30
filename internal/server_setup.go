@@ -66,12 +66,17 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc("/admin/comentarios/rechazar", s.withAuth(s.handleAdminRechazarComentario())).Methods(http.MethodGet)
 
 	newrouter.HandleFunc("/admin/dashboard", s.withAuth(s.handleAdminDashboardPage())).Methods(http.MethodGet)
+
 	newrouter.HandleFunc("/admin/post", s.withAuth(s.handleAdminListPost())).Methods(http.MethodGet)
 	newrouter.HandleFunc("/admin/post", s.withAuth(s.handleAdminCreatePost())).Methods(http.MethodPost)
-
-	newrouter.HandleFunc("/admin/post/{id}", s.withAuth(s.handleAdminEditPage())).Methods(http.MethodGet)
-	newrouter.HandleFunc("/admin/post/{id}", s.withAuth(s.handleAdminEditAction())).Methods(http.MethodPost)
+	newrouter.HandleFunc("/admin/post/{id}", s.withAuth(s.handleAdminEditPostPage())).Methods(http.MethodGet)
+	newrouter.HandleFunc("/admin/post/{id}", s.withAuth(s.handleAdminEditPostAction())).Methods(http.MethodPost)
 	newrouter.HandleFunc("/admin/post/{postid}/delete", s.withAuth(s.handleAdminDeletePost())).Methods(http.MethodGet)
+
+	newrouter.HandleFunc("/admin/works", s.withAuth(s.handleAdminListWorks())).Methods(http.MethodGet)
+	newrouter.HandleFunc("/admin/works", s.withAuth(s.handleAdminCreateWork())).Methods(http.MethodPost)
+	newrouter.HandleFunc("/admin/works/{id}", s.withAuth(s.handleAdminEditWorkPage())).Methods(http.MethodGet)
+	newrouter.HandleFunc("/admin/works/{id}", s.withAuth(s.handleAdminEditWorkAction())).Methods(http.MethodPost)
 
 	newrouter.HandleFunc("/admin/perfil", s.withAuth(s.handleAdminPerfilView())).Methods(http.MethodGet)
 	newrouter.HandleFunc("/admin/perfil", s.withAuth(s.handleAdminPerfilEdit())).Methods(http.MethodPost)

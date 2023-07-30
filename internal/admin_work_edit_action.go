@@ -1,12 +1,9 @@
 package internal
 
 import (
-	"bytes"
 	"database/sql"
 	"errors"
-	"io"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -14,11 +11,9 @@ import (
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
-	"vigo360.es/new/internal/seo"
 )
 
-func (s *Server) handleAdminEditPostAction() http.HandlerFunc {
-
+func (s *Server) handleAdminEditWorkAction() http.HandlerFunc {
 	type EditPostActionFormInput struct {
 		Titulo     string `validate:"required,min=3,max=80"`
 		Resumen    string `validate:"required,min=3,max=300"`
@@ -28,11 +23,11 @@ func (s *Server) handleAdminEditPostAction() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
-		publicacionId := mux.Vars(r)["id"]
+		trabajoId := mux.Vars(r)["id"]
 
-		_, err := s.store.publicacion.ObtenerPorId(publicacionId, false)
+		_, err := s.store.trabajo.ObtenerPorId(trabajoId, false)
 		if err != nil {
-			log.Error("no se encontró la publicación a editar")
+			log.Error("no se encontró el trabajo a editar")
 			s.handleError(r, w, 404, messages.ErrorPaginaNoEncontrada)
 			return
 		}
@@ -57,7 +52,6 @@ func (s *Server) handleAdminEditPostAction() http.HandlerFunc {
 			return
 		}
 
-		tags := r.Form["tags"]
 		var tx *sql.Tx
 
 		if nt, err := database.GetDB().Begin(); err != nil {
@@ -68,66 +62,30 @@ func (s *Server) handleAdminEditPostAction() http.HandlerFunc {
 			tx = nt
 		}
 
-		if _, err := tx.Exec("DELETE FROM publicaciones_tags WHERE publicacion_id = ?", publicacionId); err != nil {
-			e2 := tx.Rollback()
-			if e2 != nil {
-				s.handleError(r, w, 500, messages.ErrorDatos)
-			}
-			log.Error("error eliminando tags existentes: %s", err.Error())
-			s.handleError(r, w, 500, messages.ErrorDatos)
-			return
-		}
-
-		for _, t := range tags {
-			if _, err := tx.Exec("INSERT INTO publicaciones_tags (publicacion_id, tag_id) VALUES (?, ?)", publicacionId, t); err != nil {
-				e2 := tx.Rollback()
-				if e2 != nil {
-					s.handleError(r, w, 500, messages.ErrorDatos)
-				}
-				log.Error("error insertando nuevas tags: %s", err.Error())
-				s.handleError(r, w, 500, messages.ErrorDatos)
-				return
-			}
-		}
-
-		query := `UPDATE publicaciones SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
+		query := `UPDATE trabajos SET titulo=?, resumen=?, contenido=?, alt_portada=? WHERE id=?`
 		if _, err := tx.Exec(query,
 			strings.TrimSpace(fi.Titulo),
 			strings.TrimSpace(fi.Resumen),
 			strings.TrimSpace(fi.Contenido),
 			strings.TrimSpace(fi.AltPortada),
-			publicacionId,
+			trabajoId,
 		); err != nil {
 			e2 := tx.Rollback()
 			if e2 != nil {
 				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
-			log.Error("error actualizando publicación: %s", err.Error())
+			log.Error("error actualizando trabajo: %s", err.Error())
 			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
 		if r.FormValue("publicar") == "on" {
-			query := `UPDATE publicaciones SET fecha_publicacion=NOW() WHERE id=?`
-			if _, err := tx.Exec(query, publicacionId); err != nil {
+			// TODO: Update this above with the others
+			query := `UPDATE trabajos SET fecha_publicacion=NOW() WHERE id=?`
+			if _, err := tx.Exec(query, trabajoId); err != nil {
 				log.Error("error actualizando fecha de publicación: %s", err.Error())
 				s.handleError(r, w, 500, messages.ErrorDatos)
 				return
-			}
-
-			var DOMAIN = os.Getenv("DOMAIN")
-			var indexnowurls = []string{
-				DOMAIN + "/",
-				DOMAIN + "/post/" + publicacionId,
-			}
-
-			for _, t := range tags {
-				indexnowurls = append(indexnowurls, DOMAIN+"/tags/"+t+"/")
-			}
-
-			err = seo.BingIndexnowRequest(indexnowurls)
-			if err != nil {
-				log.Error("error llamando a indexnow: %s", err.Error())
 			}
 		}
 
@@ -146,42 +104,14 @@ func (s *Server) handleAdminEditPostAction() http.HandlerFunc {
 
 		// Image uploaded
 		if !errors.Is(err, http.ErrMissingFile) {
-			encodeImagesAndSave(portada_file, publicacionId)
+			encodeImagesAndSave(portada_file, trabajoId)
 		}
 
 		defer w.WriteHeader(303)
 		if r.FormValue("salir") == "true" {
-			w.Header().Add("Location", "/admin/post")
+			w.Header().Add("Location", "/admin/works")
 		} else {
 			w.Header().Add("Location", r.URL.Path)
 		}
-	}
-}
-
-func encodeImagesAndSave(portada_file io.Reader, publicacion_id string) {
-	uppath := os.Getenv("UPLOAD_PATH")
-	var err error
-	log := logger.NewLogger("encodeImagesAndSave " + publicacion_id)
-
-	var portadaJpg, portadaWebp bytes.Buffer
-	if pj, pw, e2 := generateImagesFromImage(portada_file); errors.Is(e2, ErrImageFormatError) {
-		log.Error("error procesando imágenes: %s", err.Error())
-		return
-	} else if err != nil {
-		log.Error("error procesando imágenes: %s", err.Error())
-		return
-	} else {
-		portadaJpg = pj
-		portadaWebp = pw
-	}
-
-	if e2 := os.WriteFile(uppath+"/thumb/"+publicacion_id+".jpg", portadaJpg.Bytes(), os.ModePerm); e2 != nil {
-		log.Error("error guardando imagen jpg: %s", err.Error())
-		return
-	}
-
-	if e2 := os.WriteFile(uppath+"/images/"+publicacion_id+".webp", portadaWebp.Bytes(), os.ModePerm); e2 != nil {
-		log.Error("error guardando imagen webp: %s", err.Error())
-		return
 	}
 }

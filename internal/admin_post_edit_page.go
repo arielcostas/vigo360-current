@@ -13,7 +13,7 @@ import (
 	"vigo360.es/new/internal/templates"
 )
 
-func (s *Server) handleAdminEditPage() http.HandlerFunc {
+func (s *Server) handleAdminEditPostPage() http.HandlerFunc {
 	type tag struct {
 		models.Tag
 		Seleccionada bool

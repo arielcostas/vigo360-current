@@ -25,6 +25,7 @@
                    maxlength="80" required>
             <button type="submit" class="button button-primary">Crear trabajo</button>
         </form>
+
         <section id="post-listing">
             {{ if ne (len .Works) 0 }}
                 {{ range .Posts }}
@@ -42,13 +43,6 @@
                                     {{ .Fecha_publicacion }}
                                 </span>
                             {{ end }}
-
-                            {{- $postid := .Id }}
-                            {{- with $session }}
-                                {{- if eq (index .Permisos "publicaciones_delete" ) true }}
-                                    <a href="/admin/post/{{ $postid }}/delete">Eliminar</a>
-                                {{- end }}
-                            {{- end }}
                         </p>
                     </article>
                 {{ end }}

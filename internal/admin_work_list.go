@@ -23,7 +23,7 @@ type ResumenTrabajo struct {
 	Autor_nombre      string
 }
 
-func (s *Server) handleAdminListTrabajos() http.HandlerFunc {
+func (s *Server) handleAdminListWorks() http.HandlerFunc {
 	const MAX_LISTED_WORKS = 50
 	type response struct {
 		Works   []ResumenTrabajo
