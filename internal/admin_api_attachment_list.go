@@ -10,9 +10,9 @@ import (
 
 func (s *Server) adminApiAttachmentList() http.HandlerFunc {
 	type Attachment struct {
+		Id       int    `json:"id"`
 		Title    string `json:"title"`
 		Filename string `json:"filename"`
-		Uploaded string `json:"uploaded"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +28,7 @@ func (s *Server) adminApiAttachmentList() http.HandlerFunc {
 		var result = make([]Attachment, 0)
 
 		db := database.GetDB()
-		rows, err := db.Query("SELECT nombre_archivo, titulo, fecha_subida FROM adjuntos WHERE trabajo_id = ?", trabajoId)
+		rows, err := db.Query("SELECT id, nombre_archivo, titulo FROM adjuntos WHERE trabajo_id = ?", trabajoId)
 
 		if err != nil {
 			log.Error("error leyendo adjuntos: %s", err.Error())
@@ -37,16 +37,16 @@ func (s *Server) adminApiAttachmentList() http.HandlerFunc {
 		}
 
 		for rows.Next() {
+			var id int
 			var filename string
 			var title string
-			var uploaded string
-			err = rows.Scan(&filename, &title, &uploaded)
+			err = rows.Scan(&id, &filename, &title)
 			if err != nil {
 				log.Error("error escaneando adjuntos: %s", err.Error())
 				s.handleJsonError(r, w, 500, messages.ErrorDatos)
 				return
 			}
-			result = append(result, Attachment{Title: title, Filename: filename, Uploaded: uploaded})
+			result = append(result, Attachment{Id: id, Title: title, Filename: filename})
 		}
 
 		resbytes, err := json.MarshalIndent(result, "", "\t")

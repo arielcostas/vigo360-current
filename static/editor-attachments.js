@@ -20,15 +20,15 @@ async function listAttachments() {
     return attachments
 }
 
-async function eliminarFotografia(n) {
-    let resp = await fetch("/admin/async/a?foto=" + n, {
+async function deleteAttachment(n) {
+    let resp = await fetch("/admin/async/attachments?id=" + n, {
         method: "DELETE"
     })
     let body = await resp.json()
 
     if (resp.status === 200) {
         loadAttachments()
-        imageStatus.innerText = `Imagen borrada`
+        imageStatus.innerText = `Adjunto borrado`
         setTimeout(() => {
             imageStatus.innerText = ""
         }, 2000)
@@ -64,17 +64,20 @@ loadAttachments()
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault()
-    archivo = document.getElementById("archivo")
-    fd = new FormData()
-    fd.append("foto", archivo.files[0])
-    fd.append("articulo", workId)
+    let titulo = form.getElementById("attachment-title").value
+    let archivo = form.getElementById("attachment-file").files[0]
 
-    if (archivo.files[0].size > 20971520) {
-        imageStatus.innerText = `La imagen seleccionada es demasiado pesada`
+    fd = new FormData()
+    fd.append("titulo", titulo)
+    fd.append("trabajo", workId)
+    fd.append("file", archivo)
+
+    if (archivo.size > 157_286_400) {
+        imageStatus.innerText = `El archivo seleccionado es demasiado pesado`
         return
     }
 
-    resp = await fetch('/admin/async/fotosExtra', {
+    resp = await fetch('/admin/async/attachments', {
         method: "POST",
         body: fd
     })
@@ -82,7 +85,7 @@ form.addEventListener("submit", async (e) => {
         body = await resp.json()
         imageStatus.innerText = body.errorMsg
     } else {
-        imageStatus.innerText = `Imagen guardada exitosamente`
+        imageStatus.innerText = `Archivo guardado exitosamente`
         setTimeout(() => {
             imageStatus.innerText = ""
         }, 2000)
