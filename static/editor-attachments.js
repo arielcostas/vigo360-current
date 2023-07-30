@@ -52,7 +52,7 @@ function loadAttachments() {
         }
 
         imageStatus.innerHTML = ""
-        attachmentList.innerHTML = ""
+        document.querySelectorAll(".attachment").forEach(e => e.remove())
 
         items.forEach(i => {
             let li = document.createElement("li")
