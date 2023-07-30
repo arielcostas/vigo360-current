@@ -26,7 +26,7 @@ async function deleteAttachment(n) {
     })
     let body = await resp.json()
 
-    if (resp.status === 200) {
+    if (resp.status === 204) {
         loadAttachments()
         imageStatus.innerText = `Adjunto borrado`
         setTimeout(() => {
@@ -53,7 +53,10 @@ function loadAttachments() {
         items.forEach(i => {
             let li = document.createElement("li")
             li.setAttribute("class", "attachment")
-            li.innerText = `${i.title} (${i.filename})`
+            li.innerHTML = `
+                <a onclick="deleteAttachment(${i.id})">Borrar</a>
+                ${i.title}
+                (<a href="/static/papers/${i.filename}" target="_blank">${i.filename}</a>)`
             attachmentList.appendChild(li)
         })
     })
@@ -81,7 +84,7 @@ form.addEventListener("submit", async (e) => {
         method: "POST",
         body: fd
     })
-    if (resp.status !== 200) {
+    if (resp.status !== 204) {
         body = await resp.json()
         imageStatus.innerText = body["error"]
     } else {
