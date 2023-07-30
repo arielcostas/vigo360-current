@@ -48,11 +48,11 @@ function loadAttachments() {
     attachments.then((items) => {
         document.querySelectorAll(".attachment").forEach(e => e.remove())
         attachmentList.innerHTML = ""
+        imageStatus.innerHTML = ""
+
         if (items.length < 1) {
             imageStatus.innerHTML = "<b>Ningún adjunto añadido</b>"
         }
-
-        imageStatus.innerHTML = ""
 
         items.forEach(i => {
             let li = document.createElement("li")
