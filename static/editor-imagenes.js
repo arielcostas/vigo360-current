@@ -56,7 +56,7 @@ async function eliminarFotografia(n) {
 			imageStatus.innerText = ""
 		}, 2000)
 	} else {
-		imageStatus.innerText = body.errorMsg
+		imageStatus.innerText = body["error"]
 	}
 }
 
@@ -95,9 +95,9 @@ form.addEventListener("submit", async (e) => {
 		method: "POST",
 		body: fd
 	})
-	if (resp.status != 200) {
+	if (resp.status !== 200) {
 		body = await resp.json()
-		imageStatus.innerText = body.errorMsg
+		imageStatus.innerText = body["error"]
 	} else {
 		imageStatus.innerText = `Imagen guardada exitosamente`
 		setTimeout(() => {

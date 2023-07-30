@@ -15,6 +15,10 @@ import (
 type indexParams struct {
 	CurrentPage int
 	PageCount   int
+	HasNextPage bool
+	HasPrevPage bool
+	IsFirstPage bool
+	IsLastPage  bool
 	Posts       models.Publicaciones
 	Meta        PageMeta
 }
@@ -27,11 +31,11 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		posts, err := s.store.publicacion.Listar()
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			logger.Error("error recuperando datos: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			log.Error("error recuperando datos: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -44,8 +48,8 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 		if queryPage != "" {
 			o, err := strconv.Atoi(queryPage)
 			if err != nil {
-				logger.Error("no se pudo convertir '%s' a un número de página", queryPage)
-				s.handleError(w, 404, messages.ErrorNoResultados)
+				log.Error("no se pudo convertir '%s' a un número de página", queryPage)
+				s.handleError(r, w, 404, messages.ErrorNoResultados)
 				return
 			}
 			pagina = o
@@ -55,8 +59,8 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 		var limite = getMinimo(inicio+9, len(posts))
 
 		if inicio >= len(posts) || inicio < 0 {
-			logger.Error("con %d publicaciones no existe la página %s", len(posts), pagina)
-			s.handleError(w, 404, messages.ErrorNoResultados)
+			log.Error("con %d publicaciones no existe la página %s", len(posts), pagina)
+			s.handleError(r, w, 404, messages.ErrorNoResultados)
 			return
 		}
 
@@ -73,9 +77,10 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 			Posts:       posts[inicio:limite],
 			Meta:        meta,
 		})
+
 		if err != nil {
-			logger.Error("error renderizando la página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			log.Error("error renderizando la página: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

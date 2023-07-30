@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>{{ .Work.Titulo }} - Admin Vigo360</title>
+    {{ template "_admin-head.html" . }}
+</head>
+
+<body>
+{{ template "_admin-header.html" . }}
+<main id="post-editor">
+    <h2>Editor de trabajos</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-column">
+            <div class="form-row">
+                <label for="work-titulo">Título del trabajo</label>
+                <input type="text" name="work-titulo" id="work-titulo" placeholder="Trabajo interesante" maxlength="80"
+                       required value="{{ .Work.Titulo }}">
+                <label for="work-resumen">Resumen del trabajo</label>
+                <input type="text" name="work-resumen" id="work-resumen"
+                       placeholder="Trabajo muy interesante sobre un tema nunca antes estudiado"
+                       maxlength="300" value="{{ .Work.Resumen }}" required>
+                <label for="work-contenido">Contenido del trabajo</label>
+                <textarea rows="15" name="work-contenido" id="work-contenido" placeholder="Contenido del trabajo"
+                          required>{{ .Work.Contenido }}</textarea>
+            </div>
+            <section class="form-row">
+                <label for="portada_actual">Foto de portada</label>
+                <img id="portada_actual" src="/static/thumb/{{ .Work.Id }}.jpg" height="224px" width="400px"
+                     alt="Foto de portada actual"/>
+                <input type="file" id="portada" name="portada" accept="image/png, image/jpeg, image/webp">
+                <p>
+                    Debe tener una relación de aspecto 16:9, ser menor de 20 MB y
+                    estar en formato PNG, JPG o WebP. Si no se selecciona ninguna, se conservará la
+                    actual.
+                </p>
+
+                <label for="alt_portada">Texto alternativo de portada</label>
+                <textarea rows="3" id="alt_portada" name="alt_portada" maxlength="300" required>{{- .Work.Alt_portada }}</textarea>
+                {{ if eq .Work.Fecha_publicacion "" }}
+                    <hr>
+                    <div>
+                        <input type="checkbox" name="publicar" id="publicar">
+                        <label for="publicar">Publicar (irreversible)</label>
+                    </div>
+                {{ end }}
+            </section>
+        </div>
+
+        <input type="hidden" name="work-id" value="{{ .Work.Id }}">
+
+        <div class="submit-buttons">
+            <button name="salir" value="false" type="submit" class="button button-primary-outline">Guardar y seguir
+                editando
+            </button>
+            <button name="salir" value="true" type="submit" class="button button-primary">Guardar y salir</button>
+        </div>
+
+    </form>
+    <hr/>
+    <div id="attachment-manager">
+        <h2>Gestionar adjuntos</h2>
+        <noscript>Para gestionar los adjuntos es necesario tener JavaScript habilitado.</noscript>
+        <span id="attachment-status"></span>
+        <div id="attachment-container">
+            <ul id="attachment-list"></ul>
+            <form id="attachment-upload">
+                <h3>Subir adjunto</h3>
+                <label for="attachment-title">Título del adjunto</label>
+                <input type="text" name="attachment-title" id="attachment-title">
+
+                <label for="attachment-file">Archivo (max. 150MB)</label>
+                <input type="file" name="attachment-file" id="attachment-file" accept="image/png, image/jpeg, image/webp">
+
+                <button class="button button-primary">Subir</button>
+            </form>
+        </div>
+    </div>
+</main>
+{{ template "_admin-footer.html" . }}
+<script src="/static/editor-attachments.js"></script>
+<script src="/static/editor-portada.js"></script>
+</body>
+
+</html>

@@ -25,8 +25,14 @@ type ResumenPost struct {
 }
 
 func (s *Server) handleAdminListPost() http.HandlerFunc {
+	const MAX_LISTED_POSTS = 50
+	type response struct {
+		Posts   []ResumenPost
+		Session models.Session
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		sess := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		db := database.GetDB()
 		posts := []ResumenPost{}
@@ -34,8 +40,8 @@ func (s *Server) handleAdminListPost() http.HandlerFunc {
 		err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, COALESCE(fecha_publicacion, "") as fecha_publicacion, autor_id, autores.nombre as autor_nombre, count(tag_id) as canttags FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id GROUP BY publicaciones.id ORDER BY publicado ASC, publicaciones.fecha_publicacion DESC;`)
 
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			logger.Error("error recuperando listado de publicacionoes: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			log.Error("error recuperando listado de publicacionoes: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -45,17 +51,18 @@ func (s *Server) handleAdminListPost() http.HandlerFunc {
 			posts[i] = p
 		}
 
-		err = templates.Render(w, "admin-post.html", struct {
-			Posts   []ResumenPost
-			Session models.Session
-		}{
+		if len(posts) > MAX_LISTED_POSTS {
+			posts = posts[:MAX_LISTED_POSTS]
+		}
+
+		err = templates.Render(w, "admin-post.html", &response{
 			Posts:   posts,
 			Session: sess,
 		})
 
 		if err != nil {
-			logger.Error("error recuperando el autor: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			log.Error("error recuperando el autor: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

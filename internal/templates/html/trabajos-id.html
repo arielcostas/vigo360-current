@@ -95,7 +95,7 @@
 				</figure>
 				<h2 id="post-title">{{ .Trabajo.Titulo }}</h2>
 				<p id="post-info">
-					<a href="/autores/{{ .Trabajo.Autor.Id }}">{{ .Trabajo.Autor.Nombre }}</a>
+					<a class="link" href="/autores/{{ .Trabajo.Autor.Id }}">{{ .Trabajo.Autor.Nombre }}</a>
 					{{ dateDayMonth .Trabajo.Fecha_publicacion }} {{ if ne (dateDayMonth .Trabajo.Fecha_actualizacion)
 					(dateDayMonth .Trabajo.Fecha_publicacion) }}(actualizado {{ dateDayMonth
 					.Trabajo.Fecha_actualizacion

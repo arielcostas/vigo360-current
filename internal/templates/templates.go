@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
+	"github.com/Masterminds/sprig/v3"
 	"html/template"
 	"io"
 	"os"
@@ -20,7 +21,7 @@ var t = func() *template.Template {
 		filename := de.Name()
 		contents, _ := rawtemplates.ReadFile("html/" + filename)
 
-		_, err := t.New(filename).Funcs(Functions).Parse(string(contents))
+		_, err := t.New(filename).Funcs(Functions).Funcs(sprig.FuncMap()).Parse(string(contents))
 		if err != nil {
 			fmt.Printf("error parsing template: %s", err.Error())
 			os.Exit(1)
@@ -31,8 +32,8 @@ var t = func() *template.Template {
 }()
 
 /*
-	Render ejecuta una plantilla con los datos proveídos, llamando por debajo a ExecuteTemplate.
-	Si hay un error al ejecutar la plantilla, no escribe nada al io.Writer y devuelve el error, con lo que es seguro no tener una página escrita a medias.
+Render ejecuta una plantilla con los datos proveídos, llamando por debajo a ExecuteTemplate.
+Si hay un error al ejecutar la plantilla, no escribe nada al io.Writer y devuelve el error, con lo que es seguro no tener una página escrita a medias.
 */
 func Render(w io.Writer, name string, data any) error {
 	var output bytes.Buffer

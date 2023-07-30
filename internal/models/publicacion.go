@@ -10,8 +10,6 @@ type Publicacion struct {
 	Contenido           string
 	Comentarios         []Comentario
 
-	Serie          Serie
-	Serie_posicion int
-	Autor          Autor
-	Tags           []Tag
+	Autor Autor
+	Tags  []Tag
 }

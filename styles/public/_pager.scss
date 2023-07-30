@@ -1,22 +1,34 @@
-.pager {
+#pager {
 	margin-top: 2rem;
 	background: var(--background);
 	display: flex;
 	justify-content: center;
 }
 
-.pager > a, .pager > b {
+#pager > a, #pager > b {
 	background: white;
 	padding: 0.6rem 1rem 0.5rem;
-	border-radius: 8px;
 	font-size: 1.25rem;
 	margin: 0 0.5rem;
-	box-shadow: var(--shadow);
+
+	border-radius: 0.25rem;
+	width: 2.5rem;
+	box-shadow: var(--shadow-strong);
+
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
 }
 
-@media (max-width: 1280px) {
-	.pager {
-		justify-content: start;
-		overflow-x: auto;
-	}
+#pager > a {
+	color: var(--text);
+}
+
+#pager > a:hover {
+	text-decoration: none;
+}
+
+#pager > a:not([href]) {
+	pointer-events: none;
+	cursor: not-allowed;
 }

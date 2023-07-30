@@ -120,10 +120,6 @@
 		max-width: 90%;
 	}
 
-	.post-series {
-		margin: 0rem 0 1.5rem 0;
-	}
-
 	.post-inline-related > div {
 		flex-direction: column;
 	}
@@ -137,15 +133,9 @@
 		grid-template-columns: 1fr;
 	}
 
-
 	#frontpage-articles .primero+a, #frontpage-articles .primero+a+a, 
 	#frontpage-articles a
 	{
 		grid-column: 1/7;
-	}
-
-	.pager {
-		overflow: scroll;
-    	justify-content: start;
 	}
 }

@@ -16,7 +16,7 @@ func (s *Server) handlePublicIndexAtom() http.HandlerFunc {
 		pp, err := s.store.publicacion.Listar()
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 		pp = pp.FiltrarPublicas()
@@ -34,7 +34,7 @@ func (s *Server) handlePublicIndexAtom() http.HandlerFunc {
 		})
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 			return
 		}
 		w.Header().Add("Content-Type", "application/atom+xml;charset=UTF-8")

@@ -15,12 +15,12 @@ func (s *Server) handleAdminListComentarios() http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
+		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		//sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
-		comentarios, err := s.store.comentario.ListarPorEstado(models.ESTADO_PENDIENTE)
+		comentarios, err := s.store.comentario.ListarPorEstado(models.EstadoPendiente)
 		if err != nil {
-			logger.Error("Error recuperando comentarios: " + err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			log.Error("Error recuperando comentarios: " + err.Error())
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -29,8 +29,8 @@ func (s *Server) handleAdminListComentarios() http.HandlerFunc {
 		})
 
 		if err != nil {
-			logger.Error("error recuperando el autor: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			log.Error("error recuperando el autor: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

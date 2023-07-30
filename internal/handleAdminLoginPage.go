@@ -8,7 +8,7 @@ import (
 	"vigo360.es/new/internal/templates"
 )
 
-func (s *Server) handleAdminLoginPage(prefill string) http.HandlerFunc {
+func (s *Server) handle_login_page(prefill string) http.HandlerFunc {
 	type response struct {
 		LoginError  bool
 		PrefillName string
@@ -40,7 +40,7 @@ func (s *Server) handleAdminLoginPage(prefill string) http.HandlerFunc {
 		err = templates.Render(w, "admin-login.html", resp)
 		if err != nil {
 			logger.Notice("error mostrando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

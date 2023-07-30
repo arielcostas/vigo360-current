@@ -53,7 +53,7 @@ func (s *Server) handlePublicEnviarComentario() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error guardando comentario: %s", err.Error())
-			s.handleError(w, 400, messages.ErrorDatos)
+			s.handleError(r, w, 400, messages.ErrorDatos)
 			return
 		}
 

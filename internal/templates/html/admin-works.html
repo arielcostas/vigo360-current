@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Trabajos - Admin Vigo360</title>
+    {{ template "_admin-head.html" . }}
+</head>
+
+<body>
+{{ template "_admin-header.html" . }}
+{{ $session := .Session }}
+<main id="post-list">
+    <h2>Gestión de trabajos</h2>
+    <section>
+        <form method="post">
+            <h3>Crear un nuevo trabajo</h3>
+            <label for="art-id">
+                ID de trabajo
+            </label>
+            <input type="text" name="art-id" id="art-id" maxlength="40" placeholder="trabajo-tema" required/>
+            <label for="art-titulo">
+                Título del trabajo
+            </label>
+            <input type="text" name="art-titulo" id="art-titulo" placeholder="Un trabajo sobre un tema"
+                   maxlength="80" required>
+            <button type="submit" class="button button-primary">Crear trabajo</button>
+        </form>
+
+        <section id="post-listing">
+            {{ range .Works }}
+                <article class="list-post">
+                    <a href="/admin/works/{{ .Id }}"
+                       class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
+                    <p>
+                    <span>
+                        <img width="20" height="20" src="/static/user-icon.svg"/>
+                        {{ .Autor_nombre }}
+                    </span>
+                        {{ if ne .Fecha_publicacion "01/01/0001" }}
+                            <span>
+                                <img width="20" height="20" src="/static/clock-icon.svg"/>
+                                {{ .Fecha_publicacion }}
+                            </span>
+                        {{ end }}
+                    </p>
+                </article>
+            {{ end }}
+
+            {{ if eq (len .Works) 0 }}
+                <span class="user-section-title">No se encontró ningún trabajo</span>
+            {{ end }}
+        </section>
+    </section>
+</main>
+{{ template "_admin-footer.html" . }}
+<script src="/static/post-validarid.js"></script>
+</body>
+
+</html>

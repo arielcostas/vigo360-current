@@ -30,28 +30,28 @@ func (s *Server) handlePublicSitemap() http.HandlerFunc {
 		autores, err := s.store.autor.Listar()
 		if err != nil {
 			logger.Error("error recuperando autores: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
 		trabajos, err := s.store.trabajo.Listar()
 		if err != nil {
 			logger.Error("error recuperando trabajos: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
 		tags, err := s.store.tag.Listar()
 		if err != nil {
 			logger.Error("error recuperando tags: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
 		publicaciones, err := s.store.publicacion.Listar()
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -88,7 +88,7 @@ func (s *Server) handlePublicSitemap() http.HandlerFunc {
 		output, err := xml.MarshalIndent(SitemapPage{Data: pages}, "", "\t")
 		if err != nil {
 			logger.Error("error produciendo XML: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 		w.Header().Add("Content-Type", "application/xml")
 		fmt.Fprintf(w, "%s%s", xml.Header, output)

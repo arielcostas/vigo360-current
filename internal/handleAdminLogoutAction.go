@@ -25,7 +25,7 @@ func (s *Server) handleAdminLogoutAction() http.HandlerFunc {
 		sess, _ := r.Context().Value(sessionContextKey("sess")).(models.Session)
 		if err := revokeSession(sess.Id); err != nil {
 			logger.Error("error revocando sesión: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 

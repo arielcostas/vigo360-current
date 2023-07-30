@@ -28,7 +28,7 @@ func (s *Server) handlePublicListTags() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error obteniendo tags: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 
 		sort.Slice(tags, func(p, q int) bool {
@@ -47,7 +47,7 @@ func (s *Server) handlePublicListTags() http.HandlerFunc {
 			}
 			if err != nil {
 				logger.Error("error obteniendo publicaciones con tag: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 				return
 			}
 
@@ -83,7 +83,7 @@ func (s *Server) handlePublicListTags() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error generando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

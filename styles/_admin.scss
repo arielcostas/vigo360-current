@@ -1,13 +1,14 @@
 @use "admin/editor-imagenes.scss";
 @use "admin/editor-perfil.scss";
 @use "admin/moderar-comentarios.scss";
+@use "admin/editor-attachments.scss";
 
 main {
 	border-radius: 4px;
 	box-shadow: var(--shadow);
 	background-color: #fff;
 	max-width: 1280px;
-	margin: 2rem auto auto;
+	margin: 2rem auto 2rem;
 	padding: 2rem 3rem;
 }
 
@@ -35,8 +36,7 @@ textarea {
 }
 
 #post-list,
-#dashboard,
-#series-list {
+#dashboard {
 	width: 100%;
 }
 
@@ -144,8 +144,7 @@ main h2 {
 	flex-wrap: wrap;
 }
 
-#post-list form,
-#series-list form {
+#post-list form {
 	display: flex;
 	flex-direction: column;
 	flex: 2;
@@ -159,18 +158,19 @@ main h2 {
 
 .list-post > p > span {
 	margin-right: 1rem;
-	margin-left: 0.3rem;
+	margin-left: 0.4rem;
 	display: flex;
 	align-items: center;
+	font-family: var(--mono-fonts);
 }
-
-// .list-post > p > img {
-// 	break-after: avoid;
-// }
 
 .list-post > a {
 	font-size: 1.2em;
 	font-weight: bold;
+}
+
+.list-post > a {
+	color: var(--primary-main);
 }
 
 .list-post > a.unpublished {
@@ -192,8 +192,7 @@ main h2 {
 	}
 }
 
-#post-editor .form-column,
-#series-list > div {
+#post-editor .form-column {
 	display: grid;
 	grid-template-columns: 9fr 4fr;
 	gap: 2rem;
@@ -214,10 +213,6 @@ main h2 {
 	height: auto;
 }
 
-#series-list > p {
-	margin-bottom: 1.5rem;
-}
-
 @media (max-width: 640px) {
 	main {
 		padding: 1rem 1.5rem;
@@ -228,8 +223,7 @@ main h2 {
 		flex-direction: column;
 	}
 
-	#post-editor .form-column,
-	#series-list > div {
+	#post-editor .form-column {
 		grid-template-columns: 1fr;
 	}
 

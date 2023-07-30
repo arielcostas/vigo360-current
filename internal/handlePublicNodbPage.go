@@ -37,7 +37,7 @@ func (s *Server) handlePublicNodbPage() http.HandlerFunc {
 			meta = pm
 		} else {
 			logger.Error("nodb page not found")
-			s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
+			s.handleError(r, w, 404, messages.ErrorPaginaNoEncontrada)
 			return
 		}
 
@@ -46,7 +46,7 @@ func (s *Server) handlePublicNodbPage() http.HandlerFunc {
 		})
 		if err != nil {
 			logger.Error("error mostrando la página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 

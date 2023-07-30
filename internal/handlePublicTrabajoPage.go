@@ -29,10 +29,10 @@ func (s *Server) handlePublicTrabajoPage() http.HandlerFunc {
 		if nt, err := s.store.trabajo.ObtenerPorId(trabajoid, true); err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("trabajo no encontrado: %s", err.Error())
-				s.handleError(w, 404, messages.ErrorPaginaNoEncontrada)
+				s.handleError(r, w, 404, messages.ErrorPaginaNoEncontrada)
 			} else {
 				logger.Error("error recuperando trabajo: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		} else {
@@ -45,7 +45,7 @@ func (s *Server) handlePublicTrabajoPage() http.HandlerFunc {
 
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			logger.Error("error recuperando adjuntos: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 
 		err = templates.Render(w, "trabajos-id.html", struct {
@@ -65,7 +65,7 @@ func (s *Server) handlePublicTrabajoPage() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error mostrando página: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorRender)
+			s.handleError(r, w, 500, messages.ErrorRender)
 		}
 	}
 }

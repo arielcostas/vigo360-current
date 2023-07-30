@@ -18,14 +18,14 @@ func (s *Server) handleAdminListarFotoExtra() http.HandlerFunc {
 		articuloId := r.URL.Query().Get("articulo")
 		if articuloId == "" {
 			logger.Error("no se especificó un articuloId")
-			s.handleJsonError(w, 500, messages.ErrorValidacion)
+			s.handleJsonError(r, w, 500, messages.ErrorValidacion)
 			return
 		}
 
 		files, err := os.ReadDir(uploadPath + "/extra")
 		if err != nil {
 			logger.Error("error leyendo carpeta %s: %s", uploadPath+"/extra", err.Error())
-			s.handleJsonError(w, 500, messages.ErrorDatos)
+			s.handleJsonError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -37,21 +37,21 @@ func (s *Server) handleAdminListarFotoExtra() http.HandlerFunc {
 			}
 
 			name := de.Name()
-			if strings.HasPrefix(name, articuloId) && strings.HasSuffix(name, ".jpg") {
+			if strings.HasPrefix(name, articuloId) && (strings.HasSuffix(name, ".webp") || strings.HasSuffix(name, ".jpg")) {
 				result = append(result, name)
 			}
 		}
 
 		if len(result) < 1 {
 			logger.Error("no se encontró ningún resultado")
-			s.handleJsonError(w, 404, "Ningún resultado encontrado")
+			s.handleJsonError(r, w, 404, "Ningún resultado encontrado")
 			return
 		}
 
 		resbytes, err := json.MarshalIndent(result, "", "\t")
 		if err != nil {
 			logger.Error("error escribiendo json de respuesta: %s", err.Error())
-			s.handleJsonError(w, 500, messages.ErrorRender)
+			s.handleJsonError(r, w, 500, messages.ErrorRender)
 			return
 		}
 		w.Write(resbytes)

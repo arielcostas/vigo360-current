@@ -2,17 +2,18 @@ package models
 
 type EstadoComentario int
 
+//goland:noinspection ALL
 const (
-	ESTADO_PENDIENTE EstadoComentario = 1
-	ESTADO_APROBADO  EstadoComentario = 2
-	ESTADO_RECHAZADO EstadoComentario = 3
+	EstadoPendiente EstadoComentario = 1
+	EstadoAprobado  EstadoComentario = 2
+	EstadoRechazado EstadoComentario = 3
 )
 
 type Comentario struct {
-	Id             string
-	Publicacion_id string
+	Id                 string
+	Publicacion_id     string
 	Publicacion_titulo string
-	Padre_id       string
+	Padre_id           string
 
 	Nombre         string
 	Es_autor       bool

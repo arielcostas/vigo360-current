@@ -30,10 +30,10 @@ func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("no se encontró autor coon id "+req_autor, err.Error())
-				s.handleError(w, 404, "No se ha encontrado el autor solicitado")
+				s.handleError(r, w, 404, "No se ha encontrado el autor solicitado")
 			} else {
 				logger.Error("error inesperado recuperando datos: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		}
@@ -41,14 +41,14 @@ func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 		publicaciones, err := s.store.publicacion.ListarPorAutor(autor.Id)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
 		trabajos, err := s.store.trabajo.ListarPorAutor(autor.Id)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -65,7 +65,7 @@ func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 
 		if err != nil {
 			logger.Error("error recuperando publicaciones: %s", err.Error())
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 	}
 }

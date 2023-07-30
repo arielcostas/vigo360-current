@@ -1,0 +1,30 @@
+#attachment-container {
+	margin-top: 1.5rem;
+	display: flex;
+	gap: 2rem;
+}
+
+#attachment-list {
+	flex-basis: 60%;
+}
+
+#attachment-upload {
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#attachment-status {
+	font-weight: bold;
+	line-height: 2;
+}
+
+@media (max-width: 640px) {
+	#attachment-container {
+		flex-direction: column-reverse;
+	}
+
+	#editor-image-grid {
+		grid-template-columns: 1fr;
+	}
+}

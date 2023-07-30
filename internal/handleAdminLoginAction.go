@@ -14,7 +14,7 @@ import (
 	"vigo360.es/new/internal/messages"
 )
 
-func (s *Server) handleAdminLoginAction() http.HandlerFunc {
+func (s *Server) handle_login_action() http.HandlerFunc {
 	var comprobarContraseña = func(password string, hash string) bool {
 		err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 		if err == nil {
@@ -50,7 +50,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if err := r.ParseForm(); err != nil {
 			logger.Error("error recuperando datos del formulario: %s", err.Error())
-			s.handleError(w, 400, messages.ErrorFormulario)
+			s.handleError(r, w, 400, messages.ErrorFormulario)
 			return
 		}
 
@@ -62,7 +62,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if param_userid == "" || param_password == "" {
 			logger.Error("falta usuario o contraseña")
-			s.handleAdminLoginPage(param_userid)(w, r)
+			s.handle_login_page(param_userid)(w, r)
 			return
 		}
 
@@ -72,10 +72,10 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("ningún usuario coincide con '%s'", param_userid)
-				s.handleAdminLoginPage(param_userid)(w, r)
+				s.handle_login_page(param_userid)(w, r)
 			} else {
 				logger.Error("error recuperando usuario: %s", err.Error())
-				s.handleError(w, 500, messages.ErrorDatos)
+				s.handleError(r, w, 500, messages.ErrorDatos)
 			}
 			return
 		}
@@ -84,21 +84,21 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if !pass {
 			logger.Error("la contraseña introducida para '%s' es inválida", param_userid)
-			s.handleAdminLoginPage(param_userid)(w, r)
+			s.handle_login_page(param_userid)(w, r)
 		}
 
 		token := randstr.String(20)
 
 		if _, err := db.Exec("INSERT INTO sesiones VALUES (?, NOW(), false, ?)", token, param_userid); err != nil {
 			logger.Error("error guardando nueva sesión: %s")
-			s.handleError(w, 500, messages.ErrorDatos)
+			s.handleError(r, w, 500, messages.ErrorDatos)
 		}
 
 		http.SetCookie(w, &http.Cookie{
 			Name:     "sess",
 			Value:    token,
 			Path:     "/",
-			MaxAge:   60*60*24*365,
+			MaxAge:   60 * 60 * 24 * 365,
 			Domain:   r.URL.Host,
 			HttpOnly: true,
 			SameSite: http.SameSiteStrictMode,
