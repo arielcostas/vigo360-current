@@ -3,7 +3,7 @@ let form = document.getElementById("attachment-upload")
 let imageStatus = document.getElementById("attachment-status")
 
 /**
- * @typedef {{title: string, filename: string}} Attachment
+ * @typedef {{id: int, title: string, filename: string}} Attachment
  * @returns {Promise<Attachment[]>}
  */
 async function listAttachments() {
@@ -64,8 +64,8 @@ loadAttachments()
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault()
-    let titulo = form.getElementById("attachment-title").value
-    let archivo = form.getElementById("attachment-file").files[0]
+    let titulo = document.getElementById("attachment-title").value
+    let archivo = document.getElementById("attachment-file").files[0]
 
     fd = new FormData()
     fd.append("titulo", titulo)
@@ -77,18 +77,19 @@ form.addEventListener("submit", async (e) => {
         return
     }
 
-    resp = await fetch('/admin/async/attachments', {
+    let resp = await fetch('/admin/async/attachments', {
         method: "POST",
         body: fd
     })
     if (resp.status !== 200) {
         body = await resp.json()
-        imageStatus.innerText = body.errorMsg
+        imageStatus.innerText = body["error"]
     } else {
         imageStatus.innerText = `Archivo guardado exitosamente`
         setTimeout(() => {
             imageStatus.innerText = ""
         }, 2000)
+        form.reset()
     }
 
     loadAttachments()
