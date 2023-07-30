@@ -39,10 +39,10 @@ func (s *Server) handleAdminEditWorkAction() http.HandlerFunc {
 		}
 
 		fi := EditPostActionFormInput{
-			Titulo:     r.FormValue("art-titulo"),
-			Resumen:    r.FormValue("art-resumen"),
-			Contenido:  r.FormValue("art-contenido"),
-			AltPortada: r.FormValue("alt-portada"),
+			Titulo:     r.FormValue("work-titulo"),
+			Resumen:    r.FormValue("work-resumen"),
+			Contenido:  r.FormValue("work-contenido"),
+			AltPortada: r.FormValue("work-portada"),
 		}
 
 		if err := validator.New().Struct(fi); err != nil {

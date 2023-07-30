@@ -27,26 +27,26 @@
         </form>
 
         <section id="post-listing">
-            {{ if ne (len .Works) 0 }}
-                {{ range .Posts }}
-                    <article class="list-post">
-                        <a href="/admin/works/{{ .Id }}"
-                           class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
-                        <p>
-						<span>
-							<img width="20" height="20" src="/static/user-icon.svg"/>
-							{{ .Autor_nombre }}
-						</span>
-                            {{ if ne .Fecha_publicacion "01/01/0001" }}
-                                <span>
-                                    <img width="20" height="20" src="/static/clock-icon.svg"/>
-                                    {{ .Fecha_publicacion }}
-                                </span>
-                            {{ end }}
-                        </p>
-                    </article>
-                {{ end }}
-            {{ else }}
+            {{ range .Works }}
+                <article class="list-post">
+                    <a href="/admin/works/{{ .Id }}"
+                       class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
+                    <p>
+                    <span>
+                        <img width="20" height="20" src="/static/user-icon.svg"/>
+                        {{ .Autor_nombre }}
+                    </span>
+                        {{ if ne .Fecha_publicacion "01/01/0001" }}
+                            <span>
+                                <img width="20" height="20" src="/static/clock-icon.svg"/>
+                                {{ .Fecha_publicacion }}
+                            </span>
+                        {{ end }}
+                    </p>
+                </article>
+            {{ end }}
+
+            {{ if eq (len .Works) 0 }}
                 <span class="user-section-title">No se encontró ningún trabajo</span>
             {{ end }}
         </section>
