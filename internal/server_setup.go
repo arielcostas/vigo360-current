@@ -45,20 +45,12 @@ func (s *Server) IdentifyRequests(router *mux.Router) *mux.Router {
 	return newrouter
 }
 
-func (s *Server) SetupApiRoutes(router *mux.Router) *mux.Router {
-	var newrouter = router
-
-	newrouter.HandleFunc("/api/v1/comentarios", s.withJsonAuth(s.handle_api_listar_comentarios)).Methods(http.MethodGet)
-
-	return newrouter
-}
-
 func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	var newrouter = router
 
 	newrouter.Handle("/admin/", http.RedirectHandler("/admin/login", http.StatusFound)).Methods(http.MethodGet)
-	newrouter.HandleFunc("/admin/login", s.handleAdminLoginPage("")).Methods(http.MethodGet)
-	newrouter.HandleFunc("/admin/login", s.handleAdminLoginAction()).Methods(http.MethodPost)
+	newrouter.HandleFunc("/admin/login", s.handle_login_page("")).Methods(http.MethodGet)
+	newrouter.HandleFunc("/admin/login", s.handle_login_action()).Methods(http.MethodPost)
 	newrouter.HandleFunc("/admin/logout", s.withAuth(s.handleAdminLogoutAction())).Methods(http.MethodGet)
 
 	newrouter.HandleFunc("/admin/comentarios", s.withAuth(s.handleAdminListComentarios())).Methods(http.MethodGet)
@@ -86,6 +78,9 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminListarFotoExtra())).Methods(http.MethodGet)
 	newrouter.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminCrearFotoExtra())).Methods(http.MethodPost)
 	newrouter.HandleFunc("/admin/async/fotosExtra", s.withAuth(s.handleAdminDeleteFotoExtra())).Methods(http.MethodDelete)
+
+	newrouter.HandleFunc("/admin/async/attachments", s.withAuth(s.adminApiAttachmentList())).Methods(http.MethodGet)
+	newrouter.HandleFunc("/admin/async/attachments", s.withAuth(s.adminApiAttachmentCreate())).Methods(http.MethodPost)
 
 	newrouter.HandleFunc(`/post/{postid}`, s.handlePublicPostPage()).Methods(http.MethodGet)
 

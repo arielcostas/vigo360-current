@@ -14,7 +14,7 @@ import (
 	"vigo360.es/new/internal/messages"
 )
 
-func (s *Server) handleAdminLoginAction() http.HandlerFunc {
+func (s *Server) handle_login_action() http.HandlerFunc {
 	var comprobarContraseña = func(password string, hash string) bool {
 		err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 		if err == nil {
@@ -62,7 +62,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if param_userid == "" || param_password == "" {
 			logger.Error("falta usuario o contraseña")
-			s.handleAdminLoginPage(param_userid)(w, r)
+			s.handle_login_page(param_userid)(w, r)
 			return
 		}
 
@@ -72,7 +72,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				logger.Error("ningún usuario coincide con '%s'", param_userid)
-				s.handleAdminLoginPage(param_userid)(w, r)
+				s.handle_login_page(param_userid)(w, r)
 			} else {
 				logger.Error("error recuperando usuario: %s", err.Error())
 				s.handleError(r, w, 500, messages.ErrorDatos)
@@ -84,7 +84,7 @@ func (s *Server) handleAdminLoginAction() http.HandlerFunc {
 
 		if !pass {
 			logger.Error("la contraseña introducida para '%s' es inválida", param_userid)
-			s.handleAdminLoginPage(param_userid)(w, r)
+			s.handle_login_page(param_userid)(w, r)
 		}
 
 		token := randstr.String(20)

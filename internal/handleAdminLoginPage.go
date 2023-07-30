@@ -8,7 +8,7 @@ import (
 	"vigo360.es/new/internal/templates"
 )
 
-func (s *Server) handleAdminLoginPage(prefill string) http.HandlerFunc {
+func (s *Server) handle_login_page(prefill string) http.HandlerFunc {
 	type response struct {
 		LoginError  bool
 		PrefillName string

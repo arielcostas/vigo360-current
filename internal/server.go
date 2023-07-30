@@ -16,7 +16,6 @@ func NewServer(c *Container) *Server {
 
 	var router = mux.NewRouter().StrictSlash(true)
 	s.Router = s.SetupWebRoutes(router)
-	s.Router = s.SetupApiRoutes(s.Router)
 	s.Router = s.JsonifyRoutes(router, "/api/v1")
 	s.Router = s.IdentifyRequests(router)
 	return s
