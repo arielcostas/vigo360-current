@@ -19,7 +19,7 @@ func (s *Server) JsonifyRoutes(router *mux.Router, path string) *mux.Router {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var isJsonRoute = strings.HasPrefix(r.URL.Path, path)
 			if isJsonRoute {
-				w.Header().Add("Content-Type", "application/json")
+				w.Header().Add("Content-Type", "application/json; charset=utf-8")
 			}
 			h.ServeHTTP(w, r)
 			if isJsonRoute {
