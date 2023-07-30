@@ -21,10 +21,13 @@ async function listAttachments() {
 }
 
 async function deleteAttachment(n) {
+    if (!window.confirm(`¿Seguro que desea eliminarlo? Esta acción es irreversible`)) {
+        return;
+    }
+
     let resp = await fetch("/admin/async/attachments?id=" + n, {
         method: "DELETE"
     })
-    let body = await resp.json()
 
     if (resp.status === 204) {
         loadAttachments()
@@ -33,7 +36,8 @@ async function deleteAttachment(n) {
             imageStatus.innerText = ""
         }, 2000)
     } else {
-        imageStatus.innerText = body.errorMsg
+        let body = await resp.json()
+        imageStatus.innerText = body["error"]
     }
 }
 
@@ -54,8 +58,7 @@ function loadAttachments() {
             let li = document.createElement("li")
             li.setAttribute("class", "attachment")
             li.innerHTML = `
-                <a onclick="deleteAttachment(${i.id})">Borrar</a>
-                ${i.title}
+                <a onclick="deleteAttachment(${i.id})"><b>Borrar</b></a> &mdash; ${i.title}
                 (<a href="/static/papers/${i.filename}" target="_blank">${i.filename}</a>)`
             attachmentList.appendChild(li)
         })
@@ -84,7 +87,7 @@ form.addEventListener("submit", async (e) => {
         method: "POST",
         body: fd
     })
-    if (resp.status !== 204) {
+    if (resp.status !== 201) {
         body = await resp.json()
         imageStatus.innerText = body["error"]
     } else {
