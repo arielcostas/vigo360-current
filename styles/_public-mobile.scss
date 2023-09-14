@@ -62,7 +62,8 @@
 		max-width: 95vw;
 		padding: 0;
 
-		grid-template-columns: 1fr;
+		display: flex;
+    	flex-direction: column;
 	}
 
 	#frontpage-articles :nth-child(1) {
