@@ -18,6 +18,7 @@ func NewServer(c *Container) *Server {
 	s.Router = s.SetupWebRoutes(router)
 	s.Router = s.JsonifyRoutes(router, "/api/v1")
 	s.Router = s.JsonifyRoutes(router, "/admin/async")
+
 	s.Router = s.IdentifyRequests(router)
 	s.Router = s.IdentifySessions(router)
 	s.Router = s.LogRequests(router)

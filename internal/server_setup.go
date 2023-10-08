@@ -92,7 +92,7 @@ func (s *Server) LogRequests(router *mux.Router) *mux.Router {
 
 			var db = database.GetDB()
 
-			var query = `INSERT INTO log (rip, sid, time, ip ,url, method, time_taken_ms, user_agent) VALUES (?,?, ?, ?, ?, ?, ?, ?)`
+			var query = `INSERT INTO log (rid, sid, time, ip ,url, method, time_taken_ms, user_agent) VALUES (?,?, ?, ?, ?, ?, ?, ?)`
 
 			_, err := db.Exec(query, rid, sid, startTime, ip, path, method, duration, ua)
 			if err != nil {
