@@ -40,6 +40,7 @@ func (s *Server) IdentifySessions(router *mux.Router) *mux.Router {
 			var sidCookie, err = r.Cookie("sid")
 			if sidCookie == nil || err != nil {
 				sid = randstr.String(15)
+				println("sid: " + sid)
 				http.SetCookie(w, &http.Cookie{
 					Name:     "sid",
 					Value:    sid,
@@ -47,6 +48,7 @@ func (s *Server) IdentifySessions(router *mux.Router) *mux.Router {
 					HttpOnly: true,
 				})
 			} else {
+				println("Reusing sid: " + sidCookie.Value)
 				sid = sidCookie.Value
 			}
 
@@ -90,7 +92,7 @@ func (s *Server) LogRequests(router *mux.Router) *mux.Router {
 
 			var db = database.GetDB()
 
-			var query = `INSERT INTO log (rip, sid, time, ip ,url, method, time_taken_ms, user_agent) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+			var query = `INSERT INTO log (rip, sid, time, ip ,url, method, time_taken_ms, user_agent) VALUES (?,?, ?, ?, ?, ?, ?, ?)`
 
 			_, err := db.Exec(query, rid, sid, startTime, ip, path, method, duration, ua)
 			if err != nil {
