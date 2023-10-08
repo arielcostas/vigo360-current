@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
+	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/messages"
 
 	"github.com/gorilla/mux"
@@ -30,16 +32,70 @@ func (s *Server) JsonifyRoutes(router *mux.Router, path string) *mux.Router {
 	return newrouter
 }
 
+func (s *Server) IdentifySessions(router *mux.Router) *mux.Router {
+	var newrouter = router
+	newrouter.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			var sid string
+			var sidCookie, err = r.Cookie("sid")
+			if sidCookie == nil || err != nil {
+				sid = randstr.String(15)
+				http.SetCookie(w, &http.Cookie{
+					Name:     "sid",
+					Value:    sid,
+					Path:     "/",
+					HttpOnly: true,
+				})
+			} else {
+				sid = sidCookie.Value
+			}
+
+			newContext := context.WithValue(r.Context(), ridContextKey("sid"), sid)
+			r = r.WithContext(newContext)
+			next.ServeHTTP(w, r)
+		})
+	})
+	return newrouter
+}
+
 func (s *Server) IdentifyRequests(router *mux.Router) *mux.Router {
 	var newrouter = router
 	newrouter.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var rid = randstr.String(15)
-			fmt.Printf("<6>[%s] [%s] %s %s\n", r.Header.Get("X-Forwarded-For"), rid, r.Method, r.URL.Path)
 			newContext := context.WithValue(r.Context(), ridContextKey("rid"), rid)
 			r = r.WithContext(newContext)
 			w.Header().Add("vigo360-rid", rid)
 			next.ServeHTTP(w, r)
+		})
+	})
+	return newrouter
+}
+
+func (s *Server) LogRequests(router *mux.Router) *mux.Router {
+	var newrouter = router
+	newrouter.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			var startTime = time.Now()
+
+			next.ServeHTTP(w, r)
+
+			var rid = r.Context().Value(ridContextKey("rid")).(string)
+			var sid = r.Context().Value(ridContextKey("sid")).(string)
+			var duration = time.Since(startTime).Milliseconds()
+			var ip = r.Header.Get("X-Forwarded-For")
+			var method = r.Method
+			var path = r.URL.Path
+			var ua = r.Header.Get("User-Agent")
+
+			var db = database.GetDB()
+
+			var query = `INSERT INTO log (rip, sid, time, ip ,url, method, time_taken_ms, user_agent) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+
+			_, err := db.Exec(query, rid, sid, startTime, ip, path, method, duration, ua)
+			if err != nil {
+				fmt.Println(err)
+			}
 		})
 	})
 	return newrouter
