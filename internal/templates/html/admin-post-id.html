@@ -4,6 +4,9 @@
 <head>
     <title>{{ .Post.Titulo }} - Admin Vigo360</title>
     {{ template "_admin-head.html" . }}
+
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 </head>
 
 <body>
@@ -47,7 +50,8 @@
                 </p>
 
                 <label for="alt_portada">Texto alternativo de portada</label>
-                <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300" required>{{- .Post.Alt_portada }}</textarea>
+                <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300"
+                          required>{{- .Post.Alt_portada }}</textarea>
                 {{ if eq .Post.Fecha_publicacion "" }}
                     <hr>
                     <div>
@@ -87,6 +91,10 @@
 {{ template "_admin-footer.html" . }}
 <script src="/static/editor-imagenes.js"></script>
 <script src="/static/editor-portada.js"></script>
+
+<script>
+    let mde = new EasyMDE({element: document.getElementById("art-contenido")});
+</script>
 </body>
 
 </html>
