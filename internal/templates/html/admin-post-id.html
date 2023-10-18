@@ -24,8 +24,7 @@
                        placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular"
                        maxlength="300" value="{{ .Post.Resumen }}" required>
                 <label for="art-contenido">Contenido del artículo</label>
-                <textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo"
-                          required>{{ .Post.Contenido }}</textarea>
+                <textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo">{{ .Post.Contenido }}</textarea>
             </div>
             <section class="form-row">
                 <label for="tags">Etiquetas</label>
