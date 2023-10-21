@@ -26,7 +26,7 @@ func (s *Server) getSession(token string) (models.Session, error) {
 	if err != nil {
 		return models.Session{}, err
 	}
-	if time.Since(hora).Hours() > 6 {
+	if time.Since(hora).Hours() > 168 {
 		_, err = db.Exec("UPDATE sesiones SET revocada=true WHERE sessid=?", session.Id)
 		if err != nil {
 			return models.Session{}, err
