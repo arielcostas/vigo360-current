@@ -9,16 +9,18 @@
 }
 
 #frontpage-articles img {
-	height: auto;
-	object-fit: cover;
-	width: 100%;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
 }
 
-#frontpage-articles > * {
+#frontpage-articles>* {
   background: #fff;
   display: flex;
   flex-direction: column;
   color: var(--text);
+  grid-column: span 2;
+  border: 1px solid #0f172a0d; // slate-900/5
 }
 
 #frontpage-articles a:hover {
@@ -63,17 +65,13 @@
   flex-direction: row;
 }
 
-#frontpage-articles .primero + a,
-#frontpage-articles .primero + a + a {
+#frontpage-articles .primero+a,
+#frontpage-articles .primero+a+a {
   grid-column: span 3;
 
   & .article-summary {
     display: unset;
   }
-}
-
-#frontpage-articles a {
-  grid-column: span 2;
 }
 
 .article-title {
