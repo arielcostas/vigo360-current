@@ -12,6 +12,14 @@
 	<meta property="og:locale" content="es_ES">
 	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
 
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@vigo360">
+	<meta name="twitter:creator" content="@vigo360">
+	<meta name="twitter:title" content="{{ .Meta.Titulo }}">
+	<meta name="twitter:description" content="{{ .Meta.Descripcion }}">
+	<meta name="twitter:image" content="{{ .Meta.Miniatura }}">
+	<meta name="twitter:image:alt" content="{{ .Trabajo.Alt_portada }}">
+
 	<script type="application/ld+json">
 		[{
 			"@context": "https://schema.org",
