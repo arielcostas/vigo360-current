@@ -4,10 +4,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/thanhpk/randstr"
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
 	"vigo360.es/new/internal/messages"
@@ -77,5 +78,6 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 		}
 
 		w.WriteHeader(201)
+		w.Write([]byte("{}"))
 	}
 }
