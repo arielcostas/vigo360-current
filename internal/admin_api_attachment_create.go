@@ -64,6 +64,8 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 			trabajoId, salt+fileheader.Filename, titulo,
 		)
 		if err != nil {
+			log.Error("error guardando a bbddd: %s", err.Error())
+			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
 
@@ -73,11 +75,13 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 			_ = tx.Rollback()
 			log.Error("error escribiendo imagen a %s: %s", imagePath, err.Error())
 			s.handleJsonError(r, w, 500, messages.ErrorRender)
+			return
 		} else {
 			_ = tx.Commit()
 		}
 
 		w.WriteHeader(201)
-		w.Write([]byte("{}"))
+		w.Write([]byte("{}\n"))
+		w.Header().Add("Content-Type", "application/json")
 	}
 }
