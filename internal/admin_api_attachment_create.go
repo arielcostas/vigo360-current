@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/thanhpk/randstr"
 	"vigo360.es/new/internal/database"
@@ -57,11 +58,22 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 			tx = nt
 		}
 
+		// filename = fileheader.Filename all as lowercase, separated by underscores and up to 40 characters long
+		var filename = strings.ToLower(fileheader.Filename)
+		filename = strings.ReplaceAll(filename, " ", "_")
+		filename = strings.ReplaceAll(filename, "á", "a")
+		filename = strings.ReplaceAll(filename, "é", "e")
+		filename = strings.ReplaceAll(filename, "í", "i")
+		filename = strings.ReplaceAll(filename, "ó", "o")
+		filename = strings.ReplaceAll(filename, "ú", "u")
+		filename = strings.ReplaceAll(filename, "ñ", "n")
+		filename = filename[:40]
 		var salt = randstr.String(3) + "_"
+		filename = salt + filename
 
 		_, err = tx.Exec(
 			"INSERT INTO adjuntos (trabajo_id, nombre_archivo, titulo) VALUES (?, ?, ?)",
-			trabajoId, salt+fileheader.Filename, titulo,
+			trabajoId, filename, titulo,
 		)
 		if err != nil {
 			log.Error("error guardando a bbddd: %s", err.Error())
@@ -69,7 +81,7 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 			return
 		}
 
-		var imagePath = fmt.Sprintf("%s/papers/%s", uploadPath, salt+fileheader.Filename)
+		var imagePath = fmt.Sprintf("%s/papers/%s", uploadPath, filename)
 		err = os.WriteFile(imagePath, fileBytes, 0o644)
 		if err != nil {
 			_ = tx.Rollback()
