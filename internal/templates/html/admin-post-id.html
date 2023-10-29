@@ -25,7 +25,7 @@
                         placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular"
                         maxlength="300" value="{{ .Post.Resumen }}" required>
                     <label for="art-contenido">Contenido del artículo</label>
-                    <textarea rows="15" name="art-contenido" id="art-contenido"
+                    <textarea rows="15" name="art-contenido" id="art-contenido" data-mde=""
                         placeholder="Contenido del artículo">{{ .Post.Contenido }}</textarea>
                 </div>
                 <section class="form-row">
@@ -51,7 +51,7 @@
                     </p>
 
                     <label for="alt_portada">Texto alternativo de portada</label>
-                    <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300" data-mde=""
+                    <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300"
                         required>{{- .Post.Alt_portada }}</textarea>
                     {{ if eq .Post.Fecha_publicacion "" }}
                     <hr>
