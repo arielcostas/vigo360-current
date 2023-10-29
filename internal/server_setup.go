@@ -114,7 +114,7 @@ func (s *Server) SetupSecurityHeaders(router *mux.Router) *mux.Router {
 			w.Header().Add("X-XSS-Protection", "1; mode=block")
 			w.Header().Add("X-Content-Type-Options", "nosniff")
 			w.Header().Add("Referrer-Policy", "same-origin")
-			w.Header().Add("Content-Security-Policy", "default-src 'self' data:; script-src 'self'; style-src 'self'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; base-uri 'self'; form-action 'self';")
+			w.Header().Add("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; img-src 'self' data:; upgrade-insecure-requests; base-uri 'self'; object-src 'none'; form-action 'self';")
 
 			next.ServeHTTP(w, r)
 		})
