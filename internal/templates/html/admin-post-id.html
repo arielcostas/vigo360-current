@@ -5,95 +5,95 @@
     <title>{{ .Post.Titulo }} - Admin Vigo360</title>
     {{ template "_admin-head.html" . }}
 
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="/static/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/vendor/easymde.min.css">
+    <script src="/static/vendor/easymde.min.js"></script>
 </head>
 
 <body>
-{{ template "_admin-header.html" . }}
-<main id="post-editor">
-    <h2>Editor de artículos</h2>
-    <form method="post" enctype="multipart/form-data">
-        <div class="form-column">
-            <div class="form-row">
-                <label for="art-titulo">Título del artículo</label>
-                <input type="text" name="art-titulo" id="art-titulo" placeholder="Asunto interesante" maxlength="80"
-                       required value="{{ .Post.Titulo }}">
-                <label for="art-resumen">Resumen del artículo</label>
-                <input type="text" name="art-resumen" id="art-resumen"
-                       placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular"
-                       maxlength="300" value="{{ .Post.Resumen }}" required>
-                <label for="art-contenido">Contenido del artículo</label>
-                <textarea rows="15" name="art-contenido" id="art-contenido" placeholder="Contenido del artículo">{{ .Post.Contenido }}</textarea>
-            </div>
-            <section class="form-row">
-                <label for="tags">Etiquetas</label>
-                <select name="tags" id="tags" multiple required size="{{ sum (len .Tags) 1 }}">
-                    <option value="" disabled>-- Tags --</option>
-                    {{ range .Tags}}
+    {{ template "_admin-header.html" . }}
+    <main id="post-editor">
+        <h2>Editor de artículos</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-column">
+                <div class="form-row">
+                    <label for="art-titulo">Título del artículo</label>
+                    <input type="text" name="art-titulo" id="art-titulo" placeholder="Asunto interesante" maxlength="80"
+                        required value="{{ .Post.Titulo }}">
+                    <label for="art-resumen">Resumen del artículo</label>
+                    <input type="text" name="art-resumen" id="art-resumen"
+                        placeholder="Tratamos un asunto realmente interesante sobre una cosa en particular"
+                        maxlength="300" value="{{ .Post.Resumen }}" required>
+                    <label for="art-contenido">Contenido del artículo</label>
+                    <textarea rows="15" name="art-contenido" id="art-contenido"
+                        placeholder="Contenido del artículo">{{ .Post.Contenido }}</textarea>
+                </div>
+                <section class="form-row">
+                    <label for="tags">Etiquetas</label>
+                    <select name="tags" id="tags" multiple required size="{{ sum (len .Tags) 1 }}">
+                        <option value="" disabled>-- Tags --</option>
+                        {{ range .Tags}}
                         <option {{ with .Seleccionada}}selected{{end}} value="{{ .Id }}">
                             {{ .Nombre }}
                         </option>
-                    {{ end }}
-                </select>
-                <hr>
+                        {{ end }}
+                    </select>
+                    <hr>
 
-                <label for="portada_actual">Foto de portada</label>
-                <img id="portada_actual" src="/static/thumb/{{ .Post.Id }}.jpg" height="224px" width="400px"
-                     alt="Foto de portada actual"/>
-                <input type="file" id="portada" name="portada" accept="image/png, image/jpeg, image/webp">
-                <p>
-                    Debe tener una relación de aspecto 16:9, ser menor de 20 MB y
-                    estar en formato PNG, JPG o WebP. Si no se selecciona ninguna, se conservará la
-                    actual.
-                </p>
+                    <label for="portada_actual">Foto de portada</label>
+                    <img id="portada_actual" src="/static/thumb/{{ .Post.Id }}.jpg" height="224px" width="400px"
+                        alt="Foto de portada actual" />
+                    <input type="file" id="portada" name="portada" accept="image/png, image/jpeg, image/webp">
+                    <p>
+                        Debe tener una relación de aspecto 16:9, ser menor de 20 MB y
+                        estar en formato PNG, JPG o WebP. Si no se selecciona ninguna, se conservará la
+                        actual.
+                    </p>
 
-                <label for="alt_portada">Texto alternativo de portada</label>
-                <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300"
-                          required>{{- .Post.Alt_portada }}</textarea>
-                {{ if eq .Post.Fecha_publicacion "" }}
+                    <label for="alt_portada">Texto alternativo de portada</label>
+                    <textarea rows="3" id="alt_portada" name="alt-portada" maxlength="300" data-mde=""
+                        required>{{- .Post.Alt_portada }}</textarea>
+                    {{ if eq .Post.Fecha_publicacion "" }}
                     <hr>
                     <div>
                         <input type="checkbox" name="publicar" id="publicar">
                         <label for="publicar">Publicar (irreversible)</label>
                     </div>
-                {{ end }}
-            </section>
+                    {{ end }}
+                </section>
+            </div>
+
+            <input type="hidden" name="post-id" value="{{ .Post.Id }}">
+
+            <div class="submit-buttons">
+                <button type="submit" formtarget="_blank" formaction="/admin/preview"
+                    class="button">Previsualizar</button>
+                <button name="salir" value="false" type="submit" class="button button-primary-outline">Guardar y seguir
+                    editando
+                </button>
+                <button name="salir" value="true" type="submit" class="button button-primary">Guardar y salir</button>
+            </div>
+
+        </form>
+        <hr />
+        <div id="image-manager">
+            <h2>Gestionar imágenes extra</h2>
+            <noscript>Para gestionar imágenes es necesario tener JavaScript habilitado.</noscript>
+            <span id="image-status"></span>
+            <div id="image-list">
+                <div id="editor-image-grid"></div>
+                <form id="extra-image-upload">
+                    <h3>Subir imágen</h3>
+                    <input type="file" name="archivo" id="archivo" accept="image/png, image/jpeg, image/webp">
+                    <button class="button button-primary">Subir</button>
+                </form>
+            </div>
         </div>
-
-        <input type="hidden" name="post-id" value="{{ .Post.Id }}">
-
-        <div class="submit-buttons">
-            <button type="submit" formtarget="_blank" formaction="/admin/preview" class="button">Previsualizar</button>
-            <button name="salir" value="false" type="submit" class="button button-primary-outline">Guardar y seguir
-                editando
-            </button>
-            <button name="salir" value="true" type="submit" class="button button-primary">Guardar y salir</button>
-        </div>
-
-    </form>
-    <hr/>
-    <div id="image-manager">
-        <h2>Gestionar imágenes extra</h2>
-        <noscript>Para gestionar imágenes es necesario tener JavaScript habilitado.</noscript>
-        <span id="image-status"></span>
-        <div id="image-list">
-            <div id="editor-image-grid"></div>
-            <form id="extra-image-upload">
-                <h3>Subir imágen</h3>
-                <input type="file" name="archivo" id="archivo" accept="image/png, image/jpeg, image/webp">
-                <button class="button button-primary">Subir</button>
-            </form>
-        </div>
-    </div>
-</main>
-{{ template "_admin-footer.html" . }}
-<script src="/static/editor-imagenes.js"></script>
-<script src="/static/editor-portada.js"></script>
-
-<script>
-    let mde = new EasyMDE({element: document.getElementById("art-contenido")});
-</script>
+    </main>
+    {{ template "_admin-footer.html" . }}
+    <script src="/static/editor-imagenes.js"></script>
+    <script src="/static/editor-portada.js"></script>
+    <script src="/static/editor-mde.js"></script>
 </body>
 
 </html>

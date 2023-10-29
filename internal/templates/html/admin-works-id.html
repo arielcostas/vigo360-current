@@ -5,8 +5,9 @@
     <title>{{ .Work.Titulo }} - Admin Vigo360</title>
     {{ template "_admin-head.html" . }}
 
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="/static/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/vendor/easymde.min.css">
+    <script src="/static/vendor/easymde.min.js"></script>
 </head>
 
 <body>
@@ -24,7 +25,7 @@
                        placeholder="Trabajo muy interesante sobre un tema nunca antes estudiado"
                        maxlength="300" value="{{ .Work.Resumen }}" required>
                 <label for="work-contenido">Contenido del trabajo</label>
-                <textarea rows="15" name="work-contenido" id="work-contenido" placeholder="Contenido del trabajo">{{ .Work.Contenido }}</textarea>
+                <textarea rows="15" name="work-contenido" id="work-contenido" placeholder="Contenido del trabajo" data-mde="">{{ .Work.Contenido }}</textarea>
             </div>
             <section class="form-row">
                 <label for="portada_actual">Foto de portada</label>
@@ -83,10 +84,7 @@
 {{ template "_admin-footer.html" . }}
 <script src="/static/editor-attachments.js"></script>
 <script src="/static/editor-portada.js"></script>
-
-<script>
-    let mde = new EasyMDE({element: document.getElementById("work-contenido")});
-</script>
+<script src="/static/editor-mde.js"></script>
 </body>
 
 </html>
