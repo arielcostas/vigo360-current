@@ -47,6 +47,8 @@ func (s *Server) IdentifySessions(router *mux.Router) *mux.Router {
 					Value:    sid,
 					Path:     "/",
 					HttpOnly: true,
+					Secure:   true,
+					SameSite: http.SameSiteStrictMode,
 				})
 			} else {
 				println("Reusing sid: " + sidCookie.Value)
