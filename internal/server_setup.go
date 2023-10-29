@@ -104,6 +104,20 @@ func (s *Server) LogRequests(router *mux.Router) *mux.Router {
 	return newrouter
 }
 
+func (s *Server) SetupSecurityHeaders(router *mux.Router) *mux.Router {
+	var newrouter = router
+	newrouter.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("X-Frame-Options", "SAMEORIGIN")
+			w.Header().Add("X-XSS-Protection", "1; mode=block")
+			w.Header().Add("X-Content-Type-Options", "nosniff")
+			w.Header().Add("Referrer-Policy", "same-origin")
+			w.Header().Add("Content-Security-Policy", "default-src 'self' data: 'unsafe-inline'; script-src 'self' data: maxcdn.bootstrapcdn.com unpkg.com; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests")
+		})
+	})
+	return newrouter
+}
+
 func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	var newrouter = router
 

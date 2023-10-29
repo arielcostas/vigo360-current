@@ -58,7 +58,7 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 			tx = nt
 		}
 
-		// filename = fileheader.Filename all as lowercase, separated by underscores and up to 40 characters long
+		// filename = fileheader.Filename all as lowercase, separated by underscores and up to 40 characters long + extension
 		var filename = strings.ToLower(fileheader.Filename)
 		filename = strings.ReplaceAll(filename, " ", "_")
 		filename = strings.ReplaceAll(filename, "á", "a")
@@ -70,6 +70,7 @@ func (s *Server) adminApiAttachmentCreate() http.HandlerFunc {
 		filename = filename[:40]
 		var salt = randstr.String(3) + "_"
 		filename = salt + filename
+		filename = filename + "." + strings.Split(fileheader.Filename, ".")[1]
 
 		_, err = tx.Exec(
 			"INSERT INTO adjuntos (trabajo_id, nombre_archivo, titulo) VALUES (?, ?, ?)",
