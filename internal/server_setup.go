@@ -113,6 +113,8 @@ func (s *Server) SetupSecurityHeaders(router *mux.Router) *mux.Router {
 			w.Header().Add("X-Content-Type-Options", "nosniff")
 			w.Header().Add("Referrer-Policy", "same-origin")
 			w.Header().Add("Content-Security-Policy", "default-src 'self' data: 'unsafe-inline'; script-src 'self' data: maxcdn.bootstrapcdn.com unpkg.com; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests")
+
+			next.ServeHTTP(w, r)
 		})
 	})
 	return newrouter
