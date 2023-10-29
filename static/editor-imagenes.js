@@ -63,7 +63,7 @@ async function eliminarFotografia(n) {
 function cargarImagenes() {
 	let imageList = document.getElementById("editor-image-grid")
 	imageStatus.innerHTML = "<b>Cargando datos...</b>"
-	let imagenes = listarImagenes().then((img) => {
+	listarImagenes().then((img) => {
 		if (img.length < 1) {
 			imageStatus.innerHTML = "<b>Ninguna imágen adicional</b>"
 		} else {
