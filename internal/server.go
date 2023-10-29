@@ -15,15 +15,14 @@ func NewServer(c *Container) *Server {
 	}
 
 	var router = mux.NewRouter().StrictSlash(true)
-	router = s.SetupWebRoutes(router)
-	router = s.JsonifyRoutes(router, "/api/v1")
-	router = s.JsonifyRoutes(router, "/admin/async")
+	s.Router = s.SetupWebRoutes(router)
+	s.Router = s.JsonifyRoutes(router, "/api/v1")
+	s.Router = s.JsonifyRoutes(router, "/admin/async")
 
-	router = s.IdentifyRequests(router)
-	router = s.IdentifySessions(router)
-	router = s.LogRequests(router)
-	router = s.SetupSecurityHeaders(router)
-	s.Router = router
+	s.Router = s.IdentifyRequests(router)
+	s.Router = s.IdentifySessions(router)
+	s.Router = s.LogRequests(router)
+	s.Router = s.SetupSecurityHeaders(router)
 	return s
 }
 
