@@ -26,8 +26,13 @@
 .form_comentario {
 	display: flex;
 	flex-direction: column;
-	input[type="text"], textarea {
+	input[type="text"] {
 		margin-bottom: 1rem;
+	}
+	textarea {
+		margin-bottom: 1rem;
+		resize: vertical;
+		max-height: 10rem;
 	}
 	p {
 		margin-bottom: 1rem;
