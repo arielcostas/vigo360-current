@@ -2,119 +2,85 @@
 <html lang="es-ES">
 
 <head>
-    {{- template "_head.html" . }}
+    	{{- template "_head.html" . }}
 
-    <meta property="og:title" content="{{ .Meta.Titulo }}"/>
-    <meta property="og:type" content="article"/>
-    <meta property="og:site_name" content="Vigo360"/>
-    <meta property="og:image" content="{{ .Meta.Miniatura }}"/>
-    <meta property="og:url" content="{{ .Meta.Canonica }}"/>
-    <meta property="og:locale" content="es_ES"/>
-    <meta property="og:description" content="{{ .Meta.Descripcion }}"/>
+	<meta property="og:title" content="{{ .Meta.Titulo }}" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Vigo360" />
+	<meta property="og:image" content="{{ .Meta.Miniatura }}" />
+	<meta property="og:url" content="{{ .Meta.Canonica }}" />
+	<meta property="og:locale" content="es_ES" />
+	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
 
-    <meta property="article:published_time" content="{{ date3339 .Post.Fecha_publicacion }}"/>
-    <meta property="article:modified_time" content="{{ date3339 .Post.Fecha_actualizacion }}"/>
+	<meta property="article:published_time" content="{{ date3339 .Post.Fecha_publicacion }}" />
+	<meta property="article:modified_time" content="{{ date3339 .Post.Fecha_actualizacion }}" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@vigo360">
-    <meta name="twitter:creator" content="@vigo360">
-    <meta name="twitter:title" content="{{ .Meta.Titulo }}">
-    <meta name="twitter:description" content="{{ .Meta.Descripcion }}">
-    <meta name="twitter:image" content="{{ .Meta.Miniatura }}">
-    <meta name="twitter:image:alt" content="{{ .Post.Alt_portada }}">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@vigo360">
+	<meta name="twitter:creator" content="@vigo360">
+	<meta name="twitter:title" content="{{ .Meta.Titulo }}">
+	<meta name="twitter:description" content="{{ .Meta.Descripcion }}">
+	<meta name="twitter:image" content="{{ .Meta.Miniatura }}">
+	<meta name="twitter:image:alt" content="{{ .Post.Alt_portada }}">
 
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml"/>
+	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
 
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "articleSection": [
-                {
-                {
-                    -
-                    $len: =
-                    len
-                    .Post.Tags
-                }
-            }
-                {
-                {
-                    -
-                    range
-                    $i,
-                    $t: =
-                    .Post.Tags
-                }
-            }
-                {
-                {
-                    -
-                    if
-                    $i
-                }
-            },
-                {
-                {
-                    end
-                }
-            }
-                "{{- $t.Nombre }}"
-                {
-                {
-                    -
-                    end
-                }
-            }
-            ],
-            "publisher": {
-                "@type": "Organization",
-                "name": "Vigo360",
-                "url": "https://vigo360.es",
-                "email": "vigo360@costas.dev",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://vigo360.es/static/logo.webp",
-                    "width": 400,
-                    "height": 400
-                }
-            },
-            "wordCount": {{
-            wordCount
-            .Post.Contenido
-        }},
-        "author": {
-        "@type": "Person",
-        "name": "{{ .Post.Autor.Nombre }}",
-        "url": "/autores/{{ .Post.Autor.Id }}",
-        "jobTitle": "{{ .Post.Autor.Rol }}",
-        "description": "{{ .Post.Autor.Biografia }}"
-        },
-        "creator": {
-        "@type": "Person",
-        "name": "{{ .Post.Autor.Nombre }}",
-        "url": "/autores/{{ .Post.Autor.Id }}",
-        "jobTitle": "{{ .Post.Autor.Rol }}",
-        "description": "{{ .Post.Autor.Biografia }}"
-        },
-        "datePublished": "{{ date3339 .Post.Fecha_publicacion }}",
-        "dateModified": "{{ date3339 .Post.Fecha_actualizacion }}",
-        "headline": "{{ .Post.Titulo }}",
-        "description": "{{ .Meta.Descripcion }}",
-        "url": "/post/{{ .Post.Id }}",
-        "image": {
-        "@type": "ImageObject",
-        "caption": "{{ .Post.Alt_portada }}",
-        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-        "acquireLicensePage": "/legal",
-        "contentUrl": "/static/images/{{ .Post.Id}}.webp"
-        },
-        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-        "inLanguage": "es-ES"
-        }
-    </script>
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Article",
+			"articleSection": [
+				{{- $len := len .Post.Tags }}
+				{{- range $i, $t := .Post.Tags}}
+				{{- if $i}},{{ end }}
+				"{{- $t.Nombre }}"
+				{{- end }}
+			],
+			"publisher": {
+				"@type": "Organization",
+				"name": "Vigo360",
+				"url": "https://vigo360.es",
+				"email": "vigo360@costas.dev",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://vigo360.es/static/logo.webp",
+					"width": 400,
+					"height": 400
+				}
+			},
+			"wordCount": {{ wordCount .Post.Contenido }},
+			"author": {
+				"@type": "Person",
+				"name": "{{ .Post.Autor.Nombre }}",
+				"url": "/autores/{{ .Post.Autor.Id }}",
+				"jobTitle": "{{ .Post.Autor.Rol }}",
+				"description": "{{ .Post.Autor.Biografia }}"
+			},
+			"creator": {
+				"@type": "Person",
+				"name": "{{ .Post.Autor.Nombre }}",
+				"url": "/autores/{{ .Post.Autor.Id }}",
+				"jobTitle": "{{ .Post.Autor.Rol }}",
+				"description": "{{ .Post.Autor.Biografia }}"
+			},
+			"datePublished": "{{ date3339 .Post.Fecha_publicacion }}",
+			"dateModified": "{{ date3339 .Post.Fecha_actualizacion }}",
+			"headline": "{{ .Post.Titulo }}",
+			"description": "{{ .Meta.Descripcion }}",
+			"url": "/post/{{ .Post.Id }}",
+			"image": {
+				"@type": "ImageObject",
+				"caption": "{{ .Post.Alt_portada }}",
+				"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+				"acquireLicensePage": "/legal",
+				"contentUrl": "/static/images/{{ .Post.Id}}.webp"
+			},
+			"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+			"inLanguage": "es-ES"
+		}
+	</script>
 
-    <script src="https://hcaptcha.com/1/api.js" async></script>
+	<script src="https://hcaptcha.com/1/api.js" async></script>
 </head>
 
 <body>
