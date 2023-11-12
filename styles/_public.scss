@@ -26,10 +26,6 @@ main {
 	flex: 1;
 }
 
-#post-main {
-	background: white;
-}
-
 ul,
 ol {
 	padding-left: 2rem;
@@ -305,9 +301,10 @@ main#authors #user-info #section-title {
 	height: auto;
 }
 
-#post-main {
+main#post-main {
+	background-color: white;
 	max-width: 1024px;
-	margin: auto;
+	margin: 3rem auto;
 	box-shadow: var(--shadow);
 }
 

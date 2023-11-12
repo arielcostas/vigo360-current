@@ -2,253 +2,285 @@
 <html lang="es-ES">
 
 <head>
-	{{- template "_head.html" . }}
+    {{- template "_head.html" . }}
 
-	<meta property="og:title" content="{{ .Meta.Titulo }}" />
-	<meta property="og:type" content="article" />
-	<meta property="og:site_name" content="Vigo360" />
-	<meta property="og:image" content="{{ .Meta.Miniatura }}" />
-	<meta property="og:url" content="{{ .Meta.Canonica }}" />
-	<meta property="og:locale" content="es_ES" />
-	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
+    <meta property="og:title" content="{{ .Meta.Titulo }}"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:site_name" content="Vigo360"/>
+    <meta property="og:image" content="{{ .Meta.Miniatura }}"/>
+    <meta property="og:url" content="{{ .Meta.Canonica }}"/>
+    <meta property="og:locale" content="es_ES"/>
+    <meta property="og:description" content="{{ .Meta.Descripcion }}"/>
 
-	<meta property="article:published_time" content="{{ date3339 .Post.Fecha_publicacion }}" />
-	<meta property="article:modified_time" content="{{ date3339 .Post.Fecha_actualizacion }}" />
+    <meta property="article:published_time" content="{{ date3339 .Post.Fecha_publicacion }}"/>
+    <meta property="article:modified_time" content="{{ date3339 .Post.Fecha_actualizacion }}"/>
 
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@vigo360">
-	<meta name="twitter:creator" content="@vigo360">
-	<meta name="twitter:title" content="{{ .Meta.Titulo }}">
-	<meta name="twitter:description" content="{{ .Meta.Descripcion }}">
-	<meta name="twitter:image" content="{{ .Meta.Miniatura }}">
-	<meta name="twitter:image:alt" content="{{ .Post.Alt_portada }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@vigo360">
+    <meta name="twitter:creator" content="@vigo360">
+    <meta name="twitter:title" content="{{ .Meta.Titulo }}">
+    <meta name="twitter:description" content="{{ .Meta.Descripcion }}">
+    <meta name="twitter:image" content="{{ .Meta.Miniatura }}">
+    <meta name="twitter:image:alt" content="{{ .Post.Alt_portada }}">
 
-	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+    <link rel="alternate" type="application/atom+xml" href="/atom.xml"/>
 
-	<script type="application/ld+json">
-		{
-			"@context": "https://schema.org",
-			"@type": "Article",
-			"articleSection": [
-				{{- $len := len .Post.Tags }}
-				{{- range $i, $t := .Post.Tags}}
-				{{- if $i}},{{ end }}
-				"{{- $t.Nombre }}"
-				{{- end }}
-			],
-			"publisher": {
-				"@type": "Organization",
-				"name": "Vigo360",
-				"url": "https://vigo360.es",
-				"email": "vigo360@costas.dev",
-				"logo": {
-					"@type": "ImageObject",
-					"url": "https://vigo360.es/static/logo.webp",
-					"width": 400,
-					"height": 400
-				}
-			},
-			"wordCount": {{ wordCount .Post.Contenido }},
-			"author": {
-				"@type": "Person",
-				"name": "{{ .Post.Autor.Nombre }}",
-				"url": "/autores/{{ .Post.Autor.Id }}",
-				"jobTitle": "{{ .Post.Autor.Rol }}",
-				"description": "{{ .Post.Autor.Biografia }}"
-			},
-			"creator": {
-				"@type": "Person",
-				"name": "{{ .Post.Autor.Nombre }}",
-				"url": "/autores/{{ .Post.Autor.Id }}",
-				"jobTitle": "{{ .Post.Autor.Rol }}",
-				"description": "{{ .Post.Autor.Biografia }}"
-			},
-			"datePublished": "{{ date3339 .Post.Fecha_publicacion }}",
-			"dateModified": "{{ date3339 .Post.Fecha_actualizacion }}",
-			"headline": "{{ .Post.Titulo }}",
-			"description": "{{ .Meta.Descripcion }}",
-			"url": "/post/{{ .Post.Id }}",
-			"image": {
-				"@type": "ImageObject",
-				"caption": "{{ .Post.Alt_portada }}",
-				"license": "https://creativecommons.org/licenses/by-sa/4.0/",
-				"acquireLicensePage": "/legal",
-				"contentUrl": "/static/images/{{ .Post.Id}}.webp"
-			},
-			"license": "https://creativecommons.org/licenses/by-sa/4.0/",
-			"inLanguage": "es-ES"
-		}
-	</script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "articleSection": [
+                {
+                {
+                    -
+                    $len: =
+                    len
+                    .Post.Tags
+                }
+            }
+                {
+                {
+                    -
+                    range
+                    $i,
+                    $t: =
+                    .Post.Tags
+                }
+            }
+                {
+                {
+                    -
+                    if
+                    $i
+                }
+            },
+                {
+                {
+                    end
+                }
+            }
+                "{{- $t.Nombre }}"
+                {
+                {
+                    -
+                    end
+                }
+            }
+            ],
+            "publisher": {
+                "@type": "Organization",
+                "name": "Vigo360",
+                "url": "https://vigo360.es",
+                "email": "vigo360@costas.dev",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://vigo360.es/static/logo.webp",
+                    "width": 400,
+                    "height": 400
+                }
+            },
+            "wordCount": {{
+            wordCount
+            .Post.Contenido
+        }},
+        "author": {
+        "@type": "Person",
+        "name": "{{ .Post.Autor.Nombre }}",
+        "url": "/autores/{{ .Post.Autor.Id }}",
+        "jobTitle": "{{ .Post.Autor.Rol }}",
+        "description": "{{ .Post.Autor.Biografia }}"
+        },
+        "creator": {
+        "@type": "Person",
+        "name": "{{ .Post.Autor.Nombre }}",
+        "url": "/autores/{{ .Post.Autor.Id }}",
+        "jobTitle": "{{ .Post.Autor.Rol }}",
+        "description": "{{ .Post.Autor.Biografia }}"
+        },
+        "datePublished": "{{ date3339 .Post.Fecha_publicacion }}",
+        "dateModified": "{{ date3339 .Post.Fecha_actualizacion }}",
+        "headline": "{{ .Post.Titulo }}",
+        "description": "{{ .Meta.Descripcion }}",
+        "url": "/post/{{ .Post.Id }}",
+        "image": {
+        "@type": "ImageObject",
+        "caption": "{{ .Post.Alt_portada }}",
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "acquireLicensePage": "/legal",
+        "contentUrl": "/static/images/{{ .Post.Id}}.webp"
+        },
+        "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "inLanguage": "es-ES"
+        }
+    </script>
 
-	<script src="https://hcaptcha.com/1/api.js" async></script>
+    <script src="https://hcaptcha.com/1/api.js" async></script>
 </head>
 
 <body>
-	{{ template "_header.html" }}
-	<main>
-		<div id="post-main">
-			<article>
-				<figure id="post-thumbnail">
-					<picture id="portada_actual" class="user-article-thumbnail">
-						<source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
-							alt="{{ .Post.Alt_portada }}" title="{{ .Post.Alt_portada }}" width="220"
-							height="137">
-						<img src="/static/thumb/{{ .Post.Id }}.jpg" width="220" height="137" loading="lazy"
-							alt="{{ .Post.Alt_portada }}" />
-					</picture>
-					<figcaption>{{ .Post.Alt_portada }}</figcaption>
-				</figure>
+{{ template "_header.html" }}
+<main id="post-main">
+    <article>
+        <figure id="post-thumbnail">
+            <picture id="portada_actual" class="user-article-thumbnail">
+                <source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
+                        alt="{{ .Post.Alt_portada }}" title="{{ .Post.Alt_portada }}" width="220"
+                        height="137">
+                <img src="/static/thumb/{{ .Post.Id }}.jpg" width="220" height="137" loading="lazy"
+                     alt="{{ .Post.Alt_portada }}"/>
+            </picture>
+            <figcaption>{{ .Post.Alt_portada }}</figcaption>
+        </figure>
 
-				<h2 id="post-title">{{ .Post.Titulo }}</h2>
+        <h2 id="post-title">{{ .Post.Titulo }}</h2>
 
-				<p id="post-info">
-					<a class="link" href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
-					{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
-					(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
-					}}){{end}}
-				</p>
+        <p id="post-info">
+            <a class="link" href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
+            {{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
+            (dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
+            }}){{end}}
+        </p>
 
-				<div id="post-inner">
-					{{ .Post.Contenido | markdown }}
-				</div>
-			</article>
+        <div id="post-inner">
+            {{ .Post.Contenido | markdown }}
+        </div>
+    </article>
 
-			<div id="post-author-container">
-				<a href="/autores/{{ .Post.Autor.Id }}">
-					<div id="post-author-card">
-						<img width="180" height="180" class="post-author-photo"
-							src="/static/profile/{{ .Post.Autor.Id }}.jpg"
-							alt="Fotografía de perfil de {{ .Post.Autor.Nombre }}" />
-						<div class="post-author-info">
-							<h3>{{ .Post.Autor.Nombre }}</h3>
-							<span>{{ .Post.Autor.Rol}}</span>
-							<p>{{ .Post.Autor.Biografia }}</p>
-						</div>
-					</div>
-				</a>
-			</div>
+    <div id="post-author-container">
+        <a href="/autores/{{ .Post.Autor.Id }}">
+            <div id="post-author-card">
+                <img width="180" height="180" class="post-author-photo"
+                     src="/static/profile/{{ .Post.Autor.Id }}.jpg"
+                     alt="Fotografía de perfil de {{ .Post.Autor.Nombre }}"/>
+                <div class="post-author-info">
+                    <h3>{{ .Post.Autor.Nombre }}</h3>
+                    <span>{{ .Post.Autor.Rol}}</span>
+                    <p>{{ .Post.Autor.Biografia }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
 
-			{{ if ne (len .Recommendations) 0}}
-			<h2 id="related-articles-header">Artículos recomendados</h2>
-			<div id="post-related-articles">
-				{{ range .Recommendations }}
-				<div class="post-related-article">
-					<a href="/post/{{ .Id }}">
-						<img width="300" height="170" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}">
-						<p class="article-author">
-							{{ .Autor.Nombre }}
-						</p>
-						<h4 class="article-title">{{ .Titulo }}</h4>
-						<div class="related-article-summary">
-							{{ .Resumen | markdown }}
-						</div>
-					</a>
-				</div>
-				{{ end }}
-			</div>
-			{{ end }}
-			<hr />
-			<div id="comment-section-container">
-				<h2 id="comment_section_header">Comentarios</h2>
-				{{ $loggedIn := .LoggedIn}}
-				<div id="comment_container">
-					{{ if eq (len .Comentarios) 0 }}
-					<p id="no_comments">No hay comentarios aún. ¡Sé el primero en comentar!</p>
-					{{ end }}
-					{{- range .Comentarios }}
-					{{ if $loggedIn}}
-					{{ template "comentario_rep_admin" . }}
-					{{ else }}
-					{{ template "comentario" . }}
-					{{ end }}
+    {{ if ne (len .Recommendations) 0}}
+    <h2 id="related-articles-header">Artículos recomendados</h2>
+    <section id="post-related-articles">
+        {{ range .Recommendations }}
+        <div class="post-related-article">
+            <a href="/post/{{ .Id }}">
+                <img width="300" height="170" src="/static/images/{{ .Id }}.webp" alt="{{ .Alt_portada }}">
+                <p class="article-author">
+                    {{ .Autor.Nombre }}
+                </p>
+                <h4 class="article-title">{{ .Titulo }}</h4>
+                <div class="related-article-summary">
+                    {{ .Resumen | markdown }}
+                </div>
+            </a>
+        </div>
+        {{ end }}
+    </section>
+    {{ end }}
+    <hr/>
+    <section id="comment-section-container">
+        <h2 id="comment_section_header">Comentarios</h2>
+        {{ $loggedIn := .LoggedIn}}
+        <div id="comment_container">
+            {{ if eq (len .Comentarios) 0 }}
+            <p id="no_comments">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+            {{ end }}
+            {{- range .Comentarios }}
+            {{ if $loggedIn}}
+            {{ template "comentario_rep_admin" . }}
+            {{ else }}
+            {{ template "comentario" . }}
+            {{ end }}
 
-					{{ end }}
-				</div>
-				<h3 id="comment_section_publish">Déjanos tu comentario</h3>
-				{{ if $loggedIn}}
-				{{ template "form_comentario_admin" }}
-				{{ else }}
-				{{ template "form_comentario" }}
-				{{ end }}
-			</div>
-		</div>
-	</main>
-	{{ template "_footer.html" }}
+            {{ end }}
+        </div>
+        <h3 id="comment_section_publish">Déjanos tu comentario</h3>
+        {{ if $loggedIn}}
+        {{ template "form_comentario_admin" }}
+        {{ else }}
+        {{ template "form_comentario" }}
+        {{ end }}
+    </section>
+</main>
+{{ template "_footer.html" }}
 </body>
 
 </html>
 {{ define "comentario" }}
 <div class="post_comment" id="comment-{{ .Id }}">
-	<p>
-		<strong>{{ .Nombre }}</strong>&nbsp;
-		{{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg" />{{end}}
-		{{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
-			src="/static/user-icon.svg" />{{end}}
-		{{ with .Fecha_moderacion }} - publicado {{ date_format . "02 Jan. 15:04" }}{{ end }}
-	</p>
-	<div class="post_comment_content">
-		{{ .Contenido | markdown }}
-	</div>
-	<div class="post_comment_replies">
-		<details>
-			<summary>Añadir respuesta</summary>
-			{{ template "form_comentario" .Id }}
-		</details>
-		{{ range .Children }}
-		{{- template "comentario" . }}
-		{{ end }}
-	</div>
+    <p>
+        <strong>{{ .Nombre }}</strong>&nbsp;
+        {{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg"/>{{end}}
+        {{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
+                                     src="/static/user-icon.svg"/>{{end}}
+        {{ with .Fecha_moderacion }} - publicado {{ date_format . "02 Jan. 15:04" }}{{ end }}
+    </p>
+    <div class="post_comment_content">
+        {{ .Contenido | markdown }}
+    </div>
+    <div class="post_comment_replies">
+        <details>
+            <summary>Añadir respuesta</summary>
+            {{ template "form_comentario" .Id }}
+        </details>
+        {{ range .Children }}
+        {{- template "comentario" . }}
+        {{ end }}
+    </div>
 </div>
 {{ end }}
 
 {{ define "comentario_rep_admin" }}
 <div class="post_comment" id="comment-{{ .Id }}">
-	<p>
-		<strong>{{ .Nombre }}</strong>&nbsp;
-		{{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg" />{{end}}
-		{{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
-			src="/static/user-icon.svg" />{{end}}
-		{{ with .Fecha_moderacion }} - publicado {{ date_format . "02 Jan. 15:04" }}{{ end }}
-	</p>
-	<div class="post_comment_content">
-		{{ .Contenido | markdown }}
-	</div>
-	<div class="post_comment_replies">
-		<details>
-			<summary>Añadir respuesta</summary>
-			{{ template "form_comentario_admin" .Id }}
-		</details>
-		{{ range .Children }}
-		{{- template "comentario" . }}
-		{{ end }}
-	</div>
+    <p>
+        <strong>{{ .Nombre }}</strong>&nbsp;
+        {{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg"/>{{end}}
+        {{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
+                                     src="/static/user-icon.svg"/>{{end}}
+        {{ with .Fecha_moderacion }} - publicado {{ date_format . "02 Jan. 15:04" }}{{ end }}
+    </p>
+    <div class="post_comment_content">
+        {{ .Contenido | markdown }}
+    </div>
+    <div class="post_comment_replies">
+        <details>
+            <summary>Añadir respuesta</summary>
+            {{ template "form_comentario_admin" .Id }}
+        </details>
+        {{ range .Children }}
+        {{- template "comentario" . }}
+        {{ end }}
+    </div>
 </div>
 {{ end }}
 
 {{ define "form_comentario" }}
 <form method="post" class="form_comentario">
-	<label for="fc_nombre_{{ . }}">Nombre</label>
-	<input type="text" autocomplete="name" id="fc_nombre_{{ . }}" name="nombre" required>
-	<label for="fc_contenido_{{ . }}">Contenido</label>
-	<textarea name="contenido" id="fc_contenido_{{ . }}" maxlength="2000" rows="5" required></textarea>
-	<input type="hidden" name="padre" value="{{ . }}">
-	<p>Para evitar el spam, revisaremos tu comentario, y no será visible hasta que lo aprobemos.</p>
-	<div id="comment-send">
-		<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
-		<button class="button button-primary" type="submit">Enviar</button>
-	</div>
+    <label for="fc_nombre_{{ . }}">Nombre</label>
+    <input type="text" autocomplete="name" id="fc_nombre_{{ . }}" name="nombre" required>
+    <label for="fc_contenido_{{ . }}">Contenido</label>
+    <textarea name="contenido" id="fc_contenido_{{ . }}" maxlength="2000" rows="5" required></textarea>
+    <input type="hidden" name="padre" value="{{ . }}">
+    <p>Para evitar el spam, revisaremos tu comentario, y no será visible hasta que lo aprobemos.</p>
+    <div id="comment-send">
+        <div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
+        <button class="button button-primary" type="submit">Enviar</button>
+    </div>
 </form>
 {{ end }}
 
 {{ define "form_comentario_admin" }}
 <form method="post" class="form_comentario">
-	<label for="fc_contenido_{{ . }}">Contenido</label>
-	<textarea name="contenido" id="fc_contenido_{{ . }}" maxlength="2000" rows="5" required></textarea>
-	<input type="hidden" name="padre" value="{{ . }}">
-	<p>Tu comentario será publicado inmediatamente, pero solo por ser tú. 😉</p>
-	<div id="comment-send">
-		<div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
-		<button class="button button-primary" type="submit">Enviar</button>
-	</div>
+    <label for="fc_contenido_{{ . }}">Contenido</label>
+    <textarea name="contenido" id="fc_contenido_{{ . }}" maxlength="2000" rows="5" required></textarea>
+    <input type="hidden" name="padre" value="{{ . }}">
+    <p>Tu comentario será publicado inmediatamente, pero solo por ser tú. 😉</p>
+    <div id="comment-send">
+        <div class="h-captcha" data-sitekey="81fcc2fa-fc6b-4ce0-aa37-cb05060e4b23"></div>
+        <button class="button button-primary" type="submit">Enviar</button>
+    </div>
 </form>
 {{ end }}
