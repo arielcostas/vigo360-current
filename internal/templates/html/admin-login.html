@@ -19,10 +19,10 @@
 			{{ end }}
 			<form method="POST">
 				<label for="userid">ID de Usuario</label>
-				<input type="text" id="userid" name="userid" {{with .PrefillName}}value="{{.}}" {{end}} />
+				<input type="text" id="userid" name="userid" {{with .PrefillName}}value="{{.}}" {{end}}>
 				
 				<label for="password">Contraseña</label>
-				<input type="password" id="password" name="password" />
+				<input type="password" id="password" name="password">
 
 				<button class="button button-primary" type="submit">Iniciar sesión</button>
 				<small>Por tu seguridad, recuerda cerrar sesión antes de abandonar la página.</small>

@@ -4,13 +4,13 @@
 <head>
 	{{- template "_head.html" . }}
 
-	<meta property="og:title" content="{{ .Meta.Titulo }}" />
-	<meta property="og:type" content="article" />
-	<meta property="og:site_name" content="Vigo360" />
-	<meta property="og:image" content="{{ .Meta.Miniatura }}" />
-	<meta property="og:url" content="{{ .Meta.Canonica }}" />
+	<meta property="og:title" content="{{ .Meta.Titulo }}">
+	<meta property="og:type" content="article">
+	<meta property="og:site_name" content="Vigo360">
+	<meta property="og:image" content="{{ .Meta.Miniatura }}">
+	<meta property="og:url" content="{{ .Meta.Canonica }}">
 	<meta property="og:locale" content="es_ES">
-	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
+	<meta property="og:description" content="{{ .Meta.Descripcion }}">
 
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@vigo360">
@@ -127,7 +127,7 @@
 					<div id="post-author-card">
 						<img width="180" height="180" class="post-author-photo"
 							src="/static/profile/{{ .Trabajo.Autor.Id }}.jpg"
-							alt="Fotografía de perfil de {{ .Trabajo.Autor.Nombre }}" loading="lazy" />
+							alt="Fotografía de perfil de {{ .Trabajo.Autor.Nombre }}" loading="lazy">
 						<div class="post-author-info">
 							<h3>{{ .Trabajo.Autor.Nombre }}</h3>
 							<span>{{ .Trabajo.Autor.Rol}}</span>

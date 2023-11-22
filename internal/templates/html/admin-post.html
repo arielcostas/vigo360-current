@@ -17,7 +17,7 @@
 				<label for="art-id">
 					ID de artículo
 				</label>
-				<input type="text" name="art-id" id="art-id" maxlength="40" placeholder="articulo-tema" required />
+				<input type="text" name="art-id" id="art-id" maxlength="40" placeholder="articulo-tema" required>
 				<label for="art-titulo">
 					Título del artículo
 				</label>
@@ -33,18 +33,18 @@
 						class="posts-title {{ if eq .Publicado false }}unpublished{{ end }}">{{ .Titulo }}</a>
 					<p>
 						<span>
-							<img width="20" height="20" src="/static/user-icon.svg" />
+							<img width="20" height="20" src="/static/user-icon.svg">
 							{{ .Autor_nombre }}
 						</span>
 						{{ if ne .Fecha_publicacion "01/01/0001" }}
 						<span>
-							<img width="20" height="20" src="/static/clock-icon.svg" />
+							<img width="20" height="20" src="/static/clock-icon.svg">
 							{{ .Fecha_publicacion }}
 						</span>
 						{{ end }}
 						{{- $postid := .Id }}
 						<span>
-							<img width="20" height="20" src="/static/tags-icon.svg" />
+							<img width="20" height="20" src="/static/tags-icon.svg">
 							{{ .CantTags }}
 						</span>
 

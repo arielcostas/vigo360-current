@@ -2,28 +2,28 @@
 <html lang="es-ES">
 
 <head>
-    	{{- template "_head.html" . }}
+    {{- template "_head.html" . }}
 
-	<meta property="og:title" content="{{ .Meta.Titulo }}" />
-	<meta property="og:type" content="article" />
-	<meta property="og:site_name" content="Vigo360" />
-	<meta property="og:image" content="{{ .Meta.Miniatura }}" />
-	<meta property="og:url" content="{{ .Meta.Canonica }}" />
-	<meta property="og:locale" content="es_ES" />
-	<meta property="og:description" content="{{ .Meta.Descripcion }}" />
+    <meta property="og:title" content="{{ .Meta.Titulo }}">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Vigo360">
+    <meta property="og:image" content="{{ .Meta.Miniatura }}">
+    <meta property="og:url" content="{{ .Meta.Canonica }}">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:description" content="{{ .Meta.Descripcion }}">
 
-	<meta property="article:published_time" content="{{ date3339 .Post.Fecha_publicacion }}" />
-	<meta property="article:modified_time" content="{{ date3339 .Post.Fecha_actualizacion }}" />
+    <meta property="article:published_time" content="{{ date3339 .Post.Fecha_publicacion }}">
+    <meta property="article:modified_time" content="{{ date3339 .Post.Fecha_actualizacion }}">
 
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@vigo360">
-	<meta name="twitter:creator" content="@vigo360">
-	<meta name="twitter:title" content="{{ .Meta.Titulo }}">
-	<meta name="twitter:description" content="{{ .Meta.Descripcion }}">
-	<meta name="twitter:image" content="{{ .Meta.Miniatura }}">
-	<meta name="twitter:image:alt" content="{{ .Post.Alt_portada }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@vigo360">
+    <meta name="twitter:creator" content="@vigo360">
+    <meta name="twitter:title" content="{{ .Meta.Titulo }}">
+    <meta name="twitter:description" content="{{ .Meta.Descripcion }}">
+    <meta name="twitter:image" content="{{ .Meta.Miniatura }}">
+    <meta name="twitter:image:alt" content="{{ .Post.Alt_portada }}">
 
-	<link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+    <link rel="alternate" type="application/atom+xml" href="/atom.xml">
 
 	<script type="application/ld+json">
 		{
@@ -80,7 +80,7 @@
 		}
 	</script>
 
-	<script src="https://hcaptcha.com/1/api.js" async></script>
+    <script src="https://hcaptcha.com/1/api.js" async></script>
 </head>
 
 <body>
@@ -90,7 +90,7 @@
         <figure id="post-thumbnail">
             <picture id="portada_actual" class="user-article-thumbnail">
                 <source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
-                        alt="{{ .Post.Alt_portada }}" title="{{ .Post.Alt_portada }}" width="220"
+                        title="{{ .Post.Alt_portada }}" width="220"
                         height="137">
                 <img src="/static/thumb/{{ .Post.Id }}.jpg" width="220" height="137" loading="lazy"
                      alt="{{ .Post.Alt_portada }}"/>
@@ -109,6 +109,29 @@
 
         <div id="post-inner">
             {{ .Post.Contenido | markdown }}
+        </div>
+
+        <div id="post-share">
+            <div id="post-share-tags">
+                {{- range $i, $t := .Post.Tags}}
+                <a href="/tags/{{ $t.Id }}">{{ $t.Nombre }}</a>
+                {{- end }}
+            </div>
+
+            <div id="post-share-social">
+                <a class="social-icon social-icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ .Meta.Canonica }}"
+                   target="_blank" rel="noopener noreferrer">
+                    <img src="/static/facebook-icon.svg" alt="Compartir en Facebook"/>
+                </a>
+                <a class="social-icon social-icon-x" href="https://twitter.com/intent/tweet?url={{ .Meta.Canonica }}&text={{ .Meta.Titulo }}&via=vigo360"
+                   target="_blank" rel="noopener noreferrer">
+                    <img src="/static/twitter-icon.svg" alt="Compartir en Twitter"/>
+                </a>
+                <a class="social-icon social-icon-whatsapp" href="https://api.whatsapp.com/send?text={{ .Meta.Titulo }} {{ .Meta.Canonica }}"
+                   target="_blank" rel="noopener noreferrer">
+                    <img src="/static/whatsapp-icon.svg" alt="Compartir en WhatsApp"/>
+                </a>
+            </div>
         </div>
     </article>
 
@@ -146,7 +169,7 @@
         {{ end }}
     </section>
     {{ end }}
-    <hr/>
+
     <section id="comment-section-container">
         <h2 id="comment_section_header">Comentarios</h2>
         {{ $loggedIn := .LoggedIn}}

@@ -37,6 +37,7 @@ blockquote {
 	position: relative;
 	quotes: "â€œ" "â€" "â€˜" "â€™";
 	margin: 0.75rem 0;
+	gap: 0.75rem;
 	display: flex;
 	flex-flow: row wrap;
 	background-repeat: no-repeat;
@@ -380,6 +381,55 @@ main#post-main {
 	flex: 1 1;
 	width: 150px;
 	height: 150px;
+}
+
+#post-share {
+	padding: 0 7%;
+	max-width: 85ch;
+	margin: auto;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#post-share-tags {
+	display: flex;
+	gap: 0.5rem;
+}
+
+#post-share-tags a {
+	background: var(--primary-main);
+	color: white;
+
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+#post-share-social {
+	display: flex;
+	gap: 0.5rem;
+}
+
+#post-share-social a {
+	padding: 0.5rem
+}
+
+#post-share-social a svg {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+#post-share-social .social-icon-facebook {
+	background-color: #3b5998;
+}
+
+#post-share-social .social-icon-x {
+	background-color: #222222;
+}
+
+#post-share-social .social-icon-whatsapp {
+	background-color: #25d366;
 }
 
 #post-author-container {

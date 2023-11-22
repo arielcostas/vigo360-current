@@ -111,6 +111,11 @@
 		display: none;
 	}
 
+	#post-share {
+		flex-direction: column;
+		align-items: center;
+	}
+
 	#post-related-articles {
 		flex-direction: column;
 	}
