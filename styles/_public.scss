@@ -386,7 +386,7 @@ main#post-main {
 #post-share {
 	padding: 0 3%;
 	max-width: 85ch;
-	margin: auto;
+	margin: 1rem auto;
 
 	display: flex;
 	align-items: center;
@@ -407,6 +407,10 @@ main#post-main {
 
 	padding: 0.25rem 0.75rem;
 	border-radius: 4px;
+
+	img {
+		display: block;
+	}
 }
 
 #post-share-social {
