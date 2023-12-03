@@ -18,21 +18,32 @@
 		<p>Esta página es una previsualización. Hay posibles datos sin guardar.</p>
 		<p>Fecha de generación: {{ .Ahora }}</p>
 	</div>
-	<main>
-		<div id="post-main">
-			<article>
-				<figure id="post-thumbnail">
-					<img width="1024" height="576" src="/static/images/{{ .Post.Id}}.webp" alt="{{ .Post.Alt_portada }}">
-					<figcaption>{{ .Post.Alt_portada }}</figcaption>
-				</figure>
+	<main id="post-main">
+		<article>
+			<figure id="post-thumbnail">
+				<picture id="portada_actual" class="user-article-thumbnail">
+					<source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
+							title="{{ .Post.Alt_portada }}" width="220"
+							height="137">
+					<img src="/static/thumb/{{ .Post.Id }}.jpg" width="220" height="137" loading="lazy"
+						 alt="{{ .Post.Alt_portada }}"/>
+				</picture>
+				<figcaption>{{ .Post.Alt_portada }}</figcaption>
+			</figure>
 
-				<h2 id="post-title">{{ .Post.Titulo }}</h2>
+			<h2 id="post-title">{{ .Post.Titulo }}</h2>
 
-				<div id="post-inner">
-					{{ .Post.Contenido | markdown }}
-				</div>
-			</article>
-		</div>
+			<p id="post-info">
+				<a class="link" href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
+				{{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
+				(dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
+				}}){{end}}
+			</p>
+
+			<div id="post-inner">
+				{{ .Post.Contenido | markdown }}
+			</div>
+		</article>
 	</main>
 	{{ template "_footer.html" }}
 </body>

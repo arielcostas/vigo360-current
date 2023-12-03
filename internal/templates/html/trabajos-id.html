@@ -93,9 +93,9 @@
 
 <body>
 	{{ template "_header.html" }}
-	<main>
-		<div id="post-main">
-			<article>
+	<main id="post-main">
+		<article>
+			<section>
 				<figure id="post-thumbnail">
 					<img width="1024" height="576" src="/static/images/{{ .Trabajo.Id}}.webp"
 						alt="{{ .Trabajo.Alt_portada }}">
@@ -120,9 +120,9 @@
 					</ul>
 					{{ end }}
 				</div>
-			</article>
+			</section>
 
-			<div id="post-author-container">
+			<section id="post-author-container">
 				<a href="/autores/{{ .Trabajo.Autor.Id }}">
 					<div id="post-author-card">
 						<img width="180" height="180" class="post-author-photo"
@@ -135,9 +135,9 @@
 						</div>
 					</div>
 				</a>
-			</div>
+			</section>
 
-		</div>
+		</article>
 	</main>
 	{{ template "_footer.html" }}
 </body>

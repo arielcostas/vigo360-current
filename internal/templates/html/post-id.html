@@ -135,7 +135,7 @@
         </div>
     </article>
 
-    <div id="post-author-container">
+    <section id="post-author-container">
         <a href="/autores/{{ .Post.Autor.Id }}">
             <div id="post-author-card">
                 <img width="180" height="180" class="post-author-photo"
@@ -148,7 +148,7 @@
                 </div>
             </div>
         </a>
-    </div>
+    </section>
 
     {{ if ne (len .Recommendations) 0}}
     <h2 id="related-articles-header">Artículos recomendados</h2>
