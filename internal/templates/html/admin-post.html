@@ -48,6 +48,11 @@
 							{{ .CantTags }}
 						</span>
 
+						<span>
+							<img width="20" height="20" src="/static/comments-icon.svg">
+							{{ .CantComentarios }}
+						</span>
+
 						{{- with $session }}
 						{{- if eq (index .Permisos "publicaciones_delete" ) true }}
 						<a href="/admin/post/{{ $postid }}/delete">Eliminar</a>

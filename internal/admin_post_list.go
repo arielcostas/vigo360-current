@@ -22,6 +22,7 @@ type ResumenPost struct {
 	Publicado         bool
 	Autor_id          string
 	Autor_nombre      string
+	CantComentarios   int
 }
 
 func (s *Server) handleAdminListPost() http.HandlerFunc {
@@ -37,7 +38,14 @@ func (s *Server) handleAdminListPost() http.HandlerFunc {
 		db := database.GetDB()
 		posts := []ResumenPost{}
 
-		err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, COALESCE(fecha_publicacion, "") as fecha_publicacion, autor_id, autores.nombre as autor_nombre, count(tag_id) as canttags FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id GROUP BY publicaciones.id ORDER BY publicado ASC, publicaciones.fecha_publicacion DESC;`)
+		err := db.Select(&posts, `SELECT publicaciones.id, titulo, (fecha_publicacion < NOW() && fecha_publicacion IS NOT NULL) as publicado, COALESCE(fecha_publicacion, "") as fecha_publicacion, autor_id, autores.nombre as autor_nombre, count(tag_id) as canttags, count(comentarios.id) as comentarios
+			FROM publicaciones
+		    LEFT JOIN autores ON publicaciones.autor_id = autores.id
+		    LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id
+			LEFT JOIN comentarios ON publicaciones.id = comentarios.publicacion_id
+			GROUP BY publicaciones.id
+			ORDER BY publicado ASC,
+			         publicaciones.fecha_publicacion DESC;`)
 
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			log.Error("error recuperando listado de publicacionoes: %s", err.Error())
