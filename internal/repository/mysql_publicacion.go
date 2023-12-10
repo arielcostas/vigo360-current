@@ -20,7 +20,7 @@ func NewMysqlPublicacionStore(db *sqlx.DB) *MysqlPublicacionStore {
 
 func (s *MysqlPublicacionStore) Listar() (models.Publicaciones, error) {
 	publicaciones := make(models.Publicaciones, 0)
-	query := `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, COALESCE(legal_restricted_at, ""), titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id GROUP BY id ORDER BY fecha_publicacion DESC;`
+	query := `SELECT p.id, COALESCE(fecha_publicacion, ""), fecha_actualizacion, COALESCE(legally_retired_at, ""), titulo, resumen, alt_portada, autor_id, autores.nombre as autor_nombre, autores.email as autor_email, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_nombres FROM publicaciones p LEFT JOIN publicaciones_tags ON p.id = publicaciones_tags.publicacion_id LEFT JOIN tags ON publicaciones_tags.tag_id = tags.id LEFT JOIN autores ON p.autor_id = autores.id GROUP BY id ORDER BY fecha_publicacion DESC;`
 
 	rows, err := s.db.Query(query)
 
