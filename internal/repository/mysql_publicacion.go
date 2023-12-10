@@ -106,7 +106,7 @@ func (s *MysqlPublicacionStore) Existe(id string) (bool, error) {
 
 func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (models.Publicacion, error) {
 	var post models.Publicacion
-	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion, autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_names
+	var query = `SELECT publicaciones.id, alt_portada, titulo, resumen, contenido, COALESCE(fecha_publicacion, ""), fecha_actualizacion,COALESCE(legally_retired_at, ""), autores.id as autor_id, autores.nombre as autor_nombre, autores.biografia as autor_biografia, autores.rol as autor_rol, COALESCE(GROUP_CONCAT(tags.id), "") as tags_ids, COALESCE(GROUP_CONCAT(tags.nombre), "") as tags_names
 	FROM publicaciones
 	LEFT JOIN autores on publicaciones.autor_id = autores.id
 	LEFT JOIN publicaciones_tags ON publicaciones.id = publicaciones_tags.publicacion_id
@@ -120,7 +120,7 @@ func (s *MysqlPublicacionStore) ObtenerPorId(id string, requirePublic bool) (mod
 		rawTagNombres string
 	)
 
-	var err = s.db.QueryRow(query, id).Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Autor.Id, &post.Autor.Nombre, &post.Autor.Biografia, &post.Autor.Rol, &rawTagIds, &rawTagNombres)
+	var err = s.db.QueryRow(query, id).Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Legally_retired_at, &post.Autor.Id, &post.Autor.Nombre, &post.Autor.Biografia, &post.Autor.Rol, &rawTagIds, &rawTagNombres)
 
 	if err != nil {
 		return models.Publicacion{}, err
