@@ -87,7 +87,7 @@
 {{ template "_header.html" }}
 <main id="post-main">
     <article>
-        {{ if ne (.Post.Legally_retired_at) "" }}
+        {{ if eq .Post.Legally_retired_at "" }}
         <figure id="post-thumbnail">
             <picture id="portada_actual" class="user-article-thumbnail">
                 <source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
@@ -102,7 +102,7 @@
 
         <h2 id="post-title">{{ .Post.Titulo }}</h2>
 
-        {{ if ne (.Post.Legally_retired_at) "" }}
+        {{ if eq .Post.Legally_retired_at "" }}
         <p id="post-info">
             <a class="link" href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
             {{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
@@ -112,14 +112,14 @@
         {{ end }}
 
         <div id="post-inner">
-            {{ if eq (.Post.Legally_retired_at) "" }}
+            {{ if eq .Post.Legally_retired_at "" }}
                 {{ .Post.Contenido | markdown }}
             {{ else }}
                 <p>Este artículo ha sido retirado por razones legales a fecha de {{ dateDayMonth .Post.Legally_retired_at }}.</p>
             {{ end }}
         </div>
 
-        {{ if ne (.Post.Legally_retired_at) "" }}
+        {{ if eq .Post.Legally_retired_at "" }}
         <div id="post-share">
             <div id="post-share-tags">
                 {{- range $i, $t := .Post.Tags}}
