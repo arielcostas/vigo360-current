@@ -19,7 +19,9 @@ func (s *Server) handlePublicIndexAtom() http.HandlerFunc {
 			s.handleError(r, w, 500, messages.ErrorDatos)
 			return
 		}
+
 		pp = pp.FiltrarPublicas()
+		pp = pp.FiltrarRetiradas()
 
 		lastUpdate, _ := pp.ObtenerUltimaActualizacion()
 

@@ -54,7 +54,7 @@ func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 
 		err = templates.Render(w, "autores-id.html", Response{
 			Autor:    autor,
-			Posts:    publicaciones.FiltrarPublicas(),
+			Posts:    publicaciones.FiltrarPublicas().FiltrarRetiradas(),
 			Trabajos: trabajos,
 			Meta: PageMeta{
 				Titulo:      autor.Nombre,

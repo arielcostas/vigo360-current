@@ -39,7 +39,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 		}
 
 		publicaciones, err := s.store.publicacion.Buscar(termino)
-		publicaciones = publicaciones.FiltrarPublicas()
+		publicaciones = publicaciones.FiltrarPublicas().FiltrarRetiradas()
 		if err != nil {
 			log.Error("error recuperando publicaciones: %s", err.Error())
 			s.handleError(r, w, 500, messages.ErrorDatos)

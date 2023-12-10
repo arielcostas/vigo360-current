@@ -4,6 +4,7 @@ type Publicacion struct {
 	Id                  string
 	Fecha_publicacion   string
 	Fecha_actualizacion string
+	Legally_retired_at  string
 	Alt_portada         string
 	Titulo              string
 	Resumen             string

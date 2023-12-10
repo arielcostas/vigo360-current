@@ -42,6 +42,7 @@ func (s *Server) handlePublicListTags() http.HandlerFunc {
 			var publicacionesConTag []string
 			pt, err := s.store.publicacion.ListarPorTag(t.Id)
 			pt.FiltrarPublicas()
+			pt.FiltrarRetiradas()
 			for _, p := range pt {
 				publicacionesConTag = append(publicacionesConTag, p.Id)
 			}

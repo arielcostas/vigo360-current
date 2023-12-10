@@ -57,6 +57,7 @@ func (s *Server) handlePublicSitemap() http.HandlerFunc {
 
 		trabajos = trabajos.FiltrarPublicos()
 		publicaciones = publicaciones.FiltrarPublicas()
+		publicaciones = publicaciones.FiltrarRetiradas()
 
 		pages = append(pages, SitemapQuery{Uri: "/", Changefreq: "daily", Priority: "0.8"})
 		pages = append(pages, SitemapQuery{Uri: "/autores", Changefreq: "monthly", Priority: "0.5"})

@@ -76,6 +76,10 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 			ct = nct
 		}
 
+		if post.Legally_retired_at != "" {
+			w.WriteHeader(451)
+		}
+
 		err = templates.Render(w, "post-id.html", Response{
 			Post:            post,
 			LoggedIn:        loggedIn,

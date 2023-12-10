@@ -87,6 +87,7 @@
 {{ template "_header.html" }}
 <main id="post-main">
     <article>
+        {{ if ne (.Post.Legally_retired_at) "" }}
         <figure id="post-thumbnail">
             <picture id="portada_actual" class="user-article-thumbnail">
                 <source srcset="/static/images/{{ .Post.Id}}.webp" type="image/webp"
@@ -97,20 +98,28 @@
             </picture>
             <figcaption>{{ .Post.Alt_portada }}</figcaption>
         </figure>
+        {{ end }}
 
         <h2 id="post-title">{{ .Post.Titulo }}</h2>
 
+        {{ if ne (.Post.Legally_retired_at) "" }}
         <p id="post-info">
             <a class="link" href="/autores/{{ .Post.Autor.Id }}">{{ .Post.Autor.Nombre }}</a> -
             {{ dateDayMonth .Post.Fecha_publicacion }} {{ if ne (dateDayMonth .Post.Fecha_actualizacion)
             (dateDayMonth .Post.Fecha_publicacion) }}(actualizado {{ dateDayMonth .Post.Fecha_actualizacion
             }}){{end}}
         </p>
+        {{ end }}
 
         <div id="post-inner">
-            {{ .Post.Contenido | markdown }}
+            {{ if eq (.Post.Legally_retired_at) "" }}
+                {{ .Post.Contenido | markdown }}
+            {{ else }}
+                <p>Este artículo ha sido retirado por razones legales a fecha de {{ dateDayMonth .Post.Legally_retired_at }}.</p>
+            {{ end }}
         </div>
 
+        {{ if ne (.Post.Legally_retired_at) "" }}
         <div id="post-share">
             <div id="post-share-tags">
                 {{- range $i, $t := .Post.Tags}}
@@ -133,6 +142,7 @@
                 </a>
             </div>
         </div>
+        {{ end }}
     </article>
 
     <section id="post-author-container">
@@ -150,6 +160,7 @@
         </a>
     </section>
 
+    {{ if eq (.Post.Legally_retired_at) "" }}
     {{ if ne (len .Recommendations) 0}}
     <h2 id="related-articles-header">Artículos recomendados</h2>
     <section id="post-related-articles">
@@ -193,6 +204,7 @@
         {{ template "form_comentario" }}
         {{ end }}
     </section>
+    {{ end }}
 </main>
 {{ template "_footer.html" }}
 </body>

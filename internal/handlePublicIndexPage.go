@@ -40,6 +40,7 @@ func (s *Server) handlePublicIndex() http.HandlerFunc {
 		}
 
 		posts = posts.FiltrarPublicas()
+		posts = posts.FiltrarRetiradas()
 
 		/* Paginación */
 		var pagina = 1

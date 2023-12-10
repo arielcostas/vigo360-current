@@ -27,6 +27,27 @@ func (ps Publicaciones) FiltrarPublicas() Publicaciones {
 	return nps
 }
 
+// FiltrarRetiradas Devuelve un slice con solo las publicaciones retiradas por razones legales
+func (ps Publicaciones) FiltrarRetiradas() Publicaciones {
+	var nps Publicaciones
+
+	for _, p := range ps {
+		if p.Legally_retired_at == "" {
+			continue
+		}
+
+		var fechaPub, err = time.Parse("2006-01-02 15:04:05", p.Legally_retired_at)
+		if err != nil {
+			continue
+		}
+		if fechaPub.Unix() <= time.Now().Unix() {
+			nps = append(nps, p)
+		}
+	}
+
+	return nps
+}
+
 // Devuelve la fecha de la actualización más reciente de una publicación del slice
 func (ps Publicaciones) ObtenerUltimaActualizacion() (time.Time, error) {
 	var lastUpdate time.Time

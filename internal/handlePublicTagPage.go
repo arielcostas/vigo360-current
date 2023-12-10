@@ -45,7 +45,7 @@ func (s *Server) handlePublicTagPage() http.HandlerFunc {
 
 		err = templates.Render(w, "tags-id.html", response{
 			Tag:   tag,
-			Posts: publicaciones.FiltrarPublicas(),
+			Posts: publicaciones.FiltrarPublicas().FiltrarRetiradas(),
 			Meta: PageMeta{
 				Titulo:      tag.Nombre,
 				Keywords:    tag.Nombre,

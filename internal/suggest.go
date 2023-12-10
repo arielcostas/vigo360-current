@@ -45,7 +45,7 @@ func generateSuggestions(original_id string, ps repository.PublicacionStore) ([]
 	if err != nil {
 		return resultado, err
 	}
-	options = options.FiltrarPublicas()
+	options = options.FiltrarPublicas().FiltrarRetiradas()
 
 	var originalTags []string
 	for _, t2 := range original.Tags {
