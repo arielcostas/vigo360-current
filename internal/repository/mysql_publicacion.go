@@ -35,7 +35,7 @@ func (s *MysqlPublicacionStore) Listar() (models.Publicaciones, error) {
 			rawTagNombres string
 		)
 
-		err = rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Titulo, &np.Resumen, &np.Alt_portada, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
+		err = rows.Scan(&np.Id, &np.Fecha_publicacion, &np.Fecha_actualizacion, &np.Legally_retired_at, &np.Titulo, &np.Resumen, &np.Alt_portada, &np.Autor.Id, &np.Autor.Nombre, &np.Autor.Email, &rawTagIds, &rawTagNombres)
 		if err != nil {
 			return models.Publicaciones{}, err
 		}
