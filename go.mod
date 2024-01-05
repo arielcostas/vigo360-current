@@ -16,7 +16,7 @@ require (
 	github.com/kataras/hcaptcha v0.0.2
 	github.com/mdigger/goldmark-figures v0.0.0-20210529130425-5a82ef316e38
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
-	github.com/thanhpk/randstr v1.0.5
+	github.com/thanhpk/randstr v1.0.6
 	golang.org/x/crypto v0.14.0
 )
 
