@@ -17,7 +17,7 @@ require (
 	github.com/mdigger/goldmark-figures v0.0.0-20210529130425-5a82ef316e38
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/thanhpk/randstr v1.0.5
-	golang.org/x/crypto v0.9.0
+	golang.org/x/crypto v0.14.0
 )
 
 require (
@@ -33,11 +33,11 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.0 // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 )
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.2
-	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 )
