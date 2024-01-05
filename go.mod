@@ -38,6 +38,6 @@ require (
 )
 
 require (
-	github.com/gabriel-vasile/mimetype v1.4.2
+	github.com/gabriel-vasile/mimetype v1.4.3
 	golang.org/x/net v0.17.0 // indirect
 )
