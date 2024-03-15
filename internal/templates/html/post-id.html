@@ -186,22 +186,21 @@
         {{ $loggedIn := .LoggedIn}}
         <div id="comment_container">
             {{ if eq (len .Comentarios) 0 }}
-            <p id="no_comments">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                <p id="no_comments">No hay comentarios aún. ¡Sé el primero en comentar!</p>
             {{ end }}
             {{- range .Comentarios }}
-            {{ if $loggedIn}}
-            {{ template "comentario_rep_admin" . }}
-            {{ else }}
-            {{ template "comentario" . }}
-            {{ end }}
-
+                {{ if $loggedIn}}
+                    {{ template "comentario_rep_admin" . }}
+                {{ else }}
+                    {{ template "comentario" . }}
+                {{ end }}
             {{ end }}
         </div>
         <h3 id="comment_section_publish">Déjanos tu comentario</h3>
         {{ if $loggedIn}}
-        {{ template "form_comentario_admin" }}
+            {{ template "form_comentario_admin" }}
         {{ else }}
-        {{ template "form_comentario" }}
+            {{ template "form_comentario" }}
         {{ end }}
     </section>
     {{ end }}
@@ -214,10 +213,10 @@
 <div class="post_comment" id="comment-{{ .Id }}">
     <p>
         <strong>{{ .Nombre }}</strong>&nbsp;
-        {{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg"/>{{end}}
-        {{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
+        {{- if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg"/>{{end}}
+        {{- if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
                                      src="/static/user-icon.svg"/>{{end}}
-        {{ with .Fecha_moderacion }} - publicado {{ date_format . "02 Jan. 15:04" }}{{ end }}
+                                     - {{- with .Fecha_moderacion }}{{ date_format . "02/01/2006 15:04" }}{{ else }}{{ date_format .Fecha_creacion "02/01/2006 15:04" }}{{ end }}
     </p>
     <div class="post_comment_content">
         {{ .Contenido | markdown }}
@@ -227,9 +226,6 @@
             <summary>Añadir respuesta</summary>
             {{ template "form_comentario" .Id }}
         </details>
-        {{ range .Children }}
-        {{- template "comentario" . }}
-        {{ end }}
     </div>
 </div>
 {{ end }}

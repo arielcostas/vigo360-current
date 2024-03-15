@@ -6,7 +6,6 @@ import (
 
 type ComentarioTree struct {
 	models.Comentario
-	Children []ComentarioTree
 }
 
 func (se *Comentario) ListarPublicos(articulo_id string) ([]ComentarioTree, error) {
@@ -22,6 +21,5 @@ func (se *Comentario) ListarPublicos(articulo_id string) ([]ComentarioTree, erro
 		clt = append(clt, ComentarioTree{Comentario: c})
 	}
 
-	// Llama a generarArbol para introducir los hijos en padre.Children
-	return se.generarArbol(clt), nil
+	return clt, nil
 }

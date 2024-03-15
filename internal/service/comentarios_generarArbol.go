@@ -21,6 +21,7 @@ func (se *Comentario) generarArbol(ct []ComentarioTree) []ComentarioTree {
 	var sliceComentarios = make([]ComentarioTree, 0)
 	for _, c2 := range mapaComentarios {
 		sliceComentarios = append(sliceComentarios, c2)
+
 	}
 	return sliceComentarios
 }
