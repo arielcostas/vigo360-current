@@ -247,9 +247,6 @@
             <summary>Añadir respuesta</summary>
             {{ template "form_comentario_admin" .Id }}
         </details>
-        {{ range .Children }}
-        {{- template "comentario" . }}
-        {{ end }}
     </div>
 </div>
 {{ end }}
