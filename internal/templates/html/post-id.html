@@ -237,7 +237,7 @@
         {{ if .Es_autor}} <img alt="Autor Vigo360" title="Autor Vigo360" src="/static/pencil-icon.svg"/>{{end}}
         {{ if .Autor_original}} <img alt="Autor del artículo" title="Autor del artículo"
                                      src="/static/user-icon.svg"/>{{end}}
-        {{ with .Fecha_moderacion }} - publicado {{ date_format . "02 Jan. 15:04" }}{{ end }}
+                                     - {{- with .Fecha_moderacion }}{{ date_format . "02/01/2006 15:04" }}{{ else }}{{ date_format .Fecha_creacion "02/01/2006 15:04" }}{{ end }}
     </p>
     <div class="post_comment_content">
         {{ .Contenido | markdown }}
