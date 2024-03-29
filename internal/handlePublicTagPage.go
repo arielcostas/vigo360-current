@@ -51,6 +51,7 @@ func (s *Server) handlePublicTagPage() http.HandlerFunc {
 				Keywords:    tag.Nombre,
 				Descripcion: "Publicaciones en Vigo360 sobre " + tag.Nombre,
 				Canonica:    fullCanonica("/tags/" + req_tagid),
+				BaseUrl:     baseUrl(),
 			},
 		})
 

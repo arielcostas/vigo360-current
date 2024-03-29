@@ -33,6 +33,7 @@ func (s *Server) handlePublicListTrabajos() http.HandlerFunc {
 				Titulo:      "Trabajos",
 				Descripcion: "Trabajos originales e interesantes publicados por los autores de Vigo360.",
 				Canonica:    fullCanonica("/trabajos"),
+				BaseUrl:     baseUrl(),
 			},
 		})
 

@@ -60,6 +60,7 @@ func (s *Server) handlePublicTrabajoPage() http.HandlerFunc {
 				Descripcion: trabajo.Resumen,
 				Canonica:    fullCanonica("/trabajos/" + trabajo.Id),
 				Miniatura:   fullCanonica("/static/thumb/" + trabajo.Id + ".jpg"),
+				BaseUrl:     baseUrl(),
 			},
 		})
 

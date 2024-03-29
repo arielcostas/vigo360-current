@@ -21,6 +21,7 @@ func (s *Server) handlePublicListAutores() http.HandlerFunc {
 		Titulo:      "Autores",
 		Descripcion: "Conoce a los autores y colaboradores de Vigo360.",
 		Canonica:    fullCanonica("/autores"),
+		BaseUrl:     baseUrl(),
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {

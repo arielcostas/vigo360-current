@@ -2,8 +2,12 @@ package internal
 
 import "os"
 
+func baseUrl() string {
+	return os.Getenv("DOMAIN")
+}
+
 func fullCanonica(path string) string {
-	return os.Getenv("DOMAIN") + path
+	return baseUrl() + path
 }
 
 func getMinimo(x int, y int) int {

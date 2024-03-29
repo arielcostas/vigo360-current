@@ -60,6 +60,7 @@ func (s *Server) handlePublicAutorPage() http.HandlerFunc {
 				Titulo:      autor.Nombre,
 				Descripcion: autor.Biografia,
 				Canonica:    fullCanonica("/autores/" + autor.Id),
+				BaseUrl:     baseUrl(),
 			},
 		})
 

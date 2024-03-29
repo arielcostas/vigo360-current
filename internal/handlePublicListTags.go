@@ -79,6 +79,7 @@ func (s *Server) handlePublicListTags() http.HandlerFunc {
 				Titulo:      "Tags",
 				Descripcion: "Las diversas tags en las que se categorizan los artículos de Vigo360",
 				Canonica:    fullCanonica("/tags"),
+				BaseUrl:     baseUrl(),
 			},
 		})
 

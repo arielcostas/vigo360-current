@@ -28,14 +28,14 @@
 			"author": {
 				"@type": "Person",
 				"name": "{{ .Trabajo.Autor.Nombre }}",
-				"url": "/autores/{{ .Trabajo.Autor.Id }}",
+				"url": "{{ .Meta.BaseUrl }}/autores/{{ .Trabajo.Autor.Id }}",
 				"jobTitle": "{{ .Trabajo.Autor.Rol }}",
 				"description": "{{ .Trabajo.Autor.Biografia }}"
 			},
 			"creator": {
 				"@type": "Person",
 				"name": "{{ .Trabajo.Autor.Nombre }}",
-				"url": "/autores/{{ .Trabajo.Autor.Id }}",
+				"url": "{{ .Meta.BaseUrl }}/autores/{{ .Trabajo.Autor.Id }}",
 				"jobTitle": "{{ .Trabajo.Autor.Rol }}",
 				"description": "{{ .Trabajo.Autor.Biografia }}"
 			},
@@ -58,9 +58,9 @@
 				"@type": "ImageObject",
 				"caption": "{{ .Trabajo.Alt_portada }}",
 				"license": "https://creativecommons.org/licenses/by-sa/4.0/",
-				"acquireLicensePage": "/legal",
-				"url": "/static/images/{{ .Trabajo.Id}}.webp",
-				"contentUrl": "/static/images/{{ .Trabajo.Id}}.webp"
+				"acquireLicensePage": "{{ .Meta.BaseUrl }}/legal",
+				"url": "{{ .Meta.BaseUrl }}/static/images/{{ .Trabajo.Id}}.webp",
+				"contentUrl": "{{ .Meta.BaseUrl }}/static/images/{{ .Trabajo.Id}}.webp"
 			},
 			"license": "https://creativecommons.org/licenses/by-sa/4.0/",
 			"inLanguage": "es-ES"
@@ -73,7 +73,7 @@
 					"@type": "ListItem",
 					"position": 1,
 					"item": {
-						"@id": "/trabajos",
+						"@id": "{{ .Meta.BaseUrl }}/trabajos",
 						"name": "Trabajos"
 					}
 				},
@@ -81,7 +81,7 @@
 					"@type": "ListItem",
 					"position": 2,
 					"item": {
-						"@id": "/trabajos/{{ .Trabajo.Id }}",
+						"@id": "{{ .Meta.BaseUrl }}/trabajos/{{ .Trabajo.Id }}",
 						"name": "{{ .Trabajo.Titulo }}"
 					}
 				}

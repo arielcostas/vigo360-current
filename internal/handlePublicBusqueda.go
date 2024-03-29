@@ -64,6 +64,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 			Meta: PageMeta{
 				Titulo:   "Resultados para " + termino,
 				Canonica: fullCanonica("/buscar?termino=" + termino),
+				BaseUrl:     baseUrl(),
 			},
 		})
 		if err != nil {

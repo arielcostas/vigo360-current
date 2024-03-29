@@ -92,6 +92,7 @@ func (s *Server) handlePublicPostPage() http.HandlerFunc {
 				Keywords:    keywords,
 				Canonica:    fullCanonica("/post/" + post.Id),
 				Miniatura:   fullCanonica("/static/thumb/" + post.Id + ".jpg"),
+				BaseUrl:     baseUrl(),
 			},
 		})
 		if err != nil {

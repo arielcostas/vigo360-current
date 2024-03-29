@@ -6,4 +6,5 @@ type PageMeta struct {
 	Keywords    string
 	Canonica    string
 	Miniatura   string
+	BaseUrl     string
 }
