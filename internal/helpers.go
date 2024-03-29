@@ -1,13 +1,16 @@
 package internal
 
-import "os"
+import (
+	"html/template"
+	"os"
+)
 
-func baseUrl() string {
-	return os.Getenv("DOMAIN")
+func baseUrl() template.URL {
+	return template.URL(os.Getenv("DOMAIN"))
 }
 
 func fullCanonica(path string) string {
-	return baseUrl() + path
+	return os.Getenv("DOMAIN") + path
 }
 
 func getMinimo(x int, y int) int {
