@@ -33,6 +33,7 @@
 				"url": "https://vigo360.es/autores/{{ .Autor.Id }}",
 			},
 			"hasPart": [
+				{{ $lenTrabajos := len .Trabajos }}
 				{{ range $i, $trabajo := .Trabajos }}
 				{
 					"@context": "https://schema.org",
@@ -41,9 +42,10 @@
 					"image": "/static/images/{{ $trabajo.Id }}.webp",
 					"url": "https://vigo360.es/trabajos/{{ $trabajo.Id }}",
 					"datePublished": "{{ $trabajo.Fecha_publicacion }}"
-				}{{ if ne (add $i 1) (len .Trabajos) }},{{ end }}
+				}{{ if ne (add $i 1) ($lenTrabajos) }},{{ end }}
 				{{ end }}
 
+				{{ $lenPosts := len .Posts }}
 				{{ range $i, $post := .Posts | first 10 }}
 				{
 					"@context": "https://schema.org",
@@ -52,7 +54,7 @@
 					"image": "/static/images/{{ $post.Id }}.webp",
 					"url": "https://vigo360.es/post/{{ $post.Id }}",
 					"datePublished": "{{ $post.Fecha_publicacion }}"
-				}{{ if ne (add $i 1) (len .Posts) }},{{ end }}
+				}{{ if ne (add $i 1) ($lenPosts) }},{{ end }}
 				{{ end }}
 			]
 		},
