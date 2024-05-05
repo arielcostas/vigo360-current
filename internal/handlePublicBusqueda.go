@@ -30,8 +30,8 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 	}
 
 	var algoliaApiKey string = os.Getenv("ALGOLIA_API_KEY")
-	var algoliaAppId string = os.Getenv("ALGOLIA_APP_ID")
-	var algoliaIndexName string = os.Getenv("ALGOLIA_INDEX_NAME")
+	var algoliaAppId string = os.Getenv("ALGOLIA_APPLICATION")
+	var algoliaIndexName string = os.Getenv("ALGOLIA_INDEX")
 
 	var searchOptions = []interface{}{
 		opt.Filters("fecha_publicacion != null"),
