@@ -28,7 +28,7 @@
 			"author": {
 				"@type": "Person",
 				"name": "{{ .Trabajo.Autor.Nombre }}",
-				"url": "{{ template.URL(.Meta.BaseUrl) }}/autores/{{ .Trabajo.Autor.Id }}",
+				"url": "{{ .Meta.BaseUrl }}/autores/{{ .Trabajo.Autor.Id }}",
 				"jobTitle": "{{ .Trabajo.Autor.Rol }}",
 				"description": "{{ .Trabajo.Autor.Biografia }}"
 			},

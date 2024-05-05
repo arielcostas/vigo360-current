@@ -46,7 +46,7 @@
 				{{ end }}
 
 				{{ $lenPosts := len .Posts }}
-				{{ range $i, $post := .Posts | first 10 }}
+				{{ range $i, $post := first 10 .Posts  }}
 				{
 					"@context": "https://schema.org",
 					"@type": "BlogPosting",
