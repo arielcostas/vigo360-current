@@ -63,7 +63,7 @@ func (s *Server) handlePublicBusqueda() http.HandlerFunc {
 			resultados = append(resultados, resultado{
 				Id:                hit["id"].(string),
 				Titulo:            hit["titulo"].(string),
-				Autor_nombre:      hit["autor_nombre"].(string),
+				Autor_nombre:      hit["nombre"].(string),
 				Alt_portada:       hit["alt_portada"].(string),
 				Resumen:           hit["resumen"].(string),
 				Uri:               "/post/" + hit["id"].(string),
