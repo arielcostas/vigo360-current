@@ -21,7 +21,7 @@
 				"image": "/static/profile/{{ .Autor.Id }}.jpg",
 				{{ if .Autor.Web.Url }}
 				"sameAs": [
-					"{{ .Autor.Web.Url }}",
+					"{{ safeURL .Autor.Web.Url }}",
 				],
 				{{ end }}
 				"worksFor": {
@@ -40,19 +40,18 @@
 					"@type": "Article",
 					"headline": "{{ $trabajo.Titulo }}",
 					"image": "/static/images/{{ $trabajo.Id }}.webp",
-					"url": "https://vigo360.es/trabajos/{{ $trabajo.Id }}",
+					"url": "{{ .Meta.BaseUrl }}/trabajos/{{ $trabajo.Id }}",
 					"datePublished": "{{ $trabajo.Fecha_publicacion }}"
-				}{{ if ne (add $i 1) ($lenTrabajos) }},{{ end }}
-				{{ end }}
-
-				{{ $lenPosts := len .Posts }}
-				{{ range $i, $post := first 10 .Posts  }}
+				}
+				{{- end }}
+				{{- $lenPosts := len .Posts }}
+				{{- range $i, $post := first 10 .Posts  }}
 				{
 					"@context": "https://schema.org",
 					"@type": "BlogPosting",
 					"headline": "{{ $post.Titulo }}",
 					"image": "/static/images/{{ $post.Id }}.webp",
-					"url": "https://vigo360.es/post/{{ $post.Id }}",
+					"url": "{{ .Meta.BaseUrl }}/post/{{ $post.Id }}",
 					"datePublished": "{{ $post.Fecha_publicacion }}"
 				}{{ if ne (add $i 1) ($lenPosts) }},{{ end }}
 				{{ end }}

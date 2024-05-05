@@ -57,4 +57,7 @@ var Functions = template.FuncMap{
 		}
 		return tm.Format(format)
 	},
+	"safeURL": func(url string) template.URL {
+		return template.URL(url)
+	}
 }

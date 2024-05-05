@@ -52,14 +52,14 @@
 			"author": {
 				"@type": "Person",
 				"name": "{{ .Post.Autor.Nombre }}",
-				"url": "{{ .Meta.BaseUrl }}/autores/{{ .Post.Autor.Id }}",
+				"url": "{{ safeURL .Meta.BaseUrl }}/autores/{{ .Post.Autor.Id }}",
 				"jobTitle": "{{ .Post.Autor.Rol }}",
 				"description": "{{ .Post.Autor.Biografia }}"
 			},
 			"creator": {
 				"@type": "Person",
 				"name": "{{ .Post.Autor.Nombre }}",
-				"url": "{{ .Meta.BaseUrl }}/autores/{{ .Post.Autor.Id }}",
+				"url": "{{ safeURL .Meta.BaseUrl }}/autores/{{ .Post.Autor.Id }}",
 				"jobTitle": "{{ .Post.Autor.Rol }}",
 				"description": "{{ .Post.Autor.Biografia }}"
 			},
