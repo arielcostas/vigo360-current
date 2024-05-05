@@ -6,13 +6,55 @@
 	<link rel="alternate" href="/autores/{{.Autor.Id}}/atom.xml" type="application/atom+xml">
 
 	<script type="application/ld+json">
-		[{
+		[
+		{
 			"@context": "https://schema.org",
-			"@type": "Person",
-			"email": "mailto:{{ .Autor.Email }}",
-			"name": "{{ .Autor.Nombre }}",
-			"jobTitle": "{{ .Autor.Rol }}",
-			"image": "/static/profile/{{ .Autor.Id }}.jpg"
+			"@type": "ProfilePage",
+			"mainEntityOfPage": {
+				"@context": "https://schema.org",
+				"@type": "Person",
+				"name": "{{ .Autor.Nombre }}",
+				"alternateName": "{{ .Autor.Id }}",
+				"identifier": "{{ .Autor.Id }}",
+				"email": "mailto:{{ .Autor.Email }}",
+				"jobTitle": "{{ .Autor.Rol }}",
+				"image": "/static/profile/{{ .Autor.Id }}.jpg",
+				{{ if .Autor.Web.Url }}
+				"sameAs": [
+					"{{ .Autor.Web.Url }}",
+				],
+				{{ end }}
+				"worksFor": {
+					"@context": "https://schema.org",
+					"@type": "Organization",
+					"name": "Vigo360",
+					"url": "https://vigo360.es"
+				},
+				"url": "https://vigo360.es/autores/{{ .Autor.Id }}",
+			},
+			"hasPart": [
+				{{ range $i, $trabajo := .Trabajos }}
+				{
+					"@context": "https://schema.org",
+					"@type": "Article",
+					"headline": "{{ $trabajo.Titulo }}",
+					"image": "/static/images/{{ $trabajo.Id }}.webp",
+					"url": "https://vigo360.es/trabajos/{{ $trabajo.Id }}",
+					"datePublished": "{{ $trabajo.Fecha_publicacion }}"
+				}{{ if ne (add $i 1) (len .Trabajos) }},{{ end }}
+				{{ end }}
+
+				{{ range $i, $post := .Posts | first 10 }}
+				{
+					"@context": "https://schema.org",
+					"@type": "BlogPosting",
+					"headline": "{{ $post.Titulo }}",
+					"image": "/static/images/{{ $post.Id }}.webp",
+					"url": "https://vigo360.es/post/{{ $post.Id }}",
+					"datePublished": "{{ $post.Fecha_publicacion }}"
+				}{{ if ne (add $i 1) (len .Posts) }},{{ end }}
+				{{ end }}
+			]
 		},
 		{
 			"@context": "https://schema.org",
