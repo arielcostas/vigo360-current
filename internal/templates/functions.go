@@ -59,5 +59,5 @@ var Functions = template.FuncMap{
 	},
 	"safeURL": func(url string) template.URL {
 		return template.URL(url)
-	}
+	},
 }
