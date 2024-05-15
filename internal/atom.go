@@ -17,7 +17,7 @@ var rawAtom string = `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES"
 	<title>{{ .Titulo }} - Vigo360</title>
 	<subtitle>{{ .Subtitulo }}</subtitle>
 	<updated>{{ .LastUpdate }}</updated>
-	<generator uri="https://gitlab.com/vigo360/new.vigo360.es">Vigo360</generator>
+	<generator uri="https://github.com/arielcostas/vigo360">Vigo360</generator>
 	<link rel="self" href="{{ .Dominio }}{{ .Path }}">
 	<icon>/static/logo.png</icon>
 	
@@ -36,7 +36,7 @@ var rawAtom string = `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES"
 			<uri>{{ $domain }}/autores/{{ .Autor.Id }}</uri>
 		</author>
 		{{- range .Tags }}
-		<category term="{{ .Nombre }}">
+		<category term="{{ .Nombre }}" />
 		{{- end}}
 	</entry>
 	{{- end}}

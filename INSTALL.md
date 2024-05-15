@@ -10,7 +10,7 @@ sudo mysql
 	> GRANT ALL PRIVILEGES ON vigo360.* TO USER 'vigo360';
 	> exit;
 cd /opt
-sudo git clone https://gitlab.com/Vigo360/new.vigo360.es vigo360
+sudo git clone https://github.com/arielcostas/vigo360.git vigo360
 sudo chown -R vigo360:www-data vigo360/
 su - vigo360
 ```
