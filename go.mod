@@ -12,7 +12,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/algolia/algoliasearch-client-go/v3 v3.31.1
 	github.com/chai2010/webp v1.1.1
-	github.com/go-playground/validator/v10 v10.19.0
+	github.com/go-playground/validator/v10 v10.20.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/kataras/hcaptcha v0.0.2
 	github.com/mdigger/goldmark-figures v0.0.0-20210529130425-5a82ef316e38
