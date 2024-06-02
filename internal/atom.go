@@ -6,10 +6,6 @@ import (
 	"vigo360.es/new/internal/templates"
 )
 
-/*
-	TODO: Refactor this complete file (and get rid of it)
-*/
-
 var t = template.Must(template.New("atom.xml").Funcs(templates.Functions).Parse(rawAtom))
 
 var rawAtom string = `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
@@ -18,7 +14,7 @@ var rawAtom string = `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES"
 	<subtitle>{{ .Subtitulo }}</subtitle>
 	<updated>{{ .LastUpdate }}</updated>
 	<generator uri="https://github.com/arielcostas/vigo360">Vigo360</generator>
-	<link rel="self" href="{{ .Dominio }}{{ .Path }}">
+	<link rel="self" href="{{ .Dominio }}{{ .Path }}" />
 	<icon>/static/logo.png</icon>
 	
 	{{- $domain := .Dominio }}
@@ -28,7 +24,7 @@ var rawAtom string = `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES"
 		<title>{{ .Titulo }}</title>
 		<published>{{ date3339 .Fecha_publicacion }}</published>
 		<updated>{{ date3339 .Fecha_actualizacion }}</updated>
-		<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}">
+		<link rel="alternate" href="{{ $domain }}/post/{{ .Id }}" />
 		<summary>{{ .Resumen }}</summary>
 		<author>
 			<name>{{ .Autor.Nombre }}</name>
