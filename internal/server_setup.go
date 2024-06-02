@@ -114,7 +114,7 @@ func (s *Server) SetupSecurityHeaders(router *mux.Router) *mux.Router {
 			w.Header().Add("X-XSS-Protection", "1; mode=block")
 			w.Header().Add("X-Content-Type-Options", "nosniff")
 			w.Header().Add("Referrer-Policy", "same-origin")
-			w.Header().Add("Content-Security-Policy", "default-src 'self'; script-src 'self' hcaptcha.com *.hcaptcha.com; style-src 'self' hcaptcha.com *.hcaptcha.com; frame-src hcaptcha.com *.hcaptcha.com; connect-src 'self' hcaptcha.com *.hcaptcha.com; worker-src 'none'; frame-ancestors 'none'; img-src 'self' data:; upgrade-insecure-requests; base-uri 'self'; object-src 'none'; form-action 'self';")
+			w.Header().Add("Content-Security-Policy", "default-src 'self'; script-src 'self' https://hcaptcha.com https://*.hcaptcha.com; style-src 'self' https://hcaptcha.com https://*.hcaptcha.com; frame-src https://hcaptcha.com https://*.hcaptcha.com; connect-src 'self' https://hcaptcha.com https://*.hcaptcha.com; worker-src 'none'; frame-ancestors 'none'; img-src 'self' data:; upgrade-insecure-requests; base-uri 'self'; object-src 'none'; form-action 'self';")
 
 			next.ServeHTTP(w, r)
 		})
