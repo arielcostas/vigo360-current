@@ -1,7 +1,7 @@
 package templates
 
 import (
-	gmf "github.com/mdigger/goldmark-figures"
+	gmf "github.com/arielcostas/goldmark-figures"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 )
