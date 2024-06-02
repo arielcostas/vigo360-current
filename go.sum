@@ -10,6 +10,8 @@ github.com/algolia/algoliasearch-client-go/v3 v3.31.1 h1:xXA/RK4/EuXyUCgAXUB7Ala
 github.com/algolia/algoliasearch-client-go/v3 v3.31.1/go.mod h1:i7tLoP7TYDmHX3Q7vkIOL4syVse/k5VJ+k0i8WqFiJk=
 github.com/arielcostas/goldmark-figures v1.0.1 h1:3zHCGQMpiv9O5abNvdEvRd6YpTlbQOQMhsaZMLBJzwA=
 github.com/arielcostas/goldmark-figures v1.0.1/go.mod h1:sjKF4imwjGthsFh+GCr3c2uCeeHnomYb5hGrpOHxW3s=
+github.com/arielcostas/goldmark-figures v1.0.2 h1:X4YaKNzgXt+Sum6rCfKRRJWl8E1G8BUhe39fyHuSCWQ=
+github.com/arielcostas/goldmark-figures v1.0.2/go.mod h1:sjKF4imwjGthsFh+GCr3c2uCeeHnomYb5hGrpOHxW3s=
 github.com/chai2010/webp v1.1.1 h1:jTRmEccAJ4MGrhFOrPMpNGIJ/eybIgwKpcACsrTEapk=
 github.com/chai2010/webp v1.1.1/go.mod h1:0XVwvZWdjjdxpUEIf7b9g9VkHFnInUSYujwqTLEuldU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
