@@ -8,7 +8,9 @@ import (
 
 var t = template.Must(template.New("atom.xml").Funcs(templates.Functions).Parse(rawAtom))
 
-var rawAtom string = `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
+var rawAtom string = `
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es-ES">
 	<id>{{ .Dominio }}{{ .Path }}</id>
 	<title>{{ .Titulo }} - Vigo360</title>
 	<subtitle>{{ .Subtitulo }}</subtitle>
