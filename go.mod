@@ -42,6 +42,6 @@ require (
 )
 
 require (
-	github.com/gabriel-vasile/mimetype v1.4.3
-	golang.org/x/net v0.23.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.4
+	golang.org/x/net v0.25.0 // indirect
 )
