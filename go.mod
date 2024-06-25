@@ -7,7 +7,7 @@ toolchain go1.22.2
 require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/gorilla/mux v1.8.1
-	github.com/yuin/goldmark v1.7.2
+	github.com/yuin/goldmark v1.7.4
 )
 
 require (
