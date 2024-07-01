@@ -29,6 +29,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		var authHeader = r.Header.Get("Authorization")
 		if authHeader == "" {
 			log.Error("no se especificó un token de autorización")
+			r.Header.Add("WWW-Authenticate", `Basic realm="Restricted"`)
 			s.handleJsonError(r, w, 401, messages.ErrorSinAutenticar)
 			return
 		}
@@ -39,6 +40,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 
 		if authHeader != "Basic "+auth {
 			log.Error("token de autorización inválido")
+			r.Header.Add("WWW-Authenticate", `Basic realm="Restricted"`)
 			s.handleJsonError(r, w, 401, messages.ErrorSinAutenticar)
 			return
 		}
