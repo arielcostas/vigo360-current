@@ -47,7 +47,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		}
 
 		db := database.GetDB()
-		rows, err := db.Query("SELECT id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion, autores.nombre FROM publicaciones LEFT JOIN autores ON publicaciones.autor_id = autores.id WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
+		rows, err := db.Query("SELECT p.id, p.alt_portada, p.titulo, p.resumen, p.contenido, p.fecha_publicacion, p.fecha_actualizacion, autores.nombre FROM publicaciones p LEFT JOIN autores ON p.autor_id = autores.id WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
 
 		if err != nil {
 			log.Error("error leyendo adjuntos: %s", err.Error())
@@ -58,7 +58,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		for rows.Next() {
 			var post Post
 
-			err = rows.Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion)
+			err = rows.Scan(&post.Id, &post.Alt_portada, &post.Titulo, &post.Resumen, &post.Contenido, &post.Fecha_publicacion, &post.Fecha_actualizacion, &post.Autor)
 			if err != nil {
 				log.Error("error escaneando adjuntos: %s", err.Error())
 				s.handleJsonError(r, w, 500, messages.ErrorDatos)
