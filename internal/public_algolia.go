@@ -47,7 +47,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		}
 
 		db := database.GetDB()
-		rows, err := db.Query("SELECT p.id, p.alt_portada, p.titulo, p.resumen, p.contenido, p.fecha_publicacion, p.fecha_actualizacion, autores.nombre FROM publicaciones p LEFT JOIN autores ON p.autor_id = autores.id WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
+		rows, err := db.Query("SELECT p.id, p.alt_portada, p.titulo, p.resumen, LEFT(p.contenido, 8500), p.fecha_publicacion, p.fecha_actualizacion, autores.nombre FROM publicaciones p LEFT JOIN autores ON p.autor_id = autores.id WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
 
 		if err != nil {
 			log.Error("error leyendo adjuntos: %s", err.Error())
