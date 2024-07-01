@@ -186,6 +186,7 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	var indexnowkeyurl = fmt.Sprintf("/%s.txt", os.Getenv("INDEXNOW_KEY"))
 	newrouter.HandleFunc(indexnowkeyurl, s.handlePublicIndexnowKey()).Methods(http.MethodGet)
 
+	newrouter.HandleFunc("/algolia.json", s.handlePublicIndexAlgolia()).Methods(http.MethodGet)
 	newrouter.HandleFunc("/", s.handlePublicIndex()).Methods(http.MethodGet)
 
 	newrouter.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
