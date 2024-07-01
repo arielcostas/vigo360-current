@@ -20,6 +20,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		Contenido           string `json:"contenido"`
 		Fecha_publicacion   string `json:"fecha_publicacion"`
 		Fecha_actualizacion string `json:"fecha_actualizacion"`
+		Autor               string `json:"autor"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +47,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		}
 
 		db := database.GetDB()
-		rows, err := db.Query("SELECT id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion FROM publicaciones WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
+		rows, err := db.Query("SELECT id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion, autor.nombre FROM publicaciones LEFT JOIN autor ON publicaciones.autor_id = autor.id WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
 
 		if err != nil {
 			log.Error("error leyendo adjuntos: %s", err.Error())
