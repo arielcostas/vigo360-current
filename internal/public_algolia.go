@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"vigo360.es/new/internal/database"
 	"vigo360.es/new/internal/logger"
@@ -24,8 +26,25 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 		log := logger.NewLogger(r.Context().Value(ridContextKey("rid")).(string))
 		var result []Post = make([]Post, 0)
 
+		var authHeader = r.Header.Get("Authorization")
+		if authHeader == "" {
+			log.Error("no se especificó un token de autorización")
+			s.handleJsonError(r, w, 401, messages.ErrorSinAutenticar)
+			return
+		}
+
+		var username = os.Getenv("ALGOLIA_API_USERNAME")
+		var password = os.Getenv("ALGOLIA_API_PASSWORD")
+		var auth = base64.StdEncoding.EncodeToString([]byte(username + ":" + password))
+
+		if authHeader != "Basic "+auth {
+			log.Error("token de autorización inválido")
+			s.handleJsonError(r, w, 401, messages.ErrorSinAutenticar)
+			return
+		}
+
 		db := database.GetDB()
-		rows, err := db.Query("SELECT id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion FROM publicaciones")
+		rows, err := db.Query("SELECT id, alt_portada, titulo, resumen, contenido, fecha_publicacion, fecha_actualizacion FROM publicaciones WHERE fecha_publicacion IS NOT NULL AND fecha_publicacion <= NOW() AND legally_retired_at IS NULL")
 
 		if err != nil {
 			log.Error("error leyendo adjuntos: %s", err.Error())
@@ -51,6 +70,7 @@ func (s *Server) handlePublicIndexAlgolia() http.HandlerFunc {
 			s.handleJsonError(r, w, 500, messages.ErrorRender)
 			return
 		}
+		w.Header().Add("Content-Type", "application/json")
 		w.Write(resbytes)
 	}
 }
