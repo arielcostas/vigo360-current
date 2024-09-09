@@ -15,7 +15,7 @@ require (
 	github.com/algolia/algoliasearch-client-go/v3 v3.31.2
 	github.com/arielcostas/goldmark-figures v1.0.2
 	github.com/chai2010/webp v1.1.1
-	github.com/go-playground/validator/v10 v10.22.0
+	github.com/go-playground/validator/v10 v10.22.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/kataras/hcaptcha v0.0.2
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
