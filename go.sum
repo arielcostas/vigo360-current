@@ -8,8 +8,8 @@ github.com/Masterminds/semver/v3 v3.3.0 h1:B8LGeaivUe71a5qox1ICM/JLl0NqZSW5CHyL+
 github.com/Masterminds/semver/v3 v3.3.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/Masterminds/sprig/v3 v3.3.0 h1:mQh0Yrg1XPo6vjYXgtf5OtijNAKJRNcTdOOGZe3tPhs=
 github.com/Masterminds/sprig/v3 v3.3.0/go.mod h1:Zy1iXRYNqNLUolqCpL4uhk6SHUMAOSCzdgBfDb35Lz0=
-github.com/algolia/algoliasearch-client-go/v3 v3.31.2 h1:T/k7b4C7OecOS2Q8//puhWe48P0g0bvtULJkCaZstL4=
-github.com/algolia/algoliasearch-client-go/v3 v3.31.2/go.mod h1:i7tLoP7TYDmHX3Q7vkIOL4syVse/k5VJ+k0i8WqFiJk=
+github.com/algolia/algoliasearch-client-go/v3 v3.31.3 h1:14AvzqMdKAKejw6Vw/A1SHisNGsX0+3JsWi7z28GS0E=
+github.com/algolia/algoliasearch-client-go/v3 v3.31.3/go.mod h1:i7tLoP7TYDmHX3Q7vkIOL4syVse/k5VJ+k0i8WqFiJk=
 github.com/arielcostas/goldmark-figures v1.0.2 h1:X4YaKNzgXt+Sum6rCfKRRJWl8E1G8BUhe39fyHuSCWQ=
 github.com/arielcostas/goldmark-figures v1.0.2/go.mod h1:sjKF4imwjGthsFh+GCr3c2uCeeHnomYb5hGrpOHxW3s=
 github.com/chai2010/webp v1.1.1 h1:jTRmEccAJ4MGrhFOrPMpNGIJ/eybIgwKpcACsrTEapk=
