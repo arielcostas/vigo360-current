@@ -1,5 +1,9 @@
 table {
     overflow: scroll;
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+    border: transparent;
 }
 
 table, tr, td, th {
@@ -11,6 +15,7 @@ td, th {
     padding: 0.25rem 0.5rem;
     text-align: start;
     hyphens: none;
+    white-space: break-spaces;
 }
 
 th, tr:nth-child(2n) td {
