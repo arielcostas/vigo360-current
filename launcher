@@ -6,7 +6,7 @@
 prebuild() {
 	mkdir -p assets/{extra,images,papers,profile,thumb}
 	cp -r static/* assets/
-	sass --source-map -s compressed styles/:assets/
+	sass --no-source-map -s compressed styles/:assets/
 	chmod -R a+r assets/
 }
 

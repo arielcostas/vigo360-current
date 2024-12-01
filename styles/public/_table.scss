@@ -1,0 +1,19 @@
+table {
+    overflow: scroll;
+}
+
+table, tr, td, th {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 0.25rem 0.5rem;
+    text-align: start;
+    hyphens: none;
+}
+
+th, tr:nth-child(2n) td {
+    background-color: hsla(134deg, 40%, 55%, 0.5);
+    backdrop-filter: opacity(0.3);
+}
