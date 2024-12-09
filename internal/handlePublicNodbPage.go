@@ -13,7 +13,7 @@ func (s *Server) handlePublicNodbPage() http.HandlerFunc {
 		"legal": {
 			Titulo:      "Licencias",
 			Descripcion: "Información legal relativa a Vigo360, desde licencias de uso libre hasta la política de privacidad.",
-			Canonica:    fullCanonica("/licencia"),
+			Canonica:    fullCanonica("/legal"),
 			BaseUrl:     baseUrl(),
 		},
 		"contacto": {
