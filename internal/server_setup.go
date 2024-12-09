@@ -169,7 +169,7 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc(`/post/{postid}`, cli.HandlerFunc(s.handlePublicEnviarComentario())).Methods(http.MethodPost)
 
 	newrouter.HandleFunc(`/tags`, s.handlePublicListTags()).Methods(http.MethodGet)
-	newrouter.HandleFunc(`/tags/{tagid}/`, s.handlePublicTagPage()).Methods(http.MethodGet)
+	newrouter.HandleFunc(`/tags/{tagid}`, s.handlePublicTagPage()).Methods(http.MethodGet)
 	newrouter.HandleFunc(`/trabajos`, s.handlePublicListTrabajos()).Methods(http.MethodGet)
 	newrouter.HandleFunc(`/trabajos/{trabajoid}`, s.handlePublicTrabajoPage()).Methods(http.MethodGet)
 	newrouter.HandleFunc(`/autores/{id}`, s.handlePublicAutorPage()).Methods(http.MethodGet)

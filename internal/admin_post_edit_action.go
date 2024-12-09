@@ -122,7 +122,7 @@ func (s *Server) handleAdminEditPostAction() http.HandlerFunc {
 			}
 
 			for _, t := range tags {
-				indexnowurls = append(indexnowurls, DOMAIN+"/tags/"+t+"/")
+				indexnowurls = append(indexnowurls, DOMAIN+"/tags/"+t)
 			}
 
 			err = seo.BingIndexnowRequest(indexnowurls)
