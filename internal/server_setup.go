@@ -175,7 +175,7 @@ func (s *Server) SetupWebRoutes(router *mux.Router) *mux.Router {
 	newrouter.HandleFunc(`/autores/{id}`, s.handlePublicAutorPage()).Methods(http.MethodGet)
 	newrouter.HandleFunc(`/autores`, s.handlePublicListAutores()).Methods(http.MethodGet)
 
-	newrouter.HandleFunc(`/legal`, s.handlePublicNodbPage()).Methods(http.MethodGet)
+	newrouter.HandleFunc(`/policy`, s.handlePublicNodbPage()).Methods(http.MethodGet)
 	newrouter.HandleFunc(`/contacto`, s.handlePublicNodbPage()).Methods(http.MethodGet)
 
 	newrouter.HandleFunc(`/atom.xml`, s.handlePublicIndexAtom()).Methods(http.MethodGet)

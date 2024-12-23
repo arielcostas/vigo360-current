@@ -10,10 +10,10 @@ import (
 
 func (s *Server) handlePublicNodbPage() http.HandlerFunc {
 	var nodbPageMeta = map[string]PageMeta{
-		"legal": {
-			Titulo:      "Licencias",
-			Descripcion: "Información legal relativa a Vigo360, desde licencias de uso libre hasta la política de privacidad.",
-			Canonica:    fullCanonica("/legal"),
+		"policy": {
+			Titulo:      "Políticas de Vigo360",
+			Descripcion: "Información sobre políticas relativa a Vigo360: uso de contenidos, privacidad, rectificación...",
+			Canonica:    fullCanonica("/policy"),
 			BaseUrl:     baseUrl(),
 		},
 		"contacto": {
