@@ -48,9 +48,14 @@
   box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, h6 {
+@mixin heading {
   font-family: var(--title-fonts);
+  font-weight: bold;
   line-height: 1.2;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include heading;
 }
 
 a, a:hover {
@@ -79,6 +84,10 @@ p {
 
 #header-brand > * {
   font-size: 24px;
+  font-weight: bold;
+
+  @include heading;
+
   color: var(--text);
   display: inline;
   vertical-align: middle;
